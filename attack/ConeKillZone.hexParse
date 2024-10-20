@@ -1,0 +1,42 @@
+// requires hex_playground
+
+// all non-player living
+get_caster,entity_pos/eye,duplicate
+\30,zone_entity/not_player,swap
+\30,zone_entity/living
+and_bit
+
+\[
+    // calculate cos(angle)=norm(vec_delta)*look_vec
+    duplicate,entity_pos/eye
+    get_caster,entity_pos/eye,sub
+    duplicate,abs_len,div_cross
+    get_caster,get_entity_look,mul_dot
+    \0.5,less,\[
+        pop
+    ],\[
+        \100,punch_entity // punch 100 damage
+    ],if,eval
+]swap,for_each,pop
+
+// pick items, exp orbs and minecarts (wtf
+get_caster,entity_pos/eye
+\30,zone_entity/not_living
+\[
+    // same calc cos(angle)
+    duplicate,entity_pos/eye
+    get_caster,entity_pos/eye,sub
+    duplicate,abs_len,div_cross
+    get_caster,get_entity_look,mul_dot
+    \0.5,less,\[
+        pop
+    ],\[
+        // great teleport
+        duplicate,
+            duplicate,entity_pos/eye,
+            get_caster,entity_pos/eye,swap,sub
+            teleport,
+        \vec_0_0.2,add_motion
+        charge_media
+    ],if,eval
+],swap,for_each

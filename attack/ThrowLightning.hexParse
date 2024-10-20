@@ -1,0 +1,14 @@
+// requires hexal & hex_playground
+
+\[
+    duplicate
+        type/iota \type_entity equals
+        \[entity_pos/foot] \[] if
+    eval
+    lightning
+]
+get_caster,entity_pos/eye,
+get_caster,get_entity_look,\2,mul_dot
+\320
+hexal:wisp/summon/projectile
+charge_media
