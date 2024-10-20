@@ -1,0 +1,25 @@
+{
+    "name": "hexparse_highlight",
+    "version": "114.514.1919",
+    "displayName": "HexParse Highlight Extension",
+    "engines": {
+        "vscode": "^0.0"
+    },
+    "contributes": {
+        "languages": [
+            {
+                "id": "HexParse",
+                "extensions": [
+                    ".hexParse"
+                ]
+            }
+        ],
+        "grammars": [
+            {
+                "language": "HexParse",
+                "scopeName": "source.HexParse",
+                "path": "./syntaxes/HexParse.tmGrammar.json"
+            }
+        ]
+    }
+}

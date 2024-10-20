@@ -1,0 +1,1 @@
+mklink /J "%USERPROFILE%\.vscode\extensions\hexParse_highlight" "hexParse_highlight"

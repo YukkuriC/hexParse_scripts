@@ -1,0 +1,49 @@
+{
+    "scopeName": "source.HexParse",
+    "patterns": [
+        {
+            "include": "#expression"
+        }
+    ],
+    "repository": {
+        "expression": {
+            "patterns": [
+                {
+                    "match": "\\/\\/.*",
+                    "name": "comment"
+                },
+                {
+                    "begin": "\\(|\\[",
+                    "end": "\\)|\\]",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.paren.open"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.paren.close"
+                        }
+                    },
+                    "name": "expression.group",
+                    "patterns": [
+                        {
+                            "include": "#expression"
+                        }
+                    ]
+                },
+                {
+                    "match": "\\\\|escape",
+                    "name": "string.escape"
+                },
+                {
+                    "include": "#pattern"
+                }
+            ]
+        },
+        "pattern": {
+            "match": "\\\\|[\\w\\.\\/\\-\\:]+",
+            "name": "keyword.pattern"
+        }
+    }
+}
