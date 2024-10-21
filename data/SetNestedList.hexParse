@@ -1,0 +1,48 @@
+// test case
+/*
+\[
+    [114,514,[1,[[9[19]],810]]]
+    [2,1,0,1,0]
+    get_caster
+]splat
+*/
+
+// build local vars & prepare_stack
+// #3 for code
+empty_list,\4,last_n_list,write/local
+empty_list // stack
+// make setitem seq
+read/local,\3,\[
+    read/local,\1,index,list_size,\1,greater
+    \[
+        read/local,\0,index,construct
+        read/local,\1,index,deconstruct
+        // (for fisherman)idx,[idx],frame
+        \3,fisherman,swap,construct,swap
+        // write back next layer
+        read/local,\0,index
+        read/local,\1,index,\0,index,index
+        read/local,swap,\0,swap,modify_in_place
+        swap,\1,swap,modify_in_place
+        duplicate,write/local
+        \3,index,eval
+    ]\[
+        read/local,splat,pop // drop myself
+        swap,\0,index,swap,modify_in_place
+    ]if,eval
+]modify_in_place,write/local
+read/local,\3,index,eval
+// set back
+\[
+    \1,fisherman/copy,duplicate
+    list_size,\1,greater
+    \[
+        \0,\2,slice,splat,swap
+        \3,fisherman,modify_in_place
+        swap,deconstruct,pop,deconstruct,pop,swap
+        read/local,eval
+    ]\[
+        pop,swap,pop
+    ]if,eval
+]write/local
+read/local,eval
