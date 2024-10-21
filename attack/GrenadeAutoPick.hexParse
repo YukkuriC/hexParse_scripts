@@ -1,0 +1,34 @@
+charge_media
+\[
+    \[
+        // 1. radius 8 blast
+        entity_pos/eye
+        \10,zone_entity/not_item
+        \[
+            duplicate,string/iota,get_caster,string/iota,equals
+            \[pop]\[
+                duplicate,type/entity,\type/entity_experience_orb,equals
+                \[pop]\[\100,punch_entity]if,eval
+            ]if,eval
+        ]swap,for_each,pop
+        // 2. pick items
+        wisp/self,entity_pos/eye,write/local
+        \type/entity_experience_orb,read/local,\10,zone_entity/type
+        \type/entity_item,read/local,\10,zone_entity/type,concat
+        \[
+            // great teleport
+            duplicate,entity_pos/eye,
+            get_caster,entity_pos/eye,swap,sub
+            teleport
+        ]swap,for_each
+        wisp/self,wisp/consume
+    ]
+    wisp/self,entity_pos/eye
+    wisp/media,\3.2,sub
+    wisp/summon/ticking
+]
+get_caster,entity_pos/eye
+get_caster,get_entity_look,\5,mul_dot
+\595
+wisp/summon/projectile
+charge_media
