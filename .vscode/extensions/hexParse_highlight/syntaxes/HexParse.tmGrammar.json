@@ -13,6 +13,21 @@
                     "name": "comment"
                 },
                 {
+                    "begin": "\\/\\*",
+                    "end": "\\*\\/",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "comment.paren.open"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "comment.paren.close"
+                        }
+                    },
+                    "name": "comment.multiline"
+                },
+                {
                     "begin": "\\(|\\[",
                     "end": "\\)|\\]",
                     "beginCaptures": {
