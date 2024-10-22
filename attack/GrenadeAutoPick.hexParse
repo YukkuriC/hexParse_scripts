@@ -3,12 +3,20 @@ charge_media
     \[
         // 1. radius 8 blast
         entity_pos/eye
+        duplicate,write/local // for fancy particles
         \10,zone_entity/not_item
         \[
-            duplicate,string/iota,get_caster,string/iota,equals
+            duplicate,string/iota,\myself,string/iota,equals
             \[pop]\[
                 duplicate,type/entity,\type/entity_experience_orb,equals
-                \[pop]\[\100,punch_entity]if,eval
+                \[pop]\[
+                    // link
+                    duplicate,entity_pos/foot,duplicate
+                    read/local,\2,last_n_list,particles
+                    write/local
+                    // real punch
+                    \100,punch_entity
+                ]if,eval
             ]if,eval
         ]swap,for_each,pop
         // 2. pick items
@@ -16,9 +24,17 @@ charge_media
         \type/entity_experience_orb,read/local,\10,zone_entity/type
         \type/entity_item,read/local,\10,zone_entity/type,concat
         \[
+            charge_media/wisp
+            // minor up
+            duplicate
+            \vec_0_0.2,add_motion
+            // link particles
+            duplicate,entity_pos/foot,duplicate
+            read/local,\2,last_n_list,particles
+            write/local
             // great teleport
-            duplicate,entity_pos/eye,
-            get_caster,entity_pos/eye,swap,sub
+            duplicate,entity_pos/foot,
+            \myself,entity_pos/eye,swap,sub
             teleport
         ]swap,for_each
         wisp/self,wisp/consume
