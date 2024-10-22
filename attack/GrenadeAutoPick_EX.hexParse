@@ -38,7 +38,10 @@ charge_media
                 write/local
                 // great teleport
                 duplicate,entity_pos/foot,
-                \myself,entity_pos/eye,swap,sub
+                \myself,entity_pos/eye,
+                \vec_0_0.5_0,add,
+                \myself,get_entity_velocity,\10,mul_dot,add
+                swap,sub
                 teleport
             ]swap,for_each
         ]
