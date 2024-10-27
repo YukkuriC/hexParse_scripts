@@ -1,0 +1,4 @@
+(vec)
+\[(add)\[vec_1,vec_-1,vec_2,vec_-2]for_each,splat]swap,for_each
+\[(add)\[vec_0_1,vec_0_-1,vec_0_2,vec_0_-2]for_each,splat]swap,for_each
+\[(add)\[vec_0_0_1,vec_0_0_-1,vec_0_0_2,vec_0_0_-2]for_each,splat]swap,for_each
