@@ -1,0 +1,7 @@
+// test: get_caster,entity_pos/foot
+\5,duplicate_n
+break_block
+create_water
+\1.5,explode
+conjure_block
+break_block

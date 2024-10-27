@@ -1,0 +1,9 @@
+\[ // requires hexgloop
+    \[
+        \[
+            pop
+            get_caster,entity_pos/eye
+            hexgloop:conjure_tasty_treat
+        ]\[1,1,4,5]for_each,pop
+    ]\[1,4,1,9]for_each,pop
+]\[1,9,8,1]for_each,pop
