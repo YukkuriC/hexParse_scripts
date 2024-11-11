@@ -7,7 +7,7 @@ charge_media
             // 0. walk search seq
             charge_media/wisp
             \24,mul_dot,teleport
-            // 1. radius 8 blast
+            // 1. radius 16 blast
             wisp/self,entity_pos/eye
             duplicate
                 duplicate,write/local // for fancy particles
