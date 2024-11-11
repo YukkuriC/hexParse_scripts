@@ -1,0 +1,70 @@
+// requires hexal & hex_playground
+
+charge_media
+\[
+    \[
+        \[
+            // 0. walk search seq
+            charge_media/wisp
+            \24,mul_dot,teleport
+            // 1. radius 8 blast
+            wisp/self,entity_pos/eye
+            duplicate
+                duplicate,write/local // for fancy particles
+            sentinel/create/great // extend reach
+            \16,zone_entity/not_item
+            \[
+                duplicate,string/iota,\myself,string/iota,equals
+                \[pop]\[
+                    duplicate,type/entity,\type/entity_experience_orb,equals
+                    \[pop]\[
+                        // link
+                        duplicate,entity_pos/foot,duplicate
+                        read/local,\2,last_n_list,particles
+                        write/local
+                        // real punch
+                        \100,punch_entity
+                    ]if,eval
+                ]if,eval
+            ]swap,for_each,pop
+            // 2. pick items
+            wisp/self,entity_pos/eye,write/local
+            \type/entity_experience_orb,read/local,\16,zone_entity/type
+            \type/entity_item,read/local,\16,zone_entity/type,concat
+            \[
+                charge_media/wisp
+                // minor up
+                duplicate
+                \vec_0_0.2,add_motion
+                // link particles
+                duplicate,entity_pos/foot,duplicate
+                read/local,\2,last_n_list,particles
+                write/local
+                // great teleport
+                duplicate,entity_pos/foot,
+                \myself,entity_pos/eye,
+                \vec_0_0.5_0,add,
+                \myself,get_entity_velocity,\10,mul_dot,add
+                swap,sub
+                teleport
+            ]swap,for_each
+        ]
+        \[
+            vec,vec_1
+            vec_-0.3_0_0.7,vec_-0.7_0_0.3
+            vec_-0.7_0_-0.3,vec_-0.3_0_-0.7
+            vec_0.3_0_-0.7,vec_0.7_0_-0.3
+            vec_0.7_0_0.3
+        ]for_each
+        sentinel/destroy
+        wisp/self,wisp/consume
+    ]
+    wisp/self,entity_pos/eye
+    wisp/media,\3.2,sub
+    wisp/summon/ticking
+]
+get_caster,entity_pos/eye
+get_caster,get_entity_look,\5,mul_dot
+\595
+wisp/summon/projectile
+charge_media
