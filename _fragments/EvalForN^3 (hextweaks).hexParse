@@ -1,0 +1,14 @@
+// requires hextweaks
+// test: \3
+comment_input:n write/local
+(
+    comment_1.pattern2vec eval
+    comment_2.multiply (
+        comment_2.1.minus_half read/local,_aqaaw,sub,_aqaaww,div_cross,sub
+        comment_2.2.mult_vector mul_dot
+    )
+    comment_3.range_n read/local,itter,for_each
+    comment_4.remove_head mask_v-,splat
+)
+comment_axes (const/vec/px,const/vec/py,const/vec/pz)
+for_each
