@@ -1,14 +1,17 @@
 // requires hexal & hex_playground
 
+comment_wisp.code
 \[
+    comment_stack.top.content
     duplicate
-        type/iota \type_entity equals
-        \[entity_pos/foot] \[] if
+        type/iota \type_entity equals   comment_if.hit.entity
+        \entity_pos/foot comment_pick.foot
+        \comment_else.at.hit.location if
     eval
-    lightning
+    lightning                           comment_do.strike
 ]
-get_caster,entity_pos/eye,
-get_caster,get_entity_look,\2,mul_dot
+get_caster,entity_pos/eye,              comment_shoot.from.camera
+get_caster,get_entity_look,\2,mul_dot   comment_with.speed.2
 \320
-hexal:wisp/summon/projectile
-charge_media
+hexal:wisp/summon/projectile            comment_shoot.projectile.wisp
+charge_media                            comment_and.hack.to.refill.media
