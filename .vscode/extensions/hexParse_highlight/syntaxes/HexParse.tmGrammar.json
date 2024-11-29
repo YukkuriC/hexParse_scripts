@@ -28,6 +28,26 @@
                     "name": "comment.multiline"
                 },
                 {
+                    "match": "comment_.*?(?=\\s|$)",
+                    "name": "comment.iota"
+                },
+                {
+                    "match": "tab(_.*?(?=\\s|$))?",
+                    "name": "comment.iota.tab"
+                },
+                {
+                    "match": "num(_[0-9e.\\-]+)?",
+                    "name": "num.pattern"
+                },
+                {
+                    "match": "[0-9.\\-]+(e[0-9.\\-]+)?",
+                    "name": "num"
+                },
+                {
+                    "match": "vec(_[0-9e.\\-]+){0,3}",
+                    "name": "vec"
+                },
+                {
                     "begin": "\\(|\\[",
                     "end": "\\)|\\]",
                     "beginCaptures": {
