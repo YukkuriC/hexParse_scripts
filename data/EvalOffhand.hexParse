@@ -1,5 +1,3 @@
 charge_media // from hex_playground
 read,eval
-stack_len,bool_coerce
-\print\[]
-if,eval
+stack_len,last_n_list,(print),swap,for_each
