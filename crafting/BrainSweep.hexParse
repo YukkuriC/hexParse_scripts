@@ -1,0 +1,22 @@
+// requires hex_playground
+// shift to set target pos, stand to do sweeping
+
+comment_basic-raycast
+get_caster,entity_pos/eye
+get_caster,get_entity_look
+num_2,last_n_list,write/local
+
+comment_check-sneaking
+(
+    get_caster,entity_pos/eye
+    get_caster,entity_pos/foot,sub
+    deconstruct_vec,mask_v-v
+    num_1.5,less
+)eval
+comment_shift-click:pick-block
+(read/local,splat,raycast,duplicate,mind_stack/push)
+comment_normal:do-brainsweep
+(read/local,splat,raycast/entity
+mind_stack/pop,brainsweep)
+comment_eval
+if,eval

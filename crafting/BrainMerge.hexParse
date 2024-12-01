@@ -1,0 +1,24 @@
+// requires hex_playground
+// shift to pick victim, stand to inject to villager
+
+comment_track-entity-first
+get_caster,entity_pos/eye;get_caster,get_entity_look;raycast/entity
+comment_halt-if-no-target
+duplicate,bool_coerce,\print,\halt,if,eval
+
+comment_check-sneaking
+(
+    get_caster,entity_pos/eye
+    get_caster,entity_pos/foot,sub
+    deconstruct_vec,mask_v-v
+    num_1.5,less
+)eval
+comment_shift-click:select-victim
+(mind_stack/push)
+comment_normal:do-merge
+(
+    mind_stack/pop,swap
+    brain_merge
+)
+comment_eval
+if,eval
