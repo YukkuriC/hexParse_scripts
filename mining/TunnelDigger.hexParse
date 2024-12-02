@@ -1,0 +1,32 @@
+// dig for 3x3xN
+
+comment_1.filter-axes
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast/axis,num_-1,mul
+(
+    eval,duplicate,write/local,
+    2dup,equals,rotate_reverse
+    num_-1,mul,equals
+    or()(read/local)if,eval
+)
+(const/vec/px,const/vec/py,const/vec/pz)for_each
+comment_2.build-face
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast,singleton,write/local
+(mask_v-
+    (swap // origin, axis
+        (mul,add)(-1,0,1)for_each,mask_vv-,splat
+    )read/local,for_each,write/local,pop
+)swap,for_each,pop
+read/local
+comment_3.depth // TODO
+num_10
+(
+    read/local,splat,mask_--vv // axis & face
+    (duplicate,break_block,add)swap,for_each // break & new face
+    read/local,num_2,index,num_1,sub,duplicate
+    num,greater
+    (read/local,num_3,index,duplicate,num_5,last_n_list,unappend,swap,write/local,eval)
+    (halt)if,eval
+)comment_4.code
+num_4,last_n_list,duplicate,write/local
+num_3,index,eval
+stack_len,last_n_list,pop
