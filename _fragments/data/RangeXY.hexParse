@@ -1,0 +1,24 @@
+// range [x, y]
+// max size: 450~500
+// test input: (0,20)splat
+
+// swap if x > y
+2dup,greater
+(swap)empty_list,if,eval
+// raven:x-y + ret-ptr-code
+over,write/local 
+read/local,singleton // #2: return [x]
+read/local,num_1,add // #3: ptr=x+1
+(
+    read/local,splat,mask_v-v-v,less // if y<ptr
+    (read/local,num_2,index) // return
+    (
+        read/local,splat,mask_vv--v,tuck,append // ptr,new_ret
+        read/local,num_2,rotate,replace // set list to new local
+        swap,num_1,add num_3,swap,replace // set new ptr
+        duplicate,write/local // update local
+        num_4,index,eval // eval #4 self
+    )if,eval
+) // #4: code
+num_5,last_n_list,duplicate,write/local
+num_4,index,eval

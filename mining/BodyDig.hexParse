@@ -1,0 +1,41 @@
+// requires hex_playground for mind stack read-write
+
+comment_check-sneaking
+get_caster,entity_pos/eye
+get_caster,entity_pos/foot,sub
+deconstruct_vec,mask_v-v
+num_1.5,less
+comment_shift:do-dig
+(
+    yc:mind_stack/pop,yc:mind_stack/pop
+    (   comment_1.pair-with-axes
+        write/local
+        deconstruct_vec,read/local,eval
+        swap,deconstruct_vec,read/local,eval
+        comment_2.gen-range-list // uses RangeXY_repeatCode
+            // swap to y, x
+            2dup,less
+            (swap)empty_list,if,eval
+            // x, n=(y-x+1)
+            tuck,sub,num_1,add,write/local
+            empty_list,swap // init stage: [], x (+placeholder)
+            (mask_vvv
+                (duplicate,num_1,add,rotate_reverse,append,swap) // unit: [...], x -> [...x], x+1
+            splat)
+            num_0,read/local,duplicate_n,read/local,last_n_list for_each // loop n times
+            eval,mask_v // exec and drop ptr
+    ) comment_pair-for-axes
+    (mask_-vv,mask_v-v,mask_vv-)for_each,mask_vv-
+    write/local
+    comment_3.X.Y.Z-and-dig
+    (   (   (
+                construct_vec,break_block // do dig
+            )read/local,num_2,index for_each,mask_vvv // each axis 3
+        )read/local,num_1,index for_each,mask_vv // each axis 2
+    )read/local,num_0,index for_each,mask_v // each axis 1
+)
+comment_normal:pick-pos
+(
+    get_caster,entity_pos/eye,get_caster,get_entity_look
+    raycast,yc:mind_stack/push
+)if,eval

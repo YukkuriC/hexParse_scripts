@@ -1,0 +1,15 @@
+// range [x, y] by duping code
+// max size: 168
+// test input: (0,150)splat
+
+// swap to y, x
+2dup,less
+(swap)empty_list,if,eval
+// x, n=(y-x+1)
+tuck,sub,num_1,add,write/local
+empty_list,swap // init stage: [], x (+placeholder)
+(mask_vvv
+    (duplicate,num_1,add,rotate_reverse,append,swap) // unit: [...], x -> [...x], x+1
+splat)
+num_0,read/local,duplicate_n,read/local,last_n_list for_each // loop n times
+eval,mask_v // exec and drop ptr
