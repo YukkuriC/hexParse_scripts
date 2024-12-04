@@ -2,3 +2,6 @@ get_caster,entity_pos/eye comment_get.head
 get_caster,entity_pos/foot,sub comment_minus.foot
 deconstruct_vec,mask_v-v comment_.y
 num_1.5,less comment_compare.to.1.5 tab_30
+
+// compressed ver
+get_caster,entity_pos/eye get_caster,entity_pos/foot,sub deconstruct_vec,mask_v-v num_1.5,less
