@@ -1,5 +1,5 @@
 // requires hex_playground
-// shift to pick victim, stand to inject to villager
+// shift to pick inject target, stand to merge victim
 
 comment_track-entity-first
 get_caster,entity_pos/eye;get_caster,get_entity_look;raycast/entity
