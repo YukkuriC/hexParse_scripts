@@ -1,0 +1,30 @@
+// shift to zone grab villagers, stand to distribute raycast villager
+
+comment_sneak-for-mass-teleport
+get_caster,entity_pos/eye,get_caster,entity_pos/foot,sub
+deconstruct_vec,mask_v-v,num_1.5,less
+(
+    (type/entity_villager,32)splat,get_caster,entity_pos/foot,swap,zone_entity/type comment_all-villagers
+    (duplicate,entity_pos/foot,(vec_2.5_101.5_13.5)splat,swap,sub,teleport)swap,for_each,print comment_teleport
+)(
+    comment_track-entity-first
+    get_caster,entity_pos/eye,get_caster,get_entity_look,raycast/entity
+    duplicate,bool_coerce,(print,mask_vvvvv)splat,if,eval,comment_halt-if-no-target,write/local
+    comment_test-each-pos
+    (
+        duplicate,get_entity,bool_coerce
+        (mask_v)
+        (read/local,entity_pos/foot,sub,read/local,swap,teleport/great,mask_vvvvv)
+        if,eval
+    )
+    (vec_6.5_101.5_15.5,vec_4.5_101.5_15.5,vec_2.5_101.5_15.5,vec_0.5_101.5_15.5,vec_0.5_101.5_13.5,vec_0.5_101.5_11.5)
+    for_each,mask_v
+)if,eval
+
+
+// helper: pick teleport destination (requires hex_playground mind stack)
+mind_stack/size,num_0,greater
+\mind_stack/pop\empty_list,if,eval
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
+const/vec/py,add
+append,mind_stack/push
