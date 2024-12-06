@@ -1,4 +1,4 @@
-// requires hex_playground
+// requires hex_playground & moreiotas (1.19 hexal)
 // shift to set target pos, stand to do sweeping
 
 comment_basic-raycast
@@ -17,6 +17,9 @@ comment_shift-click:pick-block
 (read/local,splat,raycast,duplicate,mind_stack/push)
 comment_normal:do-brainsweep
 (read/local,splat,raycast/entity
-mind_stack/pop,brainsweep)
+mind_stack/pop,2dup,brainsweep,swap
+duplicate,type/entity,(type/entity_villager)splat,equals
+(duplicate,entity_pos/foot,(vec_13.5_118_26.5/* recycle location */)splat,swap,sub,teleport,pop)
+(swap,brainsweep)if,eval)
 comment_eval
 if,eval

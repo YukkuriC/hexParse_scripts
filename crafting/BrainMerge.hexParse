@@ -1,4 +1,4 @@
-// requires hex_playground
+// requires hex_playground & moreiotas (1.19 hexal)
 // shift to pick inject target, stand to merge victim
 
 comment_track-entity-first
@@ -13,12 +13,16 @@ comment_check-sneaking
     deconstruct_vec,mask_v-v
     num_1.5,less
 )eval
-comment_shift-click:select-victim
+comment_shift-click:select-target
 (mind_stack/push)
 comment_normal:do-merge
 (
-    mind_stack/pop,swap
+    duplicate
+    mind_stack/pop,duplicate,mind_stack/push
     brain_merge
+    duplicate,type/entity,(type/entity_villager)splat,equals
+    (duplicate,entity_pos/foot,(vec_13.5_118_26.5/* recycle location */)splat,swap,sub,teleport)
+    (mind_stack/pop,duplicate,mind_stack/push,brain_merge)if,eval
 )
 comment_eval
 if,eval

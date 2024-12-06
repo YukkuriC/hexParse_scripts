@@ -1,0 +1,6 @@
+// main code
+\,_sesesesese // placeholder
+(
+    duplicate,type/to_item(type/block_amethyst_cluster)splat,equals
+    (break_block)()if,eval
+)swap,for_each
