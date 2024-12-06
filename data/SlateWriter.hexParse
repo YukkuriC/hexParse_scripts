@@ -11,3 +11,7 @@ get_caster,entity_pos/eye,get_caster,entity_pos/foot,sub,deconstruct_vec,mask_v-
         place_block
     )()if,eval
 )if,eval
+
+
+// general slate exec code
+circle/bounds/max,get_entity,read/entity,charge_media/circle,eval
