@@ -17,8 +17,8 @@ get_caster,entity_pos/eye,get_caster,get_entity_look,raycast,singleton,write/loc
     )read/local,for_each,write/local,pop
 )swap,for_each,pop
 read/local
-comment_3.depth // TODO
-num_10
+comment_3.depth
+readable,(read)(num_10)if,eval
 (
     read/local,splat,mask_--vv // axis & face
     (duplicate,break_block,add)swap,for_each // break & new face
