@@ -1,0 +1,13 @@
+// mind stack again
+
+get_caster,entity_pos/eye,get_caster,entity_pos/foot,sub,deconstruct_vec,mask_v-v,num_1.5,less
+(comment_record-iota
+    read,print,mind_stack/push
+)(comment_write-and-place
+    mind_stack/pop,duplicate,abs,num_0,greater(
+        deconstruct,write,print,mind_stack/push
+        get_caster,entity_pos/eye,get_caster,get_entity_look,2dup
+        raycast,rotate_reverse,raycast/axis,add
+        place_block
+    )()if,eval
+)if,eval
