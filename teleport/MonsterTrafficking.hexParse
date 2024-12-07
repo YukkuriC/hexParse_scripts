@@ -10,5 +10,5 @@
     )swap,for_each,pop
 )
 // targets
-([type/entity_pillager,vec_24.5_101_15.5][type/entity_vindicator,vec_24.5_101_15.5][type/entity_witch,vec_24.5_101_15.5])
+([type/entity_pillager,vec_24.5_101_15.5][type/entity_vindicator,vec_22.5_101_15.5][type/entity_witch,vec_20.5_101_15.5])
 for_each,pop
