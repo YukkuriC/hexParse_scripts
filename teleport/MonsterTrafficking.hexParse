@@ -1,0 +1,14 @@
+// requires moreiotas to rename
+
+// code
+(
+    splat,write/local
+    get_caster,entity_pos/foot,(32)splat,zone_entity/type,print
+    (
+        duplicate,(str_KEEP)splat,swap,string/name/set
+        duplicate,entity_pos/foot,read/local,swap,sub,teleport
+    )swap,for_each,pop
+)
+// targets
+([type/entity_pillager,vec_24.5_101_15.5][type/entity_vindicator,vec_24.5_101_15.5][type/entity_witch,vec_24.5_101_15.5])
+for_each,pop
