@@ -1,0 +1,6 @@
+// helper: pick teleport destination (requires hex_playground mind stack)
+mind_stack/size,num_0,greater
+\mind_stack/pop\empty_list,if,eval
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
+const/vec/py,num_2,div,add,print
+append,unique,print,mind_stack/push

@@ -1,0 +1,4 @@
+// pick tnt
+(type/entity_tnt,32)splat,get_caster,entity_pos/foot,swap,zone_entity/type
+(duplicate,entity_pos/foot,deconstruct_vec,mask_v-v
+const/vec/ny,mul,teleport)swap,for_each,pop

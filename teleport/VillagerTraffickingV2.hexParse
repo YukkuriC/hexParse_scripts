@@ -20,11 +20,3 @@ deconstruct_vec,mask_v-v,num_1.5,less
     (vec_6.5_101_15.5,vec_4.5_101_15.5,vec_2.5_101_15.5,vec_0.5_101_15.5,vec_0.5_101_13.5,vec_0.5_101_11.5)
     for_each,mask_v
 )if,eval
-
-
-// helper: pick teleport destination (requires hex_playground mind stack)
-mind_stack/size,num_0,greater
-\mind_stack/pop\empty_list,if,eval
-get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
-const/vec/py,num_2,div,add,print
-append,unique,print,mind_stack/push

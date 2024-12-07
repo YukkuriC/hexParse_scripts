@@ -17,9 +17,6 @@ comment_shift-click:pick-block
 (read/local,splat,raycast,duplicate,mind_stack/push)
 comment_normal:do-brainsweep
 (read/local,splat,raycast/entity
-mind_stack/pop,2dup,brainsweep,swap
-duplicate,type/entity,(type/entity_villager)splat,equals
-(duplicate,entity_pos/foot,(vec_13.5_118_26.5/* recycle location */)splat,swap,sub,teleport,pop)
-(swap,brainsweep)if,eval)
+mind_stack/pop,2dup,brainsweep,brainsweep)
 comment_eval
 if,eval
