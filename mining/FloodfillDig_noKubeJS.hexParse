@@ -1,0 +1,19 @@
+// requires moreiotas for block type cast
+
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast // init pos
+duplicate,type/to_item,swap,singleton comment_0-1_type_queue
+(
+    duplicate,bool_coerce
+    (comment_do-floodfill
+        deconstruct,duplicate,break_block // type,list,pos
+        (// type,list,pos,delta_vec
+            add,mask_v-
+            duplicate,type/to_item,rotate,equals
+            ()(pop)if,eval
+        )
+        (vec_1,vec_-1,vec_0_1,vec_0_-1,vec_0_0_1,vec_0_0_-1;vec_1_1_0,vec_1_-1_0,vec_-1_1_0,vec_-1_-1_0;vec_0_1_1,vec_0_1_-1,vec_0_-1_1,vec_0_-1_-1;vec_1_0_1,vec_-1_0_1,vec_1_0_-1,vec_-1_0_-1) // data
+        for_each,mask_v-,add,unique
+        read/local,eval
+    )( mask_vv comment_else-end )if,eval
+)comment_code
+duplicate,write/local,eval
