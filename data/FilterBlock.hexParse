@@ -1,0 +1,5 @@
+\_s comment_placeholder
+(
+    duplicate,type/to_item,(type/block_amethyst_block /* target type */)splat,equals
+    (mind_stack/push)(pop)if,eval
+)swap,for_each
