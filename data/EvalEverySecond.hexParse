@@ -1,0 +1,18 @@
+// delayed loop with stack storage with offhand read
+// requires hex_playground
+
+\[ /* initial stack */ ([])splat,splat ([
+        comment_code-body
+    ])splat,eval; stack_len,last_n_list ( comment_REPLACE_ME )splat
+    duplicate,(13)splat,swap,replace comment_build-next-eval
+    num_1,rotate,replace comment_store-stack
+    num_20,mind_env/schedule
+]
+readable,(
+    comment_schedule-offhand
+    read,print,num_6,swap,replace // read from offhand
+    duplicate,(13)splat,swap,replace,eval
+)(
+    comment_else-cancel
+    empty_list,num_0,mind_env/schedule
+)if,eval

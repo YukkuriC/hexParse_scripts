@@ -11,3 +11,12 @@
     ])splat,eval,( comment_REPLACE_ME )splat
     duplicate,num_6,swap,replace,num_10,mind_env/schedule
 ]duplicate,num_6,swap,replace,eval
+
+// delayed loop with stack storage, requires hex_playground
+\[ /* initial stack */ ([])splat,splat ([
+        comment_code-body
+    ])splat,eval; stack_len,last_n_list ( comment_REPLACE_ME )splat
+    duplicate,(13)splat,swap,replace comment_build-next-eval
+    num_1,rotate,replace comment_store-stack
+    num_20,mind_env/schedule
+]duplicate,(13)splat,swap,replace,eval
