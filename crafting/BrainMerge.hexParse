@@ -19,10 +19,7 @@ comment_normal:do-merge
 (
     duplicate
     mind_stack/pop,duplicate,mind_stack/push
-    brain_merge
-    duplicate,type/entity,(type/entity_villager)splat,equals
-    (duplicate,entity_pos/foot,(vec_13.5_118_26.5/* recycle location */)splat,swap,sub,teleport)
-    (mind_stack/pop,duplicate,mind_stack/push,brain_merge)if,eval
+    2dup,brain_merge,brain_merge
 )
 comment_eval
 if,eval
