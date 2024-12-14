@@ -3,7 +3,12 @@
 // stand to tp
 
 get_caster,entity_pos/eye get_caster,entity_pos/foot,sub deconstruct_vec,mask_v-v num_1.5,less comment_check-sneaking
-(get_caster,entity_pos/foot,mind_stack/push) comment_record-target-to-mind
+(
+    mind_stack/size,num_0,greater
+    ((mind_stack/pop)splat;mind_stack/size,duplicate_n,mind_stack/size,last_n_list,eval,sentinel/destroy) comment_cancel-selection
+    (get_caster,entity_pos/foot,duplicate,sentinel/create,mind_stack/push) comment_record-target-to-mind
+    if,eval
+)
 (get_caster,entity_pos/eye get_caster,get_entity_look raycast/entity
     duplicate,entity_pos/foot,mind_stack/pop,duplicate,mind_stack/push,swap,sub,teleport comment_tp-to-target
 ) if,eval
