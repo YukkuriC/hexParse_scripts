@@ -1,0 +1,5 @@
+get_caster,(60,1)splat
+(eval)
+(potion/regeneration,potion/absorption,potion/haste,potion/strength)
+for_each
+get_caster,num_60,potion/night_vision
