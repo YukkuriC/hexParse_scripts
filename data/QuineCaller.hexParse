@@ -1,29 +1,29 @@
 // manual eval each time, used in spell circles
 \[ ([ 
         // code body
-    ])splat,eval,( comment_REPLACE_ME )splat
+    ])splat,eval,( 114514/* replace me */ )splat
     duplicate,num_6,swap,replace
-]duplicate,num_6,swap,replace,eval
+]remove_comments,duplicate,num_6,swap,replace,eval
 
 // direct loop
 \[ ([ 
         // code body
-    ])splat,eval,( comment_REPLACE_ME )splat
+    ])splat,eval,( 114514/* replace me */ )splat
     duplicate,num_6,swap,replace,eval
-]duplicate,num_6,swap,replace,eval
+]remove_comments,duplicate,num_6,swap,replace,eval
 
 // delayed loop, requires hex_playground
 \[ ([ 
         // code body
-    ])splat,eval,( comment_REPLACE_ME )splat
+    ])splat,eval,( 114514/* replace me */ )splat
     duplicate,num_6,swap,replace,num_10,mind_env/schedule
-]duplicate,num_6,swap,replace,eval
+]remove_comments,duplicate,num_6,swap,replace,eval
 
 // delayed loop with stack storage, requires hex_playground
 \[ /* initial stack */ ([])splat,splat ([
         comment_code-body
-    ])splat,eval; stack_len,last_n_list ( comment_REPLACE_ME )splat
+    ])splat,eval; stack_len,last_n_list ( 114514/* replace me */ )splat
     duplicate,(13)splat,swap,replace comment_build-next-eval
     num_1,rotate,replace comment_store-stack
     num_20,mind_env/schedule
-]duplicate,(13)splat,swap,replace,eval
+]remove_comments,duplicate,(13)splat,swap,replace,eval
