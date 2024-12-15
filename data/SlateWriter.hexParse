@@ -9,9 +9,13 @@ get_caster,entity_pos/eye,get_caster,entity_pos/foot,sub,deconstruct_vec,mask_v-
         get_caster,entity_pos/eye,get_caster,get_entity_look,2dup
         raycast,rotate_reverse,raycast/axis,add
         place_block
-    )()if,eval
+    )(
+        writable(erase)()if,eval
+    )if,eval
 )if,eval
 
 
 // general slate exec code
-circle/bounds/max,get_entity,read/entity,charge_media/circle,eval
+charge_media/circle,circle/bounds/max,get_entity,read/entity,eval
+charge_media/circle,circle/bounds/min,get_entity,read/entity,eval
+charge_media/circle,circle/impetus_pos,const/vec/py,add,get_entity,read/entity,eval
