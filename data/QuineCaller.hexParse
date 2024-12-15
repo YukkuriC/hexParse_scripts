@@ -1,3 +1,10 @@
+// manual eval each time, used in spell circles
+\[ ([ 
+        // code body
+    ])splat,eval,( comment_REPLACE_ME )splat
+    duplicate,num_6,swap,replace
+]duplicate,num_6,swap,replace,eval
+
 // direct loop
 \[ ([ 
         // code body
