@@ -1,0 +1,10 @@
+// requires 1.20 moreiotas/1.19 hexal
+(
+    duplicate,duplicate,entity_pos/foot,(vec_4.5_101_-14.5)splat,swap,sub
+    teleport
+)
+\type/entity_item
+get_caster,entity_pos/foot
+\20
+zone_entity/type
+for_each

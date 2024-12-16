@@ -1,0 +1,12 @@
+// requires hex_playground
+
+\[ \[3]splat duplicate,num_0,greater
+    (
+        get_caster,entity_pos/eye,get_caster,get_entity_look(300)splat,mul
+        summon_arrow
+        num_1,sub,singleton comment_update-stack
+        mind_env/running_code,num_1,rotate,replace
+        comment_next-shot num_3,mind_env/schedule
+    )
+    (halt) if,eval
+]remove_comments,num_0,mind_env/schedule
