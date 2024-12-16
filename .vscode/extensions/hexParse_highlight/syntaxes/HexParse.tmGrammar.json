@@ -2,83 +2,154 @@
     "scopeName": "source.HexParse",
     "patterns": [
         {
-            "include": "#expression"
+            "include": "#TOTAL"
         }
     ],
     "repository": {
-        "expression": {
+        "TOTAL": {
             "patterns": [
                 {
-                    "match": "\\/\\/.*",
-                    "name": "comment"
+                    "name": "comment.line",
+                    "match": "//.*$"
                 },
                 {
-                    "begin": "\\/\\*",
-                    "end": "\\*\\/",
+                    "name": "comment.multiline",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                },
+                {
+                    "name": "nested.list",
+                    "begin": "\\[",
+                    "end": "\\]",
                     "beginCaptures": {
                         "0": {
-                            "name": "comment.paren.open"
+                            "name": "keyword.control.nested.left"
                         }
                     },
                     "endCaptures": {
                         "0": {
-                            "name": "comment.paren.close"
+                            "name": "keyword.control.nested.right"
                         }
                     },
-                    "name": "comment.multiline"
-                },
-                {
-                    "match": "comment_.*?(?=\\s|$)",
-                    "name": "comment.iota"
-                },
-                {
-                    "match": "tab(_.*?(?=\\s|$))?",
-                    "name": "comment.iota.tab"
-                },
-                {
-                    "match": "num(_[0-9e.\\-]+)?",
-                    "name": "num.pattern"
-                },
-                {
-                    "match": "[0-9.\\-]+(e[0-9.\\-]+)?",
-                    "name": "num"
-                },
-                {
-                    "match": "vec(_[0-9e.\\-]+){0,3}",
-                    "name": "vec"
-                },
-                {
-                    "begin": "\\(|\\[",
-                    "end": "\\)|\\]",
-                    "beginCaptures": {
-                        "0": {
-                            "name": "punctuation.paren.open"
-                        }
-                    },
-                    "endCaptures": {
-                        "0": {
-                            "name": "punctuation.paren.close"
-                        }
-                    },
-                    "name": "expression.group",
                     "patterns": [
                         {
-                            "include": "#expression"
+                            "include": "#TOTAL"
                         }
                     ]
                 },
                 {
-                    "match": "\\\\|escape",
-                    "name": "string.escape"
+                    "include": "#comment_iota"
+                },
+                {
+                    "include": "#special_handler"
+                },
+                {
+                    "include": "#literal"
                 },
                 {
                     "include": "#pattern"
                 }
             ]
         },
+        "comment_iota": {
+            "patterns": [
+                {
+                    "name": "comment.iota",
+                    "match": "comment_.*?(?![\\w:/\\.\\-])"
+                },
+                {
+                    "name": "comment.iota.tab",
+                    "match": "tab(_.*?(?![\\w:/\\.\\-]))?"
+                }
+            ]
+        },
+        "special_handler": {
+            "patterns": [
+                {
+                    "name": "keyword.vector.literal",
+                    "begin": "vec(?=(_[0-9e.\\-]+){0,3}(?![\\w:/\\.\\-]))",
+                    "end": "(?![\\w:/\\.\\-])",
+                    "patterns": [
+                        {
+                            "include": "#num"
+                        }
+                    ]
+                },
+                {
+                    "name": "keyword.num.pattern",
+                    "begin": "num(?=(_[0-9e.\\-]+)?(?![\\w:/\\.\\-]))",
+                    "end": "(?![\\w:/\\.\\-])",
+                    "patterns": [
+                        {
+                            "include": "#num"
+                        }
+                    ]
+                },
+                {
+                    "name": "keyword.mask",
+                    "match": "mask_[-v]+"
+                }
+            ]
+        },
+        "literal": {
+            "patterns": [
+                {
+                    "name": "constant.character.escape",
+                    "match": "\\\\"
+                },
+                {
+                    "name": "string.literal",
+                    "match": "str_[\\w:/\\.\\-]+"
+                },
+                {
+                    "name": "entity.name.type.class.myself",
+                    "match": "(?<![\\w:/\\.\\-])(([Mm][Yy])?[Ss][Ee][Ll][Ff])(?![\\w:/\\.\\-])"
+                },
+                {
+                    "name": "constant.numeric.literal",
+                    "match": "(?<![\\w:/\\.\\-])[0-9.\\-]+(e[0-9.\\-]+)?(?![\\w:/\\.\\-])"
+                }
+            ]
+        },
         "pattern": {
-            "match": "\\\\|[\\w\\.\\/\\-\\:]+",
-            "name": "keyword.pattern"
+            "patterns": [
+                {
+                    "name": "paren.list",
+                    "begin": "\\(",
+                    "end": "\\)",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "keyword.control.paren.left"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "keyword.control.paren.right"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#TOTAL"
+                        }
+                    ]
+                },
+                {
+                    "name": "keyword.control.meta",
+                    "match": "(?<![\\w:/\\.\\-])(if|eval(/cc)?|for_each|halt)(?![\\w:/\\.\\-])"
+                },
+                {
+                    "name": "variable.pattern",
+                    "match": "[\\w:/\\.\\-]+"
+                }
+            ]
+        },
+        "num": {
+            "patterns": [
+                {
+                    "name": "constant.numeric",
+                    "match": "[0-9.\\-]+(e[0-9.\\-]+)?"
+                }
+            ]
         }
     }
 }

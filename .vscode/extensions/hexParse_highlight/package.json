@@ -1,6 +1,6 @@
 {
     "name": "hexparse_highlight",
-    "version": "114.514.1919",
+    "version": "0.5",
     "displayName": "HexParse Highlight Extension",
     "engines": {
         "vscode": "^0.0"
