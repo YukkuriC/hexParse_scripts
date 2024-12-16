@@ -6,7 +6,7 @@ comment_wisp.code
     duplicate
         type/iota \type_entity equals   comment_if.hit.entity
         \entity_pos/foot comment_pick.foot
-        \comment_else.at.hit.location if
+        \[/* else do nothing */] if
     eval
     lightning                           comment_do.strike
 ]
