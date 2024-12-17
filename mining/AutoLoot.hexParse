@@ -1,0 +1,25 @@
+// requires moreiotas to do type filter
+// and hexparse to remove comments
+
+\[[-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8]]
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
+duplicate,sentinel/create/great,append
+write/local
+\[\[\[
+            construct_vec,read/local,num_1,index,add
+            duplicate,type/to_item,duplicate
+            \type/block_chest,equals
+            swap,\type/block_barrel,equals,or
+            \[
+                duplicate,print
+                break_block
+                \[2,type/entity_item]splat,rotate_reverse,zone_entity/type,print
+                \[
+                    duplicate,duplicate,entity_pos/foot\vec_4.5_101_-14.5,swap,sub
+                    teleport/great
+                ]swap,for_each
+            ]empty_list,if,eval
+        ]read/local,num_0,index,for_each,mask_vvv
+    ]read/local,num_0,index,for_each,mask_vv
+]remove_comments,read/local,num_0,index,for_each,mask_v
+sentinel/destroy
