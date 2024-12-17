@@ -1,17 +1,23 @@
 {
     "name": "hexparse_highlight",
-    "version": "0.5",
+    "version": "0.5.0",
     "displayName": "HexParse Highlight Extension",
+    "icon": "icon.webp",
     "engines": {
         "vscode": "^0.0"
     },
+    "publisher": "YukkuriC",
     "contributes": {
         "languages": [
             {
                 "id": "HexParse",
                 "extensions": [
                     ".hexParse"
-                ]
+                ],
+                "icon": {
+                    "dark": "icon.webp",
+                    "light": "icon.webp"
+                }
             }
         ],
         "grammars": [
