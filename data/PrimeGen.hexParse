@@ -1,0 +1,25 @@
+(2)
+\[
+    comment_DO
+    \3 comment_pos1-iterator
+    \[
+        comment_prime-judger
+        num_1,fisherman/copy
+        \[
+            mask_v--
+            modulo,bool_coerce
+        ]swap,for_each
+        comment_reduce-n-1
+        duplicate,unappend,mask_v
+        \[mask_vvvv,\and]swap,for_each,\splat,construct,eval
+        \[append,mask_v]splat,if,eval
+    ]eval
+    \[]comment_pos6-quine-entry duplicate
+    comment_WHILE
+    duplicate,num_1,index,duplicate,\200,less
+    \[[
+        num_1,add,num_1,swap,replace
+        num_6,swap,replace,eval
+    ]mask_vvv]splat,if,eval
+]remove_comments
+duplicate,num_6,swap,replace,eval
