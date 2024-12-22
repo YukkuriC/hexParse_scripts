@@ -1,10 +1,7 @@
 // requires hex_playground for mind stack read-write
 
 comment_check-sneaking
-get_caster,entity_pos/eye
-get_caster,entity_pos/foot,sub
-deconstruct_vec,mask_v-v
-num_1.5,less
+get_caster,get_entity_height,num_1.75,less
 comment_shift:do-dig
 (
     yc:mind_stack/pop,yc:mind_stack/pop

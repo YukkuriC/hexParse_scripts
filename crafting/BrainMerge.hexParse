@@ -7,12 +7,7 @@ comment_halt-if-no-target
 duplicate,bool_coerce,\print,\halt,if,eval
 
 comment_check-sneaking
-(
-    get_caster,entity_pos/eye
-    get_caster,entity_pos/foot,sub
-    deconstruct_vec,mask_v-v
-    num_1.5,less
-)eval
+get_caster,get_entity_height,num_1.75,less
 comment_shift-click:select-target
 (mind_stack/push)
 comment_normal:do-merge

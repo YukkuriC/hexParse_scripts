@@ -2,7 +2,7 @@
 // sneak to set location
 // stand to tp
 
-get_caster,entity_pos/eye get_caster,entity_pos/foot,sub deconstruct_vec,mask_v-v num_1.5,less comment_check-sneaking
+get_caster,get_entity_height,num_1.75,less comment_check-sneaking
 (
     mind_stack/size,num_0,greater
     ((mind_stack/pop)splat;mind_stack/size,duplicate_n,mind_stack/size,last_n_list,eval,sentinel/destroy) comment_cancel-selection
