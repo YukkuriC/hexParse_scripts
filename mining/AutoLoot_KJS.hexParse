@@ -1,57 +1,37 @@
-\[
-    comment_1.boom-all-block-entities
+\[  comment_1.boom-all-block-entities
     get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
     duplicate,sentinel/create/great
     \16,zone_block_entity
-    \[
-        comment_judge-type
-        \[swap,type/to_item,equals]
-        \[
+    \[  comment_judge-type
+        duplicate,type/to_item,\[
             type/block_chest,type/block_trapped_chest,type/block_barrel,type/block_dispenser
             type/block_spawner,type/block_sculk_sensor,type/block_sculk_shrieker
-        ]for_each
-        comment_auto-or-together
-        duplicate,list_size,num_1,sub,write/local
-        splat,\or,read/local,duplicate_n,read/local,last_n_list,eval
-        \[
-            duplicate,print
+        ]swap,index_of,num_0,greater_eq
+        \[  duplicate,print
             break_block
             \[2,type/entity_item]splat,rotate_reverse,zone_entity/type
             duplicate,list_size,num_0,greater
-            \[
-                \[
-                    duplicate,duplicate,entity_pos/foot,\vec_4.5_101_-14.5,swap,sub
-                    teleport
-                ]swap,for_each,mask_v
-            ]
-            \mask_v,if,eval
-        ]
-        \mask_v,if,eval
-    ]swap,for_each,mask_v
+            \[  \[  duplicate,duplicate,entity_pos/foot,\vec_4.5_101_-14.5,swap,sub
+                    teleport ]swap,for_each,pop ]
+            \pop,if,eval ]
+        \pop,if,eval
+    ]swap,for_each,pop
     comment_2.collect-all-killables
-    \[
-        duplicate,duplicate,entity_pos/foot,sentinel/get_pos,swap,sub,teleport
-        \114514,punch_entity
-    ]
-    \[eval,for_each,mask_v]
-    \[
-        [\type/entity_chest_minecart,sentinel/get_pos,\16,zone_entity/type]
+    \[  duplicate,duplicate,entity_pos/foot,sentinel/get_pos,swap,sub,teleport
+        \114514,punch_entity ]
+    \[eval,for_each,pop]
+    \[  [\type/entity_chest_minecart,sentinel/get_pos,\16,zone_entity/type]
         [sentinel/get_pos,\16,zone_entity/monster]
-        [sentinel/get_pos,\16,zone_entity/animal]
-    ]for_each,mask_vv
+        [sentinel/get_pos,\16,zone_entity/animal] ]for_each,mask_vv
     comment_3.collect-dropped-items
     \type/entity_item,sentinel/get_pos,\16,zone_entity/type
-    \[
-        duplicate,duplicate,entity_pos/foot,\vec_4.5_101_-14.5,swap,sub
-        teleport
-    ]swap,for_each,mask_v
+    \[  duplicate,duplicate,entity_pos/foot,\vec_4.5_101_-14.5,swap,sub
+        teleport ]swap,for_each,pop
     comment_4.collect-exp-orbs
     \type/entity_experience_orb,sentinel/get_pos,\16,zone_entity/type
-    \[
-        duplicate,duplicate,entity_pos/foot
+    \[  duplicate,duplicate,entity_pos/foot
         get_caster,entity_pos/eye,const/vec/py,add
-        swap,sub,teleport
-    ]swap,for_each,mask_v
+        swap,sub,teleport ]swap,for_each,pop
     comment_end
     sentinel/destroy
 ]remove_comments,eval
