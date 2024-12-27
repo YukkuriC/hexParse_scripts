@@ -1,0 +1,31 @@
+// quine version
+get_caster,entity_pos/foot,singleton
+comment_gen-list
+\[\3,write/local comment_0-2
+    \[  \[  \[read/local,mul,add]
+            \[vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1]
+            for_each,mask_v-,splat
+        ]swap,for_each
+    ]eval comment_3-5
+    \[] comment_inject-at-7
+    read/local,\1,greater
+    \[  comment_eval-and-quine
+        duplicate,\7,swap,replace
+        read/local,\3,div,\1,swap,replace
+        eval
+    ]\mask_v,if,eval
+]remove_comments
+duplicate,\7,swap,replace,eval
+comment_place-all
+(place_block)swap,for_each,mask_v
+
+
+// 1.20 CC looping version
+\[write/local,\3,get_caster,entity_pos/foot,singleton]eval/cc
+comment_do-split
+\[\[rotate,mul,add]
+    \[vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1]for_each,mask_vv-,splat
+]swap,for_each
+comment_while-i-less-1
+swap,num_3,div,duplicate,rotate_reverse
+num_1,greater_eq,\[read/local,eval]\[(place_block),swap,for_each,mask_v]if,eval
