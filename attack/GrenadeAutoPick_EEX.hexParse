@@ -62,7 +62,7 @@ charge_media
     wisp/self,entity_pos/eye
     wisp/media,\3.2,sub
     wisp/summon/ticking
-]
+],remove_comments
 get_caster,entity_pos/eye
 get_caster,get_entity_look,\5,mul_dot
 \595
