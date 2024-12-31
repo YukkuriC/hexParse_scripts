@@ -1,0 +1,5 @@
+// fixed gate
+\gate_0_-70_0,(gate/mark),rotate,for_each,pop,gate/close
+
+// unstable gate
+\gate,(gate/mark),rotate,for_each,pop,\vec_0_120_0,gate/close
