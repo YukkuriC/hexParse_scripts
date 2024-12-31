@@ -1,5 +1,6 @@
-// requires hex_playground & moreiotas
+// requires hex_playground & hexal & moreiotas
 
+\gate_4.5_101_-14.5,write/local
 \[  comment_1.boom-all-block-entities
     get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
     duplicate,sentinel/create/great
@@ -12,28 +13,22 @@
         \[  duplicate,print
             break_block
             \[2,type/entity_item]splat,rotate_reverse,zone_entity/type
-            duplicate,list_size,num_0,greater
-            \[  \[  duplicate,duplicate,entity_pos/foot,\vec_4.5_101_-14.5,swap,sub
-                    teleport ]swap,for_each,pop ]
-            \pop,if,eval ]
+            read/local,(gate/mark),rotate,for_each,pop,gate/close ]
         \pop,if,eval
     ]swap,for_each,pop
     comment_2.collect-all-killables
-    \[  duplicate,duplicate,entity_pos/foot,sentinel/get_pos,swap,sub,teleport
-        \114514,punch_entity ]
+    \gate \[duplicate; rotate,swap,gate/mark; \114514,punch_entity]
     \[eval,for_each,pop]
     \[  [\type/entity_chest_minecart,sentinel/get_pos,\16,zone_entity/type]
         [sentinel/get_pos,\16,zone_entity/monster]
         [sentinel/get_pos,\16,zone_entity/animal] ]for_each,mask_vv
+    sentinel/get_pos,gate/close
     comment_3.collect-dropped-items
     \type/entity_item,sentinel/get_pos,\16,zone_entity/type
-    \[  duplicate,duplicate,entity_pos/foot,\vec_4.5_101_-14.5,swap,sub
-        teleport ]swap,for_each,pop
+    read/local,(gate/mark),rotate,for_each,pop,gate/close
     comment_4.collect-exp-orbs
     \type/entity_experience_orb,sentinel/get_pos,\16,zone_entity/type
-    \[  duplicate,duplicate,entity_pos/foot
-        get_caster,entity_pos/eye,const/vec/py,add
-        swap,sub,teleport ]swap,for_each,pop
+    \gate_0_1_0_self,(gate/mark),rotate,for_each,pop,gate/close
     comment_end
     sentinel/destroy
 ]remove_comments,eval
