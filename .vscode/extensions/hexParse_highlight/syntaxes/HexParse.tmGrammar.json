@@ -76,6 +76,16 @@
                     ]
                 },
                 {
+                    "name": "keyword.gate.literal",
+                    "begin": "gate(?=(_.+){0,4}(?![\\w:/\\.\\-]))",
+                    "end": "(?![\\w:/\\.\\-])",
+                    "patterns": [
+                        {
+                            "include": "#inner_literal"
+                        }
+                    ]
+                },
+                {
                     "name": "keyword.num.pattern",
                     "begin": "num(?=(_[0-9e.\\-]+)?(?![\\w:/\\.\\-]))",
                     "end": "(?![\\w:/\\.\\-])",
@@ -102,7 +112,7 @@
                     "match": "str_[\\w:/\\.\\-]+"
                 },
                 {
-                    "name": "entity.name.type.class.myself",
+                    "name": "entity.name.type.literal.myself",
                     "match": "(?<![\\w:/\\.\\-])(([Mm][Yy])?[Ss][Ee][Ll][Ff])(?![\\w:/\\.\\-])"
                 },
                 {
@@ -148,6 +158,17 @@
                 {
                     "name": "constant.numeric",
                     "match": "[0-9.\\-]+(e[0-9.\\-]+)?"
+                }
+            ]
+        },
+        "inner_literal": {
+            "patterns": [
+                {
+                    "name": "entity.name.type.myself",
+                    "match": "([Mm][Yy])?[Ss][Ee][Ll][Ff]"
+                },
+                {
+                    "include": "#num"
                 }
             ]
         }
