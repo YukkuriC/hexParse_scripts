@@ -1,0 +1,6 @@
+// requires: hexal
+
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast
+duplicate,falling_block
+const/vec/ny,add
+const/vec/ny,raycast,const/vec/py,add,conjure_light
