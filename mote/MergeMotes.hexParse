@@ -1,0 +1,11 @@
+(   mote/contained/get
+    comment_reduce-merge
+    const/null,write/local
+    (   read/local,bool_coerce
+        (read/local,swap,add)
+        (write/local)
+        if,eval
+    )swap,for_each,pop
+    read/local
+)
+mote/contained_type/get,for_each
