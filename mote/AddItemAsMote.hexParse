@@ -1,0 +1,6 @@
+// simple
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast/entity; mote/make
+
+// with combine
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast/entity;mote/make
+duplicate,mote/contained/get,(add)swap,for_each,pop
