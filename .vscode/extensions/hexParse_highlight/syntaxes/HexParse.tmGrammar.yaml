@@ -1,0 +1,87 @@
+scopeName: source.HexParse
+patterns:
+- include: '#TOTAL'
+repository:
+  TOTAL:
+    patterns:
+    - match: //.*$
+      name: comment.line
+    - begin: /\*
+      end: \*/
+      name: comment.multiline
+    - begin: \[
+      beginCaptures:
+        '0':
+          name: keyword.control.nested.left
+      end: \]
+      endCaptures:
+        '0':
+          name: keyword.control.nested.right
+      name: nested.list
+      patterns:
+      - include: '#TOTAL'
+    - include: '#comment_iota'
+    - include: '#special_handler'
+    - include: '#literal'
+    - include: '#pattern'
+  comment_iota:
+    patterns:
+    - match: comment_.*?(?![\w:/\.\-])
+      name: comment.iota
+    - match: tab(_.*?(?![\w:/\.\-]))?
+      name: comment.iota.tab
+  inner_literal:
+    patterns:
+    - match: ([Mm][Yy])?[Ss][Ee][Ll][Ff]
+      name: entity.name.type.myself
+    - include: '#num'
+  literal:
+    patterns:
+    - match: \\
+      name: constant.character.escape
+    - match: str_[\w:/\.\-]+
+      name: string.literal
+    - match: (?<![\w:/\.\-])(([Mm][Yy])?[Ss][Ee][Ll][Ff])(?![\w:/\.\-])
+      name: entity.name.type.literal.myself
+    - match: (?<![\w:/\.\-])[0-9.\-]+(e[0-9.\-]+)?(?![\w:/\.\-])
+      name: constant.numeric.literal
+  num:
+    patterns:
+    - match: '[0-9.\-]+(e[0-9.\-]+)?'
+      name: constant.numeric
+  pattern:
+    patterns:
+    - begin: \(
+      beginCaptures:
+        '0':
+          name: keyword.control.paren.left
+      end: \)
+      endCaptures:
+        '0':
+          name: keyword.control.paren.right
+      name: paren.list
+      patterns:
+      - include: '#TOTAL'
+    - match: (?<![\w:/\.\-])(if|eval(/cc)?|for_each|halt)(?![\w:/\.\-])
+      name: keyword.control.meta
+    - match: '[\w:/\.\-]+'
+      name: variable.pattern
+  special_handler:
+    patterns:
+    - begin: vec(?=(_[0-9e.\-]+){0,3}(?![\w:/\.\-]))
+      end: (?![\w:/\.\-])
+      name: keyword.vector.literal
+      patterns:
+      - include: '#num'
+    - begin: gate(?=(_.+){0,4}(?![\w:/\.\-]))
+      end: (?![\w:/\.\-])
+      name: keyword.gate.literal
+      patterns:
+      - include: '#inner_literal'
+    - begin: num(?=(_[0-9e.\-]+)?(?![\w:/\.\-]))
+      end: (?![\w:/\.\-])
+      name: keyword.num.pattern
+      patterns:
+      - include: '#num'
+    - match: mask_[-v]+
+      name: keyword.mask
