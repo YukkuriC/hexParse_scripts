@@ -1,6 +1,8 @@
 // requires hex_playground & hexal & moreiotas
 
-\gate_4.5_101_-14.5,write/local
+comment_record-mote-setter
+(mote/make,duplicate,mote/contained/get(add)swap,for_each,pop)write/local
+comment_init-pos
 get_caster,entity_pos/eye,sentinel/create
 \[  comment_0.step-sentinel
     sentinel/get_pos,add,sentinel/create/great
@@ -13,8 +15,8 @@ get_caster,entity_pos/eye,sentinel/create
         ]swap,index_of,num_0,greater_eq
         \[  duplicate,print
             break_block
-            \[2,type/entity_item]splat,rotate_reverse,zone_entity/type
-            read/local,(gate/mark),rotate,for_each,pop,gate/close ]
+            \2,zone_entity/item
+            read/local,swap,for_each,pop]
         \pop,if,eval
     ]swap,for_each,pop
     comment_2.collect-all-killables
@@ -25,11 +27,11 @@ get_caster,entity_pos/eye,sentinel/create
         [sentinel/get_pos,\16,zone_entity/animal] ]for_each,mask_vv
     sentinel/get_pos,gate/close
     comment_3.collect-dropped-items
-    \type/entity_item,sentinel/get_pos,\16,zone_entity/type
-    read/local,(gate/mark),rotate,for_each,pop,gate/close
+    sentinel/get_pos,\16,zone_entity/item
+    read/local,swap,for_each,pop
     comment_4.collect-exp-orbs
     \type/entity_experience_orb,sentinel/get_pos,\16,zone_entity/type
     \gate_0_1_0_self,(gate/mark),rotate,for_each,pop,gate/close
 ]remove_comments
-get_caster,get_entity_look,num_15,mul; num_10,duplicate_n,num_10,last_n_list
-for_each,pop comment_end sentinel/destroy
+get_caster,get_entity_look,num_15,mul,num_10,duplicate_n,num_10,last_n_list
+for_each,pop,comment_end,sentinel/destroy
