@@ -1,3 +1,7 @@
 (   mote/contained/get
-    unappend,(add),rotate,for_each,pop)
+    (   duplicate,bool_coerce
+        (mote/contained/get())unappend,pop,splat,if,eval
+        unappend(add)rotate,for_each,pop
+    )swap,for_each
+)
 mote/contained_type/get,for_each
