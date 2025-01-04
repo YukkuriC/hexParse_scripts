@@ -1,0 +1,9 @@
+// expected: [0,1,2,3,4]
+// input: \5
+(empty_list,rotate)eval/cc // cc, list, num
+num_1,sub // cc, list, num-1
+duplicate,num_0,greater_eq // cc, list, num-1, if
+(   duplicate,rotate_reverse,construct,swap
+    num_2,fisherman/copy,eval)
+(mask_v-v)
+if,eval
