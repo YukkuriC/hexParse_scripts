@@ -29,3 +29,22 @@ comment_do-split
 comment_while-i-less-1
 swap,num_3,div,duplicate,rotate_reverse
 num_1,greater_eq,\[read/local,eval]\[(place_block),swap,for_each,mask_v]if,eval
+
+// recursion & hexal mote version
+(   ([comment_CODE,comment_DIST,comment_CENTER])splat,splat
+    num_1,fisherman/copy,print,num_1,greater_eq
+    (   (   // code,dist,center,offset
+            num_2,fisherman/copy,mul,add
+            swap,num_3,div,swap
+            num_2,fisherman/copy,rotate_reverse
+            num_3,last_n_list,num_1,swap,replace,eval
+        )
+        (vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1)for_each,mask_vvvv
+    )( 
+        read/local,swap,place_type,mask_vv
+    )if,eval
+)remove_comments
+comment_pick-mote
+\type/block_iron_block,mote/contained/get,\0,index,write/local
+duplicate,\9,get_caster,entity_pos/eye
+num_3,last_n_list,num_1,swap,replace,eval
