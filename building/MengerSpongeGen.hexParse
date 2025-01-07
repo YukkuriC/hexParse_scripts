@@ -1,24 +1,23 @@
 // quine version
 get_caster,entity_pos/foot,singleton
+\3,write/local
 comment_gen-list
-\[\3,write/local comment_0-2
-    \[  \[  \[read/local,mul,add]
+\[  \[  \[  \[read/local,mul,add]
             \[vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1]
             for_each,mask_v-,splat
         ]swap,for_each
-    ]eval comment_3-5
-    \[] comment_inject-at-7
+    ]eval comment_0-2
+    \[] comment_inject-at-4
     read/local,\1,greater
     \[  comment_eval-and-quine
-        duplicate,\7,swap,replace
-        read/local,\3,div,\1,swap,replace
+        duplicate,\4,swap,replace
+        read/local,\3,div,write/local
         eval
-    ]\mask_v,if,eval
+    ]\pop,if,eval
 ]remove_comments
-duplicate,\7,swap,replace,eval
+duplicate,\4,swap,replace,eval
 comment_place-all
-(place_block)swap,for_each,mask_v
-
+(place_mageblock)swap,for_each,pop
 
 // 1.20 CC looping version
 \[write/local,\3,get_caster,entity_pos/foot,singleton]eval/cc
@@ -28,23 +27,39 @@ comment_do-split
 ]swap,for_each
 comment_while-i-less-1
 swap,num_3,div,duplicate,rotate_reverse
-num_1,greater_eq,\[read/local,eval]\[(place_block),swap,for_each,mask_v]if,eval
+num_1,greater_eq,\[read/local,eval]\[(place_mageblock),swap,for_each,pop]if,eval
 
-// recursion & hexal mote version
+// recursion version
 (   ([comment_CODE,comment_DIST,comment_CENTER])splat,splat
-    num_1,fisherman/copy,print,num_1,greater_eq
+    num_1,fisherman/copy,num_1,greater_eq
     (   (   // code,dist,center,offset
             num_2,fisherman/copy,mul,add
             swap,num_3,div,swap
             num_2,fisherman/copy,rotate_reverse
             num_3,last_n_list,num_1,swap,replace,eval
         )
-        (vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1)for_each,mask_vvvv
+        (vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1)
+        for_each,mask_vvvv
     )( 
-        read/local,swap,place_type,mask_vv
+        place_mageblock,mask_vv
     )if,eval
 )remove_comments
-comment_pick-mote
-\type/block_iron_block,mote/contained/get,\0,index,write/local
 duplicate,\9,get_caster,entity_pos/eye
 num_3,last_n_list,num_1,swap,replace,eval
+
+// recursion 2
+\9,get_caster,entity_pos/eye
+(   comment_DIST,comment_CENTER
+    over,num_1,greater_eq
+    (   (   // dist,center,offset
+            num_2,fisherman/copy,mul,add
+            swap,num_3,div,swap
+            over,num_1,greater_eq
+            (read/local,eval)
+            (place_mageblock,pop)if,eval
+        )
+        (vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1)
+        for_each,mask_vvv
+    )(mask_vv)if,eval
+)remove_comments,write/local
+read/local,eval
