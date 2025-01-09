@@ -1,0 +1,30 @@
+// 法术环版，一批20块
+(   stack_len,bool_coerce
+    (   comment_1.do-menger
+        duplicate,num_1,index,num_3,greater_eq
+        (   comment_split-menger splat
+            ((vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1))eval/cc // center,step,jump,offsets
+            duplicate,bool_coerce
+            (   deconstruct,(64)splat,swizzle,2dup // jump,offsets  o,center,step,center,step
+                num_4,fisherman,mul,add
+                over,num_3,div,num_2,last_n_list
+                (112)splat,swizzle,over,eval
+            )
+            (mask_vvvv)if,eval
+        )
+        (   comment_remote-put-block
+            num_0,index
+            (   (str_TARGET)splat,wisp/self,entity_pos/foot,sub,teleport
+                wisp/self,entity_pos/foot
+                (add,place_mageblock)
+                (vec_-1_-1_-1,vec_-1_-1,vec_-1_-1_1,vec_-1_0_-1,vec_-1_0_1,vec_-1_1_-1,vec_-1_1,vec_-1_1_1,vec_0_-1_-1,vec_0_-1_1,vec_0_1_-1,vec_0_1_1,vec_1_-1_-1,vec_1_-1,vec_1_-1_1,vec_1_0_-1,vec_1_0_1,vec_1_1_-1,vec_1_1,vec_1_1_1)
+                for_each,pop
+                wisp/self,wisp/consume
+            ),num_1,rotate,replace,print
+            get_caster,entity_pos/foot,(1000)splat,wisp/summon/ticking
+        )if,eval
+        comment_2.loop read/local,charge_media/circle,comment_eval-next-step
+    )empty_list,if,eval
+)remove_comments,write/local
+(vec_100.5_150.5_-50.5,27)
+read/local,eval
