@@ -1,0 +1,11 @@
+// requires moreiotas for string
+
+// pearl version
+string/chat/prefix/get,\str_TP,equals
+\[  (string/parse)string/chat/caster,string/comma,string/split,for_each,splat,construct_vec
+    \type/entity_ender_pearl,get_caster,entity_pos/eye,\10,zone_entity/type,num_0,index
+    duplicate,duplicate,get_entity_velocity,num_-1,mul,add_motion
+    tuck,entity_pos/foot,sub,teleport
+    const/null,string/chat/prefix/set
+]
+\[\str_TP,print,string/chat/prefix/set]if,eval
