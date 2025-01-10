@@ -1,11 +1,12 @@
 // requires hex_playground & hexal & moreiotas
 
 comment_record-mote-setter
-(mote/make,duplicate,mote/contained/get(add)swap,for_each,pop)write/local
+(comment_FX duplicate,entity_pos/foot,sentinel/get_pos,num_2,last_n_list,particles; mote/make)write/local
 comment_init-pos
 get_caster,entity_pos/eye,sentinel/create
 \[  comment_0.step-sentinel
-    sentinel/get_pos,add,sentinel/create/great
+    sentinel/get_pos,add
+    comment_FX duplicate,particles,duplicate,sentinel/get_pos,num_2,last_n_list,particles; sentinel/create/great
     comment_1.boom-all-block-entities
     sentinel/get_pos,\16,zone_block_entity
     \[  comment_judge-type
@@ -13,19 +14,18 @@ get_caster,entity_pos/eye,sentinel/create
             type/block_chest,type/block_trapped_chest,type/block_barrel,type/block_dispenser
             type/block_spawner,type/block_sculk_sensor,type/block_sculk_shrieker
         ]swap,index_of,num_0,greater_eq
-        \[  duplicate,print
+        \[  duplicate,print comment_FX duplicate,sentinel/get_pos,num_2,last_n_list,particles
             break_block
             \2,zone_entity/item
             read/local,swap,for_each,pop]
         \pop,if,eval
     ]swap,for_each,pop
     comment_2.collect-all-killables
-    \gate \[duplicate; rotate,swap,gate/mark; \114514,punch_entity]
+    \[comment_FX duplicate,entity_pos/foot,sentinel/get_pos,num_2,last_n_list,particles \114514,punch_entity]
     \[eval,for_each,pop]
     \[  [\type/entity_chest_minecart,sentinel/get_pos,\16,zone_entity/type]
         [sentinel/get_pos,\16,zone_entity/monster]
         [sentinel/get_pos,\16,zone_entity/animal] ]for_each,mask_vv
-    sentinel/get_pos,gate/close
     comment_3.collect-dropped-items
     sentinel/get_pos,\16,zone_entity/item
     read/local,swap,for_each,pop
@@ -34,4 +34,4 @@ get_caster,entity_pos/eye,sentinel/create
     \gate_0_1_0_self,(gate/mark),rotate,for_each,pop,gate/close
 ]remove_comments
 get_caster,get_entity_look,num_15,mul,num_10,duplicate_n,num_10,last_n_list
-for_each,pop,comment_end,sentinel/destroy
+for_each,pop,sentinel/destroy
