@@ -1,0 +1,6 @@
+(   (write,mask_v--v--v /* don't continue this time */)eval/cc
+    (str_ENTITY)splat comment_idx-6
+    (str_CODE)splat,eval comment_idx-10
+)remove_comments
+num_6,get_caster,entity_pos/eye;get_caster,get_entity_look,raycast/entity,replace
+num_10,read,replace,eval
