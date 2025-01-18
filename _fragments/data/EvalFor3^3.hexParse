@@ -1,4 +1,33 @@
+// thoth spread
 (vec)
 \[(add)\[vec_1,vec_-1]for_each,splat]swap,for_each
 \[(add)\[vec_0_1,vec_0_-1]for_each,splat]swap,for_each
 \[(add)\[vec_0_0_1,vec_0_0_-1]for_each,splat]swap,for_each
+
+// raven & thoth
+(-1,0,1),write/local
+(((construct_vec)read/local,for_each,mask_vv-,splat)read/local,for_each,mask_v-,splat)read/local,for_each
+
+// pure thoth
+(-1,0,1)
+(eval,(mul),rotate,for_each,mask_v-)
+(const/vec/px,const/vec/py,const/vec/pz),for_each,mask_v-,splat
+(   // list,list,vec
+    rotate_reverse,( // vec,list,vec
+        swap,(add,add)swap,for_each,mask_vv-,splat
+    )swap,for_each,mask_vv-,splat
+)swap,for_each,mask_vv-
+
+// pure thoth with stack pollution
+(str_stack,comment_pollution)splat
+comment_--------------------------
+(-1,0,1)
+(
+    pop,stack_len,last_n_list,unappend,mask_v-
+    duplicate,duplicate
+    (   // list,list,i
+        rotate_reverse,( // i,list,i
+            swap,(construct_vec)swap,for_each,mask_vv-,splat
+        )swap,for_each,mask_vv-,splat
+    )swap,for_each,mask_vv-
+)(str_foo)for_each,mask_v-,splat
