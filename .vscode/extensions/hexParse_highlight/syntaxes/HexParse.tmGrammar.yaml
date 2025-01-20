@@ -55,8 +55,10 @@ repository:
     patterns:
     - match: \\|escape$
       name: constant.character.escape
-    - match: str_[\w:/\.\-]+
+    - match: str_.*$
       name: string.literal
+    - match: entity_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      name: entity.name.type.entity
     - include: '#inner_literal'
   inner_literal:
     patterns:
@@ -95,3 +97,8 @@ repository:
         "0":
           patterns:
           - include: '#inner_literal'
+    - match: type(/(iota|entity|block|item))?_(.*)$
+      name: keyword.type.literal
+      captures:
+        "3":
+          name: entity.name.namespace.typeid
