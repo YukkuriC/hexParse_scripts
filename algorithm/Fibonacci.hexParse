@@ -1,0 +1,6 @@
+// test input: \10
+(   duplicate,num_1,less_eq
+    (pop,num_1)
+    (duplicate,num_1,sub,read/local,eval
+    swap,num_2,sub,read/local,eval,add)if,eval
+)duplicate,write/local,eval
