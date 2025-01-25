@@ -1,0 +1,13 @@
+// test input: (3,4)splat
+(   over,num_0,less_eq // m<=0
+    (mask_v-,num_1,add) // n+1
+    ( // m>0
+        duplicate,num_0,less_eq // n<=0
+        (   mask_-v,num_1,sub,num_1 // A(m-1,1)
+            read/local,eval)
+        (   2dup,num_1,sub,read/local,eval // A(m,n-1)
+            mask_v-,swap,num_1,sub,swap
+            read/local,eval // A(m-1,ans)
+        )if,eval
+    )if,eval
+)duplicate,write/local,eval
