@@ -1,0 +1,4 @@
+\mote_7dfb71ee-8b09-4ec9-ac98-679df52bed8f_0 // random item mote
+#my_aim,\2,mul,sub
+\vec_0_-3_0,add
+const/vec/py,mote/use_on

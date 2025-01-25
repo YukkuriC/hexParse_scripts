@@ -1,0 +1,4 @@
+get_caster,num_8,blink,get_caster,num_8,blink
+(get_caster,num_5,blink,get_caster,entity_pos/foot,(10)splat,explode)
+const/null,num_10,duplicate_n,num_10,last_n_list
+for_each
