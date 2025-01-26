@@ -1,0 +1,16 @@
+// test input: ([1,2,3,4],4)splat
+write/local
+(   singleton // code,list,res,[num]
+    read/local,num_1,greater
+    (   comment_pick
+        rotate,over,xor,rotate_reverse,add // code,list,res
+        comment_recursion
+        read/local,num_1,sub,write/local comment_n-sub
+        rotate_reverse,2dup,(30)splat,swizzle // code,list,res + code,list
+        for_each,mask_vvv-,splat
+        read/local,num_1,add,write/local comment_n-add
+    )
+    (mask_vv--,add)if,eval comment_else-return
+)remove_comments,swap // code,list
+2dup,empty_list,rotate_reverse // code,list,res,code,list
+for_each,mask_vvv-
