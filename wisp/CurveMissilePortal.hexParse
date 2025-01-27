@@ -1,0 +1,37 @@
+(
+  duplicate,wisp/self,equals
+  (comment_init
+    pop,num_20
+  )
+  (   duplicate,num_0,greater
+    (   num_1,sub,comment_charge_media/wisp
+      (
+        duplicate,wisp/self,equals
+        ( comment_init
+          pop
+          num_2,wisp/move/speed/set
+          (pop,random,num_0.5,sub,num_5,mul)(0,1,2)for_each
+          splat,construct_vec
+        )
+        ( comment_shoot
+          duplicate,wisp/self,entity_pos/foot,add,wisp/move/target/set
+          get_caster,get_entity_look,add,num_2,div
+          ( swap,pop
+            wisp/self,entity_pos/foot,add,duplicate
+            type/to_item,bool_coerce
+            ( duplicate
+              comment_charge_media/wisp,lightning
+              num_5,explode/fire
+              wisp/self,wisp/consume
+            )
+            ()if,eval
+          )
+          (vec_0_1,vec_0_-1,vec_1,vec_-1,vec_0_0_1,vec_0_0_-1;vec_1_1_0,vec_1_-1_0,vec_-1_1_0,vec_-1_-1_0;vec_0_1_1,vec_0_1_-1,vec_0_-1_1,vec_0_-1_-1;vec_1_0_1,vec_-1_0_1,vec_1_0_-1,vec_-1_0_-1)for_each,pop
+        )if,eval
+      )
+      wisp/self,entity_pos/foot,(35)splat,wisp/summon/ticking
+    )
+    (wisp/self,wisp/consume)if,eval
+  )if,eval
+)
+get_caster,entity_pos/eye,const/vec/py,num_2,mul,add,(770)splat,wisp/summon/ticking
