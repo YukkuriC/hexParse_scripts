@@ -1,0 +1,35 @@
+// dig to px
+
+circle/bounds/max,duplicate,mote/storage/bind/temp
+const/vec/nz,add comment_init-stack
+\[
+  [ \type/item_hexcasting:slate,mote/contained/get,num_0,index
+    num_1,mote/split,mask_v-
+    swap,const/vec/ny,mote/use_on] comment_0.place-slate
+  [ num_5,zone_entity/item,
+    (mote/make,duplicate,mote/contained/get,num_0,index,add)
+    swap,for_each,pop] comment_1.collect-near-items
+]remove_comments,write/local
+comment_quine
+\[\[
+    comment_grab-range
+    duplicate,sentinel/create/great
+    comment_dig-before
+    duplicate,const/vec/nx,add
+      duplicate,type/to_item,\type/block_hexcasting:slate,equals
+      (
+        duplicate,const/vec/ny,add,break_block
+        duplicate,break_block
+        read/local,num_1,index,eval
+      )(pop),if,eval
+    comment_place-next
+    const/vec/px,add,\3,duplicate_n
+      (add,break_block)
+      (vec_0_1_1,vec_0_1_0,vec_0_1_-1
+      vec_0_0_1,vec_0_0_0,vec_0_0_-1
+      vec_0_-1_1,vec_0_-1_0,vec_0_-1_-1)for_each,pop
+      const/vec/ny,add,conjure_block // 1
+      read/local,num_0,index,eval // 2
+  ],eval(str_QUINE)splat
+  duplicate,num_4,swap,replace,charge_media/circle
+]remove_comments,duplicate,num_4,swap,replace,eval
