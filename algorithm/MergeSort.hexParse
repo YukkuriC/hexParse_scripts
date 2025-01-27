@@ -1,0 +1,25 @@
+// test input: comment_test-case (pop,random)const/null,(400)splat,duplicate_n,(400)splat,last_n_list,for_each
+(comment_if-longer-than-1
+  duplicate,abs,duplicate,num_1,greater
+  (   comment_1.split-list
+    duplicate,num_2,div,floor
+    tuck,num_0,swap,(4)splat,fisherman/copy,rotate_reverse,slice
+    (18)splat,swizzle,slice
+    comment_2.recursive
+    read/local,eval,swap,read/local,eval
+    comment_3.merge
+    (rotate_reverse,empty_list,rotate_reverse)eval/cc // res,l1,l2
+    over,bool_coerce
+    ( comment_if-first-contents
+      duplicate,bool_coerce
+      (  comment_if-second-contents
+        deconstruct,rotate,deconstruct
+        (2)splat,swizzle,2dup,greater comment_if-num1-gt-num2 // res,l1,l2,num1,num2
+        (10 /*l2,num2,l1,num1*/ 2 /*l1,num1,l2,num2*/)splat,if,swizzle,construct comment_return-bigger // res,l?,num,l?
+        (20)splat,swizzle,append,rotate_reverse comment_push-smaller
+        (3)splat,fisherman/copy,eval comment_loop
+      )(mask_v--v,add)if,eval comment_else-add-first
+    )(mask_v-v-,add)if,eval comment_else-add-second
+  )(pop),if,eval comment_else-return
+)write/local
+read/local,eval

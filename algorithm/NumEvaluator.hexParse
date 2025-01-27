@@ -1,0 +1,24 @@
+// test input: \114.514
+(1,1e6)splat,div,swap // tolerance,num
+(   over,num_0,greater_eq
+    (str_aqaa,str_dedd)splat,if,singleton // tolerance,num,jump,res
+    (16)splat,swizzle,abs // jump,res,tolerance,num
+)eval/cc
+comment_handle-div-2
+2dup,num_1,modulo,less
+(   num_2,mul,swap,num_2,mul,swap
+    rotate,(str_d)swap,add,rotate_reverse
+    num_3,fisherman/copy,eval)
+((mask_v-v--,rotate_reverse)eval/cc),if,eval // new jump,res,num
+comment_handle-bits
+duplicate,num_1,greater_eq
+(   duplicate,num_1,and,bool_coerce
+    ((str_w)rotate,add,swap num_1,xor)
+    ((str_a)rotate,add,swap num_2,div)if,eval
+    num_2,fisherman/copy,eval
+)
+(   mask_v-v,unappend,construct
+    (str__)splat,write/local
+    (read/local,swap,add,write/local stack_len,last_n_list)swap,for_each,pop
+)if,eval
+read/local,print,write
