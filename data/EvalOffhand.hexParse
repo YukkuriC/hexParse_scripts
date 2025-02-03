@@ -1,3 +1,8 @@
+// ver.1
 charge_media // from hex_playground
 read,eval
 stack_len,last_n_list,(print),swap,for_each
+
+// ver.2 with separate stack
+([pop,read,eval][1])splat,for_each
+(print)swap,for_each
