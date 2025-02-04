@@ -6,3 +6,7 @@ stack_len,last_n_list,(print),swap,for_each
 // ver.2 with separate stack
 ([pop,read,eval][1])splat,for_each
 (print)swap,for_each
+
+// ver.2.5 use hexflow reduce to skip #804
+([mask_vv,read,eval][()])splat,pure_reduce
+(print)swap,for_each
