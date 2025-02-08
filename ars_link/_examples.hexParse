@@ -1,0 +1,5 @@
+(glyph_projectile,glyph_accelerate,glyph_burst,glyph_harm,glyph_amplify,glyph_amplify)cast_spell
+
+#my_aim,(glyph_accelerate,glyph_burst,glyph_harm,glyph_amplify,glyph_amplify)cast_spell_shoot
+
+\self,(glyph_projectile,glyph_accelerate,glyph_burst,glyph_harm,glyph_amplify,glyph_amplify)cast_spell_as comment_this-one-is-great-spell
