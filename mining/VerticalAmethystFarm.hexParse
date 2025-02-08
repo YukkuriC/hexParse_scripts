@@ -1,0 +1,27 @@
+// requires hexflow & hexop 1.20 (for amethyst farm)
+
+\vec_4_120_30,mote/storage/bind/temp
+comment_mine-all-amethyst
+const/vec/py,\32,duplicate_n,\32,last_n_list
+\vec_7.5_119.5_31.5,construct
+(add,duplicate)swap,pure_reduce
+( comment_each-layer
+  ( comment_each-shard eval,add
+    duplicate,type/to_item,(type/block_amethyst_cluster)splat,equals
+    (break_block,pop)splat,if,eval
+  )
+  (const/vec/px,const/vec/pz,const/vec/nx,const/vec/nz)
+  for_each,pop
+  comment_mote-collect
+  num_2,zone_entity/item
+  (mote/make)swap,for_each,pop
+)swap,for_each,pop
+comment_mote-sort-and-recharge
+( splat,mote/contained/get
+  (add)swap,pure_reduce,splat comment_sort-mote
+  swap,duplicate,num_0,greater
+  (over,swap,(vec_3.5_120_30.5)splat,swap,mote/return)
+  (pop)if,eval
+)
+\[[114,type/item_amethyst_shard][114,type/item_hexcasting:amethyst_dust][0,type/item_hexcasting:charged_amethyst]]
+for_each,print
