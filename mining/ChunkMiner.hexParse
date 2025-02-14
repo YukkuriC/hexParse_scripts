@@ -10,23 +10,36 @@
     comment_next-sentinel
     duplicate,\vec_7.5_-1_7.5,add,
     duplicate,check_ambit
-    (sentinel/create/great)(#break)if,eval
+    (sentinel/create/great)(())splat,pop,if,eval
     comment_split-to-256
     (add,duplicate)
     (1,16)splat,duplicate_n,\16,last_n_list
     num_-1,construct,pure_reduce,write/local
     ( (num_0,swap,construct_vec,add)
-    read/local,for_each,mask_vv-,splat)read/local,for_each
+    read/local,for_each,mask_vv-,splat)read/local,for_each,mask_v-
     comment_do-dig
     \[\3,duplicate_n
-      break_block,conjure_block,break_block]swap,for_each,pop
+      break_block,conjure_light,break_block]swap,for_each,pop
     comment_sentinel-collect
-    \16,zone_entity/item
+    sentinel/get_pos,\16,zone_entity/item
     (mote/make,duplicate,mote/contained/get
     swap,construct,(add)swap,pure_reduce)swap,for_each,pop
+    comment_collect-exp-orbs
+    \gate_self_0_2_0,(gate/mark)
+    (type/entity_experience_orb,16)splat,sentinel/get_pos,swap,zone_entity/type
+    for_each,pop,gate/close
   ]eval // pos=2
   \str_QuinePoint // pos=4
-  num_4,build_nested,num_3,mind_env/schedule
+  num_4,build_nested,num_2,mind_env/schedule
 ]remove_comments
-get_caster,entity_pos/foot,sentinel/create
+comment_dig-start
+#my_aim,raycast,duplicate,sentinel/create/great
+comment_swap-dig-direction
+get_caster,entity_pos/eye,sub,deconstruct_vec,mask_v-v,num_0,greater
+\[ comment_replace-go-up
+  duplicate,num_1,index,duplicate,\vec_7.5_-1_7.5,index_of
+  \vec_7.5_1_7.5,replace
+  num_1,swap,replace
+]()if,eval
+comment_here-we-go
 num_4,build_nested,eval
