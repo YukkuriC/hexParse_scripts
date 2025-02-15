@@ -7,19 +7,15 @@
     deconstruct_vec,read/local,eval
     rotate,read/local,eval,rotate_reverse,construct_vec
     \vec_0.5_0_0.5,add
-    comment_next-sentinel
-    duplicate,\vec_7.5_-1_7.5,add,
-    duplicate,check_ambit
-    (sentinel/create/great)(())splat,pop,if,eval
     comment_split-to-256
     (add,duplicate)
     (1,16)splat,duplicate_n,\16,last_n_list
     num_-1,construct,pure_reduce,write/local
     ( (num_0,swap,construct_vec,add)
-    read/local,for_each,mask_vv-,splat)read/local,for_each,mask_v-
+    read/local,for_each,mask_vv-,splat)read/local,for_each
     comment_do-dig
     \[\3,duplicate_n
-      break_block,conjure_light,break_block]swap,for_each,pop
+      break_block,conjure_block,break_block]swap,for_each,pop
     comment_sentinel-collect
     sentinel/get_pos,\16,zone_entity/item
     (mote/make,duplicate,mote/contained/get
@@ -28,6 +24,10 @@
     \gate_self_0_2_0,(gate/mark)
     (type/entity_experience_orb,16)splat,sentinel/get_pos,swap,zone_entity/type
     for_each,pop,gate/close
+    comment_next-sentinel
+    duplicate,\vec_7.5_-1_7.5,add,
+    duplicate,check_ambit
+    (sentinel/create/great)(())splat,pop,if,eval
   ]eval // pos=2
   \str_QuinePoint // pos=4
   num_4,build_nested,num_2,mind_env/schedule
