@@ -37,7 +37,7 @@ repository:
   CUTTER:
     patterns:
     - name: code_cutter
-      match: \\|[\w./\-:]+
+      match: \\|[\w./\-:\u0100-\uffff]+
       captures:
         "0":
           patterns:
