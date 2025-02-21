@@ -1,0 +1,11 @@
+// comment_test-input: (3,12)splat
+(rotate_reverse,empty_list,rotate_reverse)eval/cc // jump,[],f,t
+2dup,greater_eq
+(mask_v-vv)
+(
+    swap // jump,[],t,f
+    rotate,over,append // jump,t,f,[]
+    rotate_reverse,num_1,add,swap
+    num_3,fisherman/copy,eval
+)
+if,eval
