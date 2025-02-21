@@ -1,3 +1,4 @@
+#my_aim,raycast,mote/storage/bind/temp
 (   mote/contained/get
     (   duplicate,bool_coerce
         (mote/contained/get())unappend,pop,splat,if,eval
