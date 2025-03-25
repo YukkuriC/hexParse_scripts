@@ -1,0 +1,4 @@
+( (glyph_harm,glyph_amplify,glyph_amplify,glyph_delay,glyph_hex_ars_link:hex_callback)
+  cast_spell_touch
+)remove_comments,set_callback
+#my_aim,raycast/entity,(glyph_hex_ars_link:hex_callback)cast_spell_touch
