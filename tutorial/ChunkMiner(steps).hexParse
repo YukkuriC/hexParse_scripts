@@ -1,0 +1,35 @@
+// 0. 内嵌iota和Quine结构
+\[\[ get_caster,const/vec/py,add_motion comment_飞起来]eval comment_0至2位：运行实际代码
+  \str_4位：套娃点
+  num_4,build_nested comment_执行套娃（hexflow黑科技）
+  eval comment_运行Quine
+]remove_comments comment_移除quine内注释以获得精确下标
+comment_外层执行前也得先套娃
+duplicate,num_4,swap,replace comment_原版套娃方式
+eval
+
+// 1. 确定区块边界 & 选取平面内16x16点
+get_caster,entity_pos/foot comment_测试数据
+comment_取xz坐标16整倍并偏移至方块中心
+\[\16,div,floor,\16,mul]write/local
+deconstruct_vec,read/local,eval
+rotate,read/local,eval,rotate_reverse,construct_vec
+\vec_0.5_0_0.5,add
+comment_展开至16x16平面256点
+(add,duplicate)
+(1,16)splat,duplicate_n,\16,last_n_list
+num_-1,construct,pure_reduce,write/local
+( (num_0,swap,construct_vec,add)
+read/local,for_each,mask_vv-,splat)read/local,for_each,mask_v-
+comment_测试：显示hexal粒子
+(particles comment_实操换成挖掘)swap,for_each
+
+// 2. 收拾残局 & 哨卫步进
+\gate_self_0_2_0,(gate/mark)
+(type/entity_experience_orb,16)splat,sentinel/get_pos,swap,zone_entity/type
+for_each,pop,gate/close comment_此处栈里还剩一个哨卫坐标
+duplicate,\vec_7.5_-1_7.5,add,
+duplicate,check_ambit comment_判定是否可以放下一个哨卫
+(sentinel/create/great) comment_放置
+(())splat,pop comment_否则屏蔽后续逻辑，就此终止
+if,eval
