@@ -1,0 +1,45 @@
+\[
+    comment_init
+    read/local,const/null,equals
+    \[
+        mask_v
+        get_caster,get_entity_look,write/local
+        \,3,wisp/move/speed/set
+        \,50
+    ]
+    comment_loop
+    \[
+        comment_bounce
+        wisp/self,entity_pos/foot,read/local,add
+        deconstruct_vec,\,3,last_n_list
+        wisp/self,entity_pos/foot
+        deconstruct_vec,\,3,last_n_list,swap
+        \[
+            tuck
+            index
+            over,\,18,swizzle
+            replace,splat,construct_vec
+            type/to_item,bool_coerce
+            \[
+                read/local,deconstruct_vec,\,3,last_n_list,swap
+                2dup,index
+                \,-0.7,mul,replace
+                splat,construct_vec,write/local
+            ]
+            ()if,eval
+        ]
+        (0,1,2)for_each,mask_vvv
+        comment_move
+        wisp/self,entity_pos/foot,read/local,add,wisp/move/target/set
+        comment_gravity
+        read/local,\,vec_0_-0.05,add,\,0.99,mul,write/local
+        comment_boom
+        num_1,sub,duplicate,num_0,less
+        (
+            wisp/self,entity_pos/foot,num_5,explode
+        )
+        ()if,eval
+    ]if,eval
+]remove_comments
+get_caster,entity_pos/eye,const/vec/py,add
+\,18,wisp/summon/ticking
