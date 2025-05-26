@@ -1,0 +1,28 @@
+// collects all wandering wisps near 300t age
+// cannot handle out-of-range error, need external limits
+
+\[
+    read/local,const/null,equals
+    (mask_v,empty_list,write/local)
+    ()if,eval
+    comment_pick-existed-wandering
+    (num_0,index)read/local,for_each
+    comment_pick-new-wandering
+    \,type/entity_wisp/wandering,wisp/self,entity_pos/foot,\,16,zone_entity/type
+    tuck,and,xor((1,2)splat,last_n_list)swap,for_each
+    read/local,add
+    \[
+        splat
+        over,bool_coerce,comment_wisp-alive
+        (
+            num_1,add,comment_tick
+            duplicate(290)splat,greater
+            (mask_v,wisp/consume)
+            (num_2,last_n_list)
+            if,eval
+        )(mask_vv)if,eval
+    ]swap,for_each
+    write/local
+    // wisp/media,comment_print,comment_pop
+]
+get_caster,entity_pos/foot,\,100,wisp/summon/ticking
