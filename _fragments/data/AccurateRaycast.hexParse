@@ -1,0 +1,17 @@
+// calculate which point the raycast lands
+// requires full block
+// test input: #my_aim
+
+// 1. prepare
+2dup,raycast,rotate_reverse,2dup,raycast/axis // target, src, dir, face
+
+// 2. calc dupe times
+(0,2)#batch_fisherman,num_5,fisherman,sub,mul // src, dir, face, dist_axis
+num_0.5,sub // subtract block center -> surface => src, dir, face, dist_axis
+rotate_reverse,over,mul,div // calc dist => src, dist_axis, -dir(axis=1)
+
+// 3. merge to 
+mul,sub // return!
+
+// test output
+print,particles

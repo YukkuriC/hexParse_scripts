@@ -1,0 +1,3 @@
+// extracts multi entries from stack
+// test input: (...stack) (0,1,2)
+(fisherman/copy,stack_len,last_n_list,unappend,mask_v-)swap,for_each,splat
