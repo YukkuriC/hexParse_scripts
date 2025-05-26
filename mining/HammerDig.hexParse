@@ -1,0 +1,12 @@
+// dig 3x3x1 according to hit direction
+
+comment_get-axis
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast/axis,deconstruct_vec
+(eval,construct_vec)(rotate,rotate_reverse)for_each,mask_vvv-
+(duplicate,num_-1,mul,const/vec/0,num_3,last_n_list)swap,for_each,splat
+comment_get-plane
+get_caster,entity_pos/eye,get_caster,get_entity_look,raycast,swap
+(add,swap(add)swap,for_each,mask_v-,splat)
+swap,for_each,mask_vv-
+comment_do-break
+(break_block)swap,for_each,pop
