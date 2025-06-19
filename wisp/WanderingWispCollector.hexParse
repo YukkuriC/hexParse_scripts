@@ -8,7 +8,7 @@
     comment_pick-existed-wandering
     (num_0,index)read/local,for_each
     comment_pick-new-wandering
-    \,type/entity_wisp/wandering,wisp/self,entity_pos/foot,\,16,zone_entity/type
+    \,type/entity_hexal:wisp/wandering,wisp/self,entity_pos/foot,\,16,zone_entity/type
     tuck,and,xor((1,2)splat,last_n_list)swap,for_each
     read/local,add
     \[
