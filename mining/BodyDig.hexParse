@@ -1,10 +1,11 @@
 // requires hex_playground for mind stack read-write
+// and hexal/moreiotas for digging content check
 
 comment_check-sneaking
 get_caster,get_entity_height,num_1.75,less
 comment_shift:do-dig
 (
-    yc:mind_stack/pop,yc:mind_stack/pop
+    mind_stack/pop,mind_stack/pop
     (   comment_1.pair-with-axes
         write/local
         deconstruct_vec,read/local,eval
@@ -26,7 +27,10 @@ comment_shift:do-dig
     write/local
     comment_3.X.Y.Z-and-dig
     (   (   (
-                construct_vec,break_block // do dig
+                construct_vec,
+                // replace to simple break_block if no types
+                duplicate,type/to_item,bool_coerce // check not air
+                (break_block)()if,eval // do dig
             )read/local,num_2,index for_each,mask_vvv // each axis 3
         )read/local,num_1,index for_each,mask_vv // each axis 2
     )read/local,num_0,index for_each,mask_v // each axis 1
@@ -34,5 +38,5 @@ comment_shift:do-dig
 comment_normal:pick-pos
 (
     get_caster,entity_pos/eye,get_caster,get_entity_look
-    raycast,yc:mind_stack/push
+    raycast,mind_stack/push
 )if,eval
