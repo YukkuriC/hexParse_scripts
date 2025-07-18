@@ -1,0 +1,25 @@
+// usage: take enough blocks and click the beacon
+
+// beacon pos
+#my_aim,raycast
+(
+    comment_seq_-X_X
+    duplicate,num_2,mul,num_1,add
+    write/local,num_1,read/local,duplicate_n,read/local,last_n_list
+    over,read/local,swap,sub,write/local
+    (
+        stack_len,last_n_list,pop
+        read/local,num_1,sub,duplicate,write/local
+    )swap,for_each,duplicate
+    comment_thoth-each-offset
+    (comment_pos_depth_seq_offset1
+        swap(comment_pos_depth_o1_o2
+            num_3,swizzle,comment_pos_o1_o2_depth
+            num_-1,mul,swap,comment_pos_o1_depth_o2
+            construct_vec,add,comment_get-offset-pos
+            duplicate,break_block,place_block
+        )swap,for_each,pop
+    )swap,for_each,pop
+)
+comment_each-layer
+(1,2,3,4)for_each,pop
