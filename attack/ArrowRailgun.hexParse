@@ -1,6 +1,6 @@
 // requires hexal
 
-// apabus or 100 burst
+// abacus or 100 burst
 (type/entity_arrow,10)splat,get_caster,entity_pos/eye,swap,zone_entity/type,num_0,index
 duplicate,duplicate,entity_pos/foot,get_caster,entity_pos/eye,get_caster,get_entity_look,add,swap,sub,teleport
 readable,(read)(num_100)if,eval,write/local
@@ -21,3 +21,18 @@ swap,num_2,last_n_list,write/local
 (read/local,splat,for_each,mask_vv)
 const/null,num_40,duplicate_n,num_40,last_n_list
 for_each
+
+// mk2: double tap to TP & shoot
+(type/entity_arrow,10)splat,#my_aim,add,swap,zone_entity/type,num_0,index
+comment_check-dist
+duplicate,entity_pos/foot,#my_aim,add,sub,abs,num_0.5,greater
+(duplicate,entity_pos/foot,#my_aim,add,swap,sub,teleport)
+(
+    (100)splat comment_speed
+    // readable,(read)(num_100)if,eval,
+    write/local
+    read/local,duplicate_n,read/local,last_n_list
+    ((str_VEL)splat,add_motion)
+    num_1,get_caster,get_entity_look,replace
+    swap,for_each,pop
+)if,eval
