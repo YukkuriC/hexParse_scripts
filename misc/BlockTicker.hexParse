@@ -1,0 +1,4 @@
+#my_aim,raycast
+#is_sneaking,(const/vec/py,add)()if,eval
+(1000)splat,duplicate,duplicate_n,duplicate,last_n_list
+(pop,tick)swap,for_each,mask_vv
