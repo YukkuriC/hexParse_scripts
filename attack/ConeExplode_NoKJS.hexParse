@@ -18,7 +18,7 @@ and_bit
         duplicate,entity_pos/foot,type/to_item,bool_coerce
         (const/vec/py,add_motion)
         ( entity_pos/foot,num_4,duplicate_n comment_classic-explosion
-            create_water
+            in_nether,(create_lava,create_water)splat,if,eval // ported hexgloop spell
             #is_sneaking,(10,3)splat,if,explode
             conjure_block
             break_block
