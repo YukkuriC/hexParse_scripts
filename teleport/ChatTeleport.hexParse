@@ -9,3 +9,21 @@ string/chat/prefix/get,\str_TP,equals
     const/null,string/chat/prefix/set
 ]
 \[\str_TP,print,string/chat/prefix/set]if,eval
+
+// blink + look_at version with another chat prefix, requires hex_playground
+#is_sneaking
+comment_prefix
+( ("Prefix set to: ",null,"blink")splat
+  duplicate,string/chat/prefix/get,equals,rotate_reverse,if,duplicate,string/chat/prefix/set
+  string/iota,add,print,pop
+)
+comment_blink
+( string/chat/caster,string/space,string/split,unappend,mask_v-
+  string/comma,string/split,(string/parse)swap,for_each
+  splat,construct_vec
+  get_caster,over,look_at
+  duplicate,#sentinel // _fragments/actions/RemoteSentinel.hexParse
+  get_caster,entity_pos/eye,swap,sub,abs
+  get_caster,swap,blink
+  const/null,string/chat/prefix/set
+)if,eval
