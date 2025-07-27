@@ -27,3 +27,23 @@ comment_blink
   get_caster,swap,blink
   const/null,string/chat/prefix/set
 )if,eval
+
+// gate swap version with chat prefix 2
+// glitched: can't go outside chunk-loading border
+#is_sneaking
+comment_prefix
+( ("Prefix set to: ",null,"tp")splat
+  duplicate,string/chat/prefix/get,equals,rotate_reverse,if,duplicate,string/chat/prefix/set
+  string/iota,add,print,pop
+)
+comment_swap-tp
+( string/chat/caster,string/space,string/split,unappend,mask_v-
+  string/comma,string/split,(string/parse)swap,for_each
+  splat,construct_vec,duplicate,string/iota,("TP to: ")splat,swap,add,print,pop
+  (entity_<UUID HERE>,gate_<UUID HERE>)splat // input: entity to swap & its gate
+  duplicate,get_caster,gate/mark,rotate_reverse
+  tuck,tuck,entity_pos/foot,sub,teleport // 1. tp dummy to target
+  swap,gate/close // 2. tp player to target
+  (gate_0_63_0)splat,tuck,swap,gate/mark,gate/close // 3. tp dummy back
+  const/null,string/chat/prefix/set
+)if,eval
