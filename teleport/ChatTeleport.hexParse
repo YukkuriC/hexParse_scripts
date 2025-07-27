@@ -47,3 +47,19 @@ comment_swap-tp
   (gate_0_63_0)splat,tuck,swap,gate/mark,gate/close // 3. tp dummy back
   const/null,string/chat/prefix/set
 )if,eval
+
+// compile gate version
+#is_sneaking
+comment_prefix
+( ("Prefix set to: ",null,"tp")splat
+  duplicate,string/chat/prefix/get,equals,rotate_reverse,if,duplicate,string/chat/prefix/set
+  string/iota,add,print,pop
+)
+comment_swap-tp
+( string/chat/caster,string/space,string/split,unappend,mask_v-
+  string/comma,string/split,splat // x,y,z
+  ("gate_","_","_",373)splat,swizzle
+  add,add,add,add,add,compile,splat // build gate
+  duplicate,get_caster,gate/mark,gate/close
+  const/null,string/chat/prefix/set
+)if,eval
