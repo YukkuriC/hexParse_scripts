@@ -1,6 +1,16 @@
 // requires 1.20 cc
+// macro ref: #sentinel
 // input: \vec_0_120_0
 (get_caster,entity_pos/eye,sentinel/create)eval/cc // target,jump
+over,sentinel/get_pos,sub,duplicate,abs,duplicate,(15.999)splat,less // target,jump,delta,dist | if near_enough
+(mask_vvv,sentinel/create/great) comment_near-enough
+(div,(15.999)splat,mul,sentinel/get_pos,add,sentinel/create/great; duplicate,eval)
+if,eval
+
+// alt version: from last sentinel
+// macro ref: #sentinel_near
+sentinel/get_pos,bool_coerce
+()(get_caster,entity_pos/eye,sentinel/create)if,eval/cc // target,jump
 over,sentinel/get_pos,sub,duplicate,abs,duplicate,(15.999)splat,less // target,jump,delta,dist | if near_enough
 (mask_vvv,sentinel/create/great) comment_near-enough
 (div,(15.999)splat,mul,sentinel/get_pos,add,sentinel/create/great; duplicate,eval)

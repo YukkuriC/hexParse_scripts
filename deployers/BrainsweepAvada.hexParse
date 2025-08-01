@@ -1,0 +1,34 @@
+// requires hexcellular for remote data
+
+// =============== part 1: slave ===============
+// stack this as many as possible
+\prop_avada,observe_property,duplicate,num_0,index,bool_coerce
+( duplicate,splat,#sentinel_near
+  duplicate,entity_pos/eye
+  2dup,num_2,last_n_list(prop_avada)splat,swap,hexcellular:set_property,comment_update-pos
+  brainsweep,comment_mishap-to-attack)
+()if,eval
+
+// =============== part 2 marker ===============
+// simple raycast version
+\prop_avada,#my_aim,raycast/entity
+duplicate,entity_pos/foot,num_2,last_n_list
+print,set_property
+
+// find nearest version
+\prop_avada
+get_caster,entity_pos/foot,\,32,zone_entity/living,num_1,index
+duplicate,bool_coerce
+( duplicate,entity_pos/eye
+  duplicate,get_caster,entity_pos/foot,num_2,last_n_list,particles // visual fx
+  num_2,last_n_list,/*print*/,set_property)
+(mask_vv)if,eval
+
+// =============== part 3 activator ===============
+// detects entity inside property & control redstone circuit
+\vec_5_140_-14 comment_pos
+duplicate,moreiotas:type/to_item,bool_coerce
+\,prop_avada,hexcellular:observe_property,num_0,index,bool_coerce
+(break_block,mask_v)
+(mask_v,conjure_block)
+if,splat,if,eval
