@@ -23,9 +23,11 @@ get_caster,entity_pos/eye,sentinel/create
     comment_2.collect-all-killables
     \[comment_FX duplicate,entity_pos/foot,sentinel/get_pos,num_2,last_n_list,particles #wisp_avada]
     \[eval,for_each,pop]
-    \[  [\type/entity_chest_minecart,sentinel/get_pos,\16,zone_entity/type]
-        [sentinel/get_pos,\16,zone_entity/monster]
+    \[  [sentinel/get_pos,\16,zone_entity/monster]
         [sentinel/get_pos,\16,zone_entity/animal] ]for_each,mask_vv
+    comment_2.1.handle-chest-minecarts-separately
+    \[comment_FX print,duplicate,entity_pos/foot,sentinel/get_pos,num_2,last_n_list,particles \114514,punch_entity]
+    \type/entity_chest_minecart,sentinel/get_pos,\16,zone_entity/type,for_each,pop
     comment_3.collect-dropped-items
     sentinel/get_pos,\16,zone_entity/item
     read/local,swap,for_each,pop
