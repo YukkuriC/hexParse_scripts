@@ -1,0 +1,27 @@
+comment_0.base-pos
+get_caster,entity_pos/foot,deconstruct_vec
+( num_3,div,floor,num_3,mul,rotate)
+num_3,duplicate_n,add,add,eval,construct_vec
+comment_1.target-offsets
+(-9,-6,-3,0,3,6,9)num_3,duplicate_n
+( rotate_reverse
+  ( swap
+    ( construct_vec,add
+      duplicate,deconstruct_vec,add,add,num_2,modulo,bool_coerce
+      (pop)()if,eval
+    )swap,for_each,mask_vvv-,splat
+  )swap,for_each,mask_vvv-,splat
+)swap,for_each,mask_vvv-
+comment_2.place-or-collect-copper
+get_caster,get_entity_height,num_1.75,less
+comment_2.1.collect
+( duplicate,moreiotas:type/to_item(type/item_oxidized_copper)splat,equals
+  ( duplicate,break_block
+    num_2,zone_entity/item
+    (mote/make)swap,for_each,pop
+  )(pop)if,eval
+)
+comment_2.2.place
+( duplicate,moreiotas:type/to_item,bool_coerce
+  (pop)(place_block)if,eval)
+if,swap,for_each,pop
