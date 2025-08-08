@@ -1,0 +1,30 @@
+/*
+  (Ax+By+Cz)%D=0
+  1. (2A+B)%D=0
+  2. (3B-A)%D=0
+  3. (-A+B+C)%D=0
+  -> 7A%D=7B%D=0
+  -> (A,B,C,D)=(2,3,-1,7)
+  */
+
+// 1. placer
+get_caster,entity_pos/foot,deconstruct_vec
+( num_7,div,num_0.5,add,floor,num_7,mul,rotate)
+num_3,duplicate_n,add,add,eval,construct_vec
+comment_1.target-offsets
+(-3,-2,-1,0,1,2,3)num_3,duplicate_n
+( rotate_reverse
+  ( swap
+    ( construct_vec,add)swap,for_each,mask_vvv-,splat
+  )swap,for_each,mask_vvv-,splat
+)swap,for_each,mask_vvv-
+comment_2.filter
+( duplicate,matrix/make,reverse
+  (vec_2_3_-1)splat,matrix/make,mul,matrix/unmake,num_7,modulo,bool_coerce
+  (pop)(
+    duplicate,type/to_item,bool_coerce
+    (pop,place_block)splat,if,eval
+  )if,eval
+)swap,for_each,pop
+
+// TODO: marker & harvester
