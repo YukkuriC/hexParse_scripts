@@ -11,9 +11,8 @@ for_each,pop
  * cone attacking version
  */
 get_caster,entity_pos/foot,duplicate
-\31,zone_entity/not_player,swap
-\31,zone_entity/living
-and_bit
+\31,zone_entity/animal,swap
+\31,zone_entity/monster,or
 (// calculate cos(angle)=norm(vec_delta)*look_vec
   duplicate,entity_pos/eye
   get_caster,entity_pos/eye,sub
