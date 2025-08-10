@@ -2,3 +2,10 @@
 #is_sneaking,(const/vec/py,add)()if,eval
 (1000)splat,duplicate,duplicate_n,duplicate,last_n_list
 (pop,tick)swap,for_each,mask_vv
+
+// super-boose version, without 
+#my_aim,raycast
+( pop,(1000)splat,duplicate,duplicate_n,duplicate,last_n_list
+  (pop,tick)swap,for_each,mask_vv)
+(20)splat,duplicate,duplicate_n,duplicate,last_n_list
+for_each,mask_vv
