@@ -6,13 +6,16 @@ comment_temp-mote-nexus
 #sentinel_near
 mote/storage/bind/temp
 comment_build-cube
-get_caster,entity_pos/eye
+get_caster,entity_pos/foot,const/vec/ny,add,write/local comment_aim-direction
+read/local
 ([-1,0,1],3)splat,duplicate_n
 ( rotate_reverse ( swap (construct_vec,add)swap,for_each,mask_vvv-,splat )swap,for_each,mask_vvv-,splat )swap,for_each,mask_vvv-
 comment_dig-amethyst
 ( duplicate,type/to_item,(type/block_amethyst_cluster)splat,equals
-  (break_block,pop)splat,if,eval)swap,for_each,pop
-comment_collect-drops
-(mote/make)
-get_caster,entity_pos/eye,num_3,zone_entity/item
-for_each,pop
+  (duplicate,break_block,read/local,num_2,last_n_list,particles,const/null)(pop)if,eval)swap,for_each
+comment_collect-drops-if-broken
+abs,num_0,greater
+( (mote/make)
+  read/local,num_3,zone_entity/item
+  for_each,pop 
+)()if,eval
