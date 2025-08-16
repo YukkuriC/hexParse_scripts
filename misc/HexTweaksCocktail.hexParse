@@ -1,0 +1,24 @@
+// requires hextweaks, tested on 1.20
+
+// 0. compile target spell
+\you_like_drinking_potions,infusion,write
+
+// 1. real buff maker
+\self
+( duplicate,abs,num_20,swap,div,floor
+  duplicate,num_0,greater
+  ((1,_sswqsswqsswssqwssqwssqwewasswsswwawsswwaw)splat,eval)
+  (pop,print,mask_vv)if,eval
+)(
+  comment_normal
+  "instant_health","resistance"
+  comment_mna
+  "mna:flame_cloak","mna:mana_shield","mna:bulwark","mna:wind_wall"
+  "mna:burning_rage"
+  comment_cataclysm
+  "cataclysm:monstrous"
+  comment_goety
+  "goety:soul_armor","goety:iron_hide","goety:chill_hide"
+  "goety:buff","goety:rampage","goety:charged"
+  "goety:corpse_eater","goety:insight","goety:shadow_walk"
+)remove_comments,for_each,mask_vv
