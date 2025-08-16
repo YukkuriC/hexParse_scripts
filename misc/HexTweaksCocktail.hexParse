@@ -20,5 +20,5 @@
   comment_goety
   "goety:soul_armor","goety:iron_hide","goety:chill_hide"
   "goety:buff","goety:rampage","goety:charged"
-  "goety:corpse_eater","goety:insight","goety:shadow_walk"
+  "goety:corpse_eater","goety:insight","goety:fortunate"
 )remove_comments,for_each,mask_vv
