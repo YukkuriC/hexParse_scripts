@@ -9,6 +9,8 @@ repository:
     - begin: /\*
       end: \*/
       name: comment.multiline
+    - match: "\".*?\""
+      name: string.literal.quotes
     - begin: \[
       beginCaptures:
         '0':
