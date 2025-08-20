@@ -14,8 +14,11 @@
     ( (num_0,swap,construct_vec,add)
     read/local,for_each,mask_vv-,splat)read/local,for_each
     comment_do-dig
-    \[\3,duplicate_n
-      break_block,conjure_block,break_block]swap,for_each,pop
+    \[duplicate,break_block
+      comment_check-liquid
+      duplicate,type/to_item,bool_coerce
+      (destroy_water)(mask_v)if,eval
+    ]swap,for_each,mask_v
     comment_sentinel-collect
     sentinel/get_pos,\16,zone_entity/item
     (mote/make,duplicate,mote/contained/get
