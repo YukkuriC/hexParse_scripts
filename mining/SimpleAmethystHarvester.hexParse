@@ -1,10 +1,6 @@
 // requires hexal for motes
 // used for PnC drones
 
-comment_temp-mote-nexus
-\vec_13.5_63.5_-26.5,duplicate
-#sentinel_near
-mote/storage/bind/temp
 comment_build-cube
 get_caster,entity_pos/foot,const/vec/ny,add,write/local comment_aim-direction
 read/local
@@ -15,7 +11,11 @@ comment_dig-amethyst
   (duplicate,break_block,read/local,num_2,last_n_list,particles,const/null)(pop)if,eval)swap,for_each
 comment_collect-drops-if-broken
 abs,num_0,greater
-( (mote/make)
+( comment_temp-mote-nexus
+  \vec_13.5_63.5_-26.5,duplicate
+  #sentinel_near
+  mote/storage/bind/temp
+ (mote/make)
   read/local,num_3,zone_entity/item
   for_each,pop 
 )()if,eval
