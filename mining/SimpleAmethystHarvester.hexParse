@@ -12,7 +12,7 @@ comment_dig-amethyst
 comment_collect-drops-if-broken
 abs,num_0,greater
 ( comment_temp-mote-nexus
-  \vec_13.5_63.5_-26.5,duplicate
+  (vec_13.5_63.5_-26.5)splat,duplicate
   #sentinel_near
   mote/storage/bind/temp
  (mote/make)
