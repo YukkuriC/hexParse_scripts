@@ -24,8 +24,8 @@ get_caster,entity_pos/foot,duplicate
   // attacker
   ((pop,((mask_vv-vv)splat,duplicate,entity_pos/eye,brainsweep),swap
     tuck,num_1,swap,replace
-    swap,entity_pos/eye,(0.1)splat,wisp/summon/ticking)
-  over,health,ceil
+    swap,entity_pos/foot,(0.05)splat,wisp/summon/ticking)
+  over,health,ceil,(990)splat,2dup,less,rotate_reverse,if
   duplicate,duplicate,duplicate_n,last_n_list
   for_each,pop),if,eval
 )swap,for_each,pop
