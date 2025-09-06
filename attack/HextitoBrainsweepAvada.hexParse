@@ -2,15 +2,13 @@
 
 // 1. attack unit
 // #my_aim,raycast/entity
-( pop,comment_single-attack
-  (stack_len,last_n_list,pop,(mask_v-v-v)splat,duplicate,entity_pos/eye,brainsweep)
-  swap,num_4,swap,replace
-  get_caster,entity_pos/foot,swap,conjure_hextito
-  get_caster,entity_pos/foot,get_entity/item
-  sleight,mage_mouth)
-over,health,ceil,(800)splat,2dup,less,rotate_reverse,if
+comment_1.prepare-stack (stack_len,last_n_list,pop,(mask_v-v-v)splat,duplicate,entity_pos/foot)
+num_4,num_2,fisherman/copy,replace
+#hextito_eval
+comment_2.do-brainsweep ( pop,(brainsweep)#hextito_eval )
+swap,health,ceil,(800)splat,2dup,less,rotate_reverse,if
 duplicate,duplicate,duplicate_n,last_n_list
-for_each,mask_vv
+for_each,pop
 
 // 2. cone attacking version
 get_caster,entity_pos/foot,duplicate
@@ -25,15 +23,13 @@ get_caster,entity_pos/foot,duplicate
   get_caster,get_entity_look,mul_dot
   num_0.5,less,(pop)
   // attacker
-  (( pop,comment_single-attack
-    (stack_len,last_n_list,pop,(mask_v-v-v)splat,duplicate,entity_pos/eye,brainsweep)
-    swap,num_4,swap,replace
-    get_caster,entity_pos/foot,swap,conjure_hextito
-    get_caster,entity_pos/foot,get_entity/item
-    sleight,mage_mouth)
-  over,health,ceil,(800)splat,2dup,less,rotate_reverse,if
-  duplicate,duplicate,duplicate_n,last_n_list
-  for_each,mask_vv),if,eval
+  (comment_1.prepare-stack (stack_len,last_n_list,pop,(mask_v-v-v)splat,duplicate,entity_pos/foot)
+    num_4,num_2,fisherman/copy,replace
+    #hextito_eval
+    comment_2.do-brainsweep ( pop,(brainsweep)#hextito_eval )
+    swap,health,ceil,(800)splat,2dup,less,rotate_reverse,if
+    duplicate,duplicate,duplicate_n,last_n_list
+    for_each,pop),if,eval
 )swap,for_each,pop
 // pick items, exp orbs and minecarts (wtf
 get_caster,entity_pos/foot,duplicate

@@ -1,0 +1,4 @@
+// requires hexical
+// #hextito_eval
+// input: \[get_caster,print]
+get_caster,entity_pos/foot,tuck,swap,conjure_hextito; get_entity/item,sleight,mage_mouth
