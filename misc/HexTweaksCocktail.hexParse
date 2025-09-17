@@ -4,12 +4,8 @@
 \you_like_drinking_potions,infusion,write
 
 // 1. real buff maker
-\self
-( duplicate,abs,num_20,swap,div,floor
-  duplicate,num_0,greater
-  ((1,_sswqsswqsswssqwssqwssqwewasswsswwawsswwaw)splat,eval)
-  (pop,print,mask_vv)if,eval
-)(
+\SELF
+((1,1,_sswqsswqsswssqwssqwssqwewasswsswwawsswwaw)splat,eval)(
   comment_normal
   "instant_health","resistance"
   comment_mna
@@ -21,4 +17,12 @@
   "goety:soul_armor","goety:iron_hide","goety:chill_hide"
   "goety:buff","goety:rampage","goety:charged"
   "goety:corpse_eater","goety:insight","goety:fortunate"
+)remove_comments,for_each,pop
+
+// 1.1. boosted cast extending limit to (20 + 17 * ratio) char
+( empty_list,get_caster,entity_pos/foot,(17)splat,wisp/summon/ticking
+  (type/entity_hexal:wisp/ticking)splat,get_caster,entity_pos/foot,get_entity/type,wisp/consume
+  (1,1,_sswqsswqsswssqwssqwssqwewasswsswwawsswwaw)splat,eval)(
+  comment_magichem
+  "magichem:terantic_might","magichem:gigantic_vigor"
 )remove_comments,for_each,mask_vv

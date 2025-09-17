@@ -1,0 +1,3 @@
+// boost next cast with extra <17 dust
+empty_list,get_caster,entity_pos/foot,(17)splat,wisp/summon/ticking
+(type/entity_hexal:wisp/ticking)splat,get_caster,entity_pos/foot,get_entity/type,wisp/consume
