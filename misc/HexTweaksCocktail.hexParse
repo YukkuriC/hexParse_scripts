@@ -24,5 +24,5 @@
   (type/entity_hexal:wisp/ticking)splat,get_caster,entity_pos/foot,get_entity/type,wisp/consume
   (1,1,_sswqsswqsswssqwssqwssqwewasswsswwawsswwaw)splat,eval)(
   comment_magichem
-  "magichem:terantic_might","magichem:gigantic_vigor"
+  "magichem:terantic_might","magichem:gigantic_vigor","magichem:radiant_resolve"
 )remove_comments,for_each,mask_vv
