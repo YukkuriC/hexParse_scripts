@@ -30,13 +30,15 @@ comment_shift:do-dig
                 construct_vec,
                 // replace to simple break_block if no types
                 duplicate,type/to_item,bool_coerce // check not air
-                (break_block)()if,eval // do dig
+                (break_block,pop)splat,if,eval // do dig
             )read/local,num_2,index for_each,mask_vvv // each axis 3
         )read/local,num_1,index for_each,mask_vv // each axis 2
     )read/local,num_0,index for_each,mask_v // each axis 1
+    comment_4.clear-sentinel
+    sentinel/destroy
 )
 comment_normal:pick-pos
 (
     get_caster,entity_pos/eye,get_caster,get_entity_look
-    raycast,mind_stack/push
+    raycast,duplicate,sentinel/create,mind_stack/push
 )if,eval
