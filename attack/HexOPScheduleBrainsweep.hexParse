@@ -1,0 +1,37 @@
+// requires hexop (or hex_playground) & hexal
+
+get_caster,entity_pos/foot,duplicate
+#is_sneaking,\[\31,zone_entity/not_player,swap
+  \31,zone_entity/living,and]
+\[\31,zone_entity/animal,swap
+  \31,zone_entity/monster,or]if,eval
+(// calculate cos(angle)=norm(vec_delta)*look_vec
+  duplicate,entity_pos/eye
+  get_caster,entity_pos/eye,sub
+  duplicate,abs_len,div_cross
+  get_caster,get_entity_look,mul_dot
+  num_0.5,less,(pop)
+  // attacker
+  ( comment_0-fx duplicate,entity_pos/eye,get_caster,entity_pos/foot,num_2,last_n_list,particles
+    comment_1.attacker ((mask_v-v-v)splat,duplicate,entity_pos/foot,brainsweep)
+    num_1,num_2,fisherman/copy,replace,swap
+    comment_2.do-brainsweep (over,health)eval/cc // attacker,target,jump,health
+    num_3,fisherman/copy,num_0,mind_env/schedule
+    num_2,fisherman/copy,health
+    2dup,duplicate,num_0,less_eq,rotate_reverse,equals,or comment_condition-to-stop // target,jump,health,health_new
+    (mask_vvvv)(mask_v-,over,eval)if,eval),if,eval
+)swap,for_each,pop
+// pick items, exp orbs
+get_caster,entity_pos/foot,duplicate
+\31,zone_entity/item,swap
+\type/entity_experience_orb,swap,\31,zone_entity/type,add
+\gate_self_0_1.5,swap
+(
+  // same calc cos(angle)
+  duplicate,entity_pos/eye
+  get_caster,entity_pos/eye,sub
+  duplicate,abs_len,div_cross
+  get_caster,get_entity_look,mul_dot
+  num_0.5,less,(pop)(gate/mark)if,eval
+),swap,for_each,pop
+gate/close
