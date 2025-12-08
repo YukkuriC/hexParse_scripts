@@ -36,7 +36,7 @@ duplicate,entity_pos/foot,#my_aim,add,sub,abs,num_0.5,greater
     swap,for_each,mask_vvv
 )if,eval
 
-// mk2.5: shoot right after picked (requires hex_playground)
+// mk2.5: shoot right after picked (requires hex_playground(old)/hexop(new))
 // pick arrow
 (type/entity_arrow,10)splat,get_caster,entity_pos/eye,get_caster,get_entity_look,add,swap,moreiotas:zone_entity/type,num_0,index
 duplicate,duplicate,entity_pos/foot,get_caster,entity_pos/eye,get_caster,get_entity_look,add,swap,sub,teleport/great
@@ -46,6 +46,22 @@ duplicate,duplicate,entity_pos/foot,get_caster,entity_pos/eye,get_caster,get_ent
     (100)splat,comment_speed
     duplicate,duplicate,duplicate_n,last_n_list,/* 100 100s*/
     (pop,add_motion)
+    swap,for_each,mask_vvv
+)num_1,rotate,replace
+num_1,mind_env/schedule
+
+// mk2.5a: shoot right after picked (requires hex_playground(old)/hexop(new))
+// but uses explosion
+// pick arrow
+(type/entity_arrow,10)splat,get_caster,entity_pos/eye,get_caster,get_entity_look,add,swap,moreiotas:zone_entity/type,num_0,index
+duplicate,duplicate,entity_pos/foot,get_caster,entity_pos/eye,get_caster,get_entity_look,add,swap,sub,teleport/great
+// delay shoot
+((mask_--v)splat
+    entity_pos/eye comment_explosion-push-point
+    get_caster,get_entity_look,(0.0001)splat,mul,sub comment_explosion-source
+    (300)splat,comment_speed
+    duplicate,duplicate,duplicate_n,last_n_list,/* 100 100s*/
+    (pop,(0.1)splat,explode)
     swap,for_each,mask_vvv
 )num_1,rotate,replace
 num_1,mind_env/schedule
