@@ -1,0 +1,24 @@
+// input: end,start
+// test stack: get_caster,entity_pos/foot,#my_aim,raycast
+
+comment_pick-unit-step
+2dup,sub // end,start,(end-start)
+duplicate,deconstruct_vec,num_3,last_n_list
+(abs)swap,pure_map
+(2dup,greater,rotate_reverse,if)swap,pure_reduce,splat // end,start,(end-start),count
+tuck,div // end,start,count,step
+comment_loop-step
+(num_3,fisherman/copy,singleton // end, start,count,step,JUMP,[output]
+num_3,fisherman)eval/cc // end, start,step,JUMP,[output],count
+duplicate,num_1,greater_eq( // start += step
+  (65)splat,swizzle,over,add // JUMP,[output],count,step,start
+  num_3,fisherman,over,append // JUMP,count,step,start,[output]
+  (85)splat,swizzle,num_1,sub // count--; start,step,JUMP,[output],count
+  num_2,fisherman/copy,eval // loop
+)( // end
+  mask_vvvv-v
+)if,eval
+
+// test result:
+(duplicate,type/to_item,bool_coerce
+()(place_block)if,eval)swap,for_each
