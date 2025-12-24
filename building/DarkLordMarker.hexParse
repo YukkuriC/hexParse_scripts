@@ -1,0 +1,15 @@
+// requires hexical & hexflow & hexal
+
+get_caster,entity_pos/eye,\vec_0_60,add
+\[\100,mul,deconstruct_vec,swap,construct_vec,add]
+\_waqaweeewewwqeqewewwweeeeedqewweweqeqwweeqdqwweweeqqqqedwewqwewdeqqqqeeweqwewwewwewwqwewwwewwwwewwwwewwwewqewdeawwdedwwae // target pattern
+draw_pattern
+for_each,mask_v-
+\[2dup,swap
+  #grid_point_line
+  (duplicate
+    #sentinel_near
+    duplicate,moreiotas:type/to_item,bool_coerce
+  ()(place_block)if,eval)swap,for_each,mask_v
+  mask_v-
+]swap,pure_reduce,mask_v
