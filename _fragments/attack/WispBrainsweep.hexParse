@@ -1,9 +1,0 @@
-// requires hexal
-// #wisp_avada
-// input: <some entity>
-(pop,((mask_vv-vv)splat,duplicate,entity_pos/eye,brainsweep),swap
-  tuck,num_1,swap,replace
-  swap,entity_pos/eye,(0.1)splat,wisp/summon/ticking)
-over,health,ceil
-duplicate,duplicate,duplicate_n,last_n_list
-for_each,pop
