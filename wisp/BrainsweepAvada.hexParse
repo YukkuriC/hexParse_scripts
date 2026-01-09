@@ -1,45 +1,11 @@
-#my_aim,raycast/entity
+// requires hexal
+// use as #attacker (entity -> die)
+// #my_aim,raycast/entity
+
 (pop,((mask_vv-vv)splat,duplicate,entity_pos/eye,brainsweep),swap
   tuck,num_1,swap,replace
   swap,entity_pos/eye,(0.1)splat,wisp/summon/ticking
 )
-over,health,ceil
+over,health,ceil,(990)splat,2dup,less,rotate_reverse,if
 duplicate,duplicate,duplicate_n,last_n_list
 for_each,pop
-
-/*
- * cone attacking version
- */
-get_caster,entity_pos/foot,duplicate
-#is_sneaking,\[\31,zone_entity/not_player,swap
-  \31,zone_entity/living,and]
-\[\31,zone_entity/animal,swap
-  \31,zone_entity/monster,or]if,eval
-(// calculate cos(angle)=norm(vec_delta)*look_vec
-  duplicate,entity_pos/eye
-  get_caster,entity_pos/eye,sub
-  duplicate,abs_len,div_cross
-  get_caster,get_entity_look,mul_dot
-  num_0.5,less,(pop)
-  // attacker
-  ((pop,((mask_vv-vv)splat,duplicate,entity_pos/eye,brainsweep),swap
-    tuck,num_1,swap,replace
-    swap,entity_pos/foot,(0.05)splat,wisp/summon/ticking)
-  over,health,ceil,(990)splat,2dup,less,rotate_reverse,if
-  duplicate,duplicate,duplicate_n,last_n_list
-  for_each,pop),if,eval
-)swap,for_each,pop
-// pick items, exp orbs and minecarts (wtf
-get_caster,entity_pos/foot,duplicate
-\31,zone_entity/item,swap
-\type/entity_experience_orb,swap,\31,zone_entity/type,add
-\gate_self_0_1.5,swap
-(
-  // same calc cos(angle)
-  duplicate,entity_pos/eye
-  get_caster,entity_pos/eye,sub
-  duplicate,abs_len,div_cross
-  get_caster,get_entity_look,mul_dot
-  num_0.5,less,(pop)(gate/mark)if,eval
-),swap,for_each,pop
-gate/close

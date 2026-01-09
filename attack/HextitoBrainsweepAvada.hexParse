@@ -1,7 +1,7 @@
 // requires hexical
-
-// 1. attack unit
+// use as #attacker (entity -> die)
 // #my_aim,raycast/entity
+
 comment_1.prepare-stack (stack_len,last_n_list,pop,(mask_v-v-v)splat,duplicate,entity_pos/foot)
 num_4,num_2,fisherman/copy,replace
 #hextito_eval
@@ -10,40 +10,3 @@ comment_2.do-brainsweep (over,health)eval/cc // target,jump,health
 num_2,fisherman/copy,health
 2dup,duplicate,num_0,less_eq,rotate_reverse,equals,or comment_condition-to-stop // target,jump,health,health_new
 (mask_vvvv)(mask_v-,over,eval)if,eval
-
-// 2. cone attacking version
-get_caster,entity_pos/foot,duplicate
-#is_sneaking,\[\31,zone_entity/not_player,swap
-  \31,zone_entity/living,and]
-\[\31,zone_entity/animal,swap
-  \31,zone_entity/monster,or]if,eval
-(// calculate cos(angle)=norm(vec_delta)*look_vec
-  duplicate,entity_pos/eye
-  get_caster,entity_pos/eye,sub
-  duplicate,abs_len,div_cross
-  get_caster,get_entity_look,mul_dot
-  num_0.5,less,(pop)
-  // attacker
-  ( comment_1.prepare-stack (stack_len,last_n_list,pop,(mask_v-v-v)splat,duplicate,entity_pos/foot)
-    num_4,num_2,fisherman/copy,replace
-    #hextito_eval
-    comment_2.do-brainsweep (over,health)eval/cc // target,jump,health
-    (brainsweep)#hextito_eval
-    num_2,fisherman/copy,health
-    2dup,duplicate,num_0,less_eq,rotate_reverse,equals,or comment_condition-to-stop // target,jump,health,health_new
-    (mask_vvvv)(mask_v-,over,eval)if,eval),if,eval
-)swap,for_each,pop
-// pick items, exp orbs
-get_caster,entity_pos/foot,duplicate
-\31,zone_entity/item,swap
-\type/entity_experience_orb,swap,\31,zone_entity/type,add
-\gate_self_0_1.5,swap
-(
-  // same calc cos(angle)
-  duplicate,entity_pos/eye
-  get_caster,entity_pos/eye,sub
-  duplicate,abs_len,div_cross
-  get_caster,get_entity_look,mul_dot
-  num_0.5,less,(pop)(gate/mark)if,eval
-),swap,for_each,pop
-gate/close
