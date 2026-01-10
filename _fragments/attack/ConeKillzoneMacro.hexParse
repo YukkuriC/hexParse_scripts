@@ -15,7 +15,7 @@ get_caster,entity_pos/foot,duplicate
   comment_attacker
   (#attacker),if,eval
 )swap,for_each,pop
-// pick items, exp orbs and minecarts (wtf
+// pick items, exp orbs
 get_caster,entity_pos/foot,duplicate
 \31,zone_entity/item,swap
 \type/entity_experience_orb,swap,\31,zone_entity/type,add
