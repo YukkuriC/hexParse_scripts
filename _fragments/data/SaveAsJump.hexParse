@@ -1,0 +1,26 @@
+// hex 1.20
+// converts the iota at stack top inside a (iota)splat,swap,eval fragment
+// when calling iris on certain fragment, the original data pops out
+// used as macro #wrap_jump
+// #my_aim,raycast/entity
+
+( swap // [back] target
+  (([ comment_send-me-back swap,eval ])splat,iris /*target here*/ (mask_-)splat,swap,eval)
+  num_6,rotate,replace,eval
+)iris
+
+
+// test code
+empty_list,write/local
+(#wrap_jump,read/local,swap,append,write/local)
+get_caster,entity_pos/foot,(32)splat,zone_entity
+for_each,pop
+
+(iris)
+read/local,print,for_each
+
+
+// wrong code (crash in 0.11.3)
+(#wrap_jump)
+get_caster,entity_pos/foot,(32)splat,zone_entity
+for_each
