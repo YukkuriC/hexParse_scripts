@@ -12,3 +12,25 @@ duplicate,num_1,greater,(comment_find-minimum
   over,eval)if,eval
 )
 (comment_last-cut mask_-v-,factor_cut,pop)if,eval
+
+
+// v2: using premade prime map, requires hex 0.11.3+ for not crashing
+// #my_aim,raycast/entity
+
+(swap
+  (num_1,fisherman/copy,factor_cut)iris // [loop break] target [loop] life
+  comment_break-if-life-low
+  duplicate,num_1,less_eq (num_3,fisherman,eval)empty_list,if,eval
+  comment_each-primes
+  ( 2dup,modulo,num_0,equals // [loop break] target [loop] life (+factor)
+    ( num_3,fisherman/copy,swap,factor_cut,mask_v- // [loop break] target [loop] life new_life
+      over,eval )
+    empty_list,if,eval )
+  ( 2,3,5,7,
+    11,13,17,19,
+    23,29,31,37,
+    41,43,47 )remove_comments,for_each,pop
+  comment_fallback-cut
+  num_2,fisherman/copy,num_1,factor_cut,mask_v-; over,eval
+)iris
+comment_last-cut mask_-v-,factor_cut,pop
