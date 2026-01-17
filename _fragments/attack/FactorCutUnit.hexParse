@@ -2,14 +2,13 @@
 // use as #attacker (entity -> die)
 // #my_aim,raycast/entity
 
-()iris // target [loop]
+(num_1,fisherman/copy,factor_cut)iris // target [loop] life
 comment_single-cut
-num_1,fisherman/copy,factor_cut
 duplicate,num_1,greater,(comment_find-minimum
   (swap,num_2)iris // target [loop] [pick_factor] life num
   2dup,modulo,num_0,greater
   (comment_add num_1,add,num_2,fisherman/copy,eval)
-  (comment_do-cut num_4,fisherman/copy,swap,/*print*/,factor_cut,mask_vvv // target [loop] ([pick_factor] life life1)
-  duplicate,eval)if,eval
+  (comment_do-cut num_4,fisherman/copy,swap,/*print*/,factor_cut,mask_vv- // target [loop] ([pick_factor] life life1)
+  over,eval)if,eval
 )
-(comment_last-cut mask_-vv,num_1,factor_cut,pop)if,eval
+(comment_last-cut mask_-v-,factor_cut,pop)if,eval
