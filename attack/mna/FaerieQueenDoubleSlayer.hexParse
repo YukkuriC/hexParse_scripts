@@ -1,0 +1,12 @@
+// requires moreiotas and macro #attacker
+// since queen only drop loot if there's no another queen within 32 blocks,
+// we teleport all nearby ones away and only consume the nearest each execution
+
+// 1. pick nearest queen
+(type/entity_mna:faerie_queen,32)splat,get_caster,entity_pos/foot,swap,zone_entity/type
+deconstruct,swap // target,list
+// 2. clean other queens
+(vec_0_40_0)splat,swap
+(mask_v--,swap,teleport)swap,for_each
+// 3. kill
+mask_-vv,#attacker
