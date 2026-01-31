@@ -1,0 +1,3 @@
+(wisp/consume)
+(type/entity_hexal:wisp/ticking,5)splat get_caster,entity_pos/foot,swap,zone_entity/type
+for_each,pop
