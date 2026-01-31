@@ -1,0 +1,11 @@
+( yjsp_media; wisp/self,duplicate,entity_pos/foot,get_caster,entity_pos/foot,swap,sub,teleport
+  ( comment_not-self 2dup,equals, (#return)empty_list,if,eval
+    comment_delta-pos duplicate,entity_pos/eye,get_caster,entity_pos/eye,swap,sub // self, e, dpos(in)
+    comment_only-vel-in over,get_entity_velocity // self, e, dpos(in), vel
+    2dup,mul,num_0,greater_eq, empty_list,(#return),if,eval
+    comment_pulse-out
+    copy_mask_n-n,num_-2,mul,add_motion
+    copy_mask_nn-,duplicate,abs,num_6,sub,mul,teleport
+  )wisp/self,entity_pos/foot,num_6,zone_entity/not_player,for_each,pop
+)
+get_caster,entity_pos/foot,num_1,wisp/summon/ticking
