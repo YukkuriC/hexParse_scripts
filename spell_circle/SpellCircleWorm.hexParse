@@ -1,0 +1,23 @@
+// requires: hexal & hexcellular & hexop
+/*  constants:
+    vec_5_63_-89: mote nexus pos
+    vec_5.5_65.5_-89.5: great sentinel pos (start slate pos +2)
+    const/vec/py: forward dir
+    const/vec/ny: backward dir
+    const/vec/px: slate -> ground
+    const/vec/nx: ground -> slate
+*/
+yjsp_media
+\vec_5_63_-89,mote/storage/bind/temp
+\vec_5.5_65.5_-89.5,sentinel/create/great
+\myprop_collector(duplicate,get_entity/item,duplicate,bool_coerce,([mote/make,pop],pop)splat,if,eval)set_property
+\myprop_step,(yjsp_media
+  sentinel/get_pos,duplicate,const/vec/px,add,duplicate,break_block,conjure_block
+  duplicate,break_block,myprop_collector
+  (type/item_hexcasting:slate),splat,mote/contained/get,num_0,index,num_1,mote/split,mask_v-
+  over,const/vec/px,add,const/vec/nx,mote/use_on
+  const/vec/ny,num_2,mul,add,duplicate,break_block,myprop_collector,pop
+  sentinel/get_pos,const/vec/py,add,sentinel/create/great
+  (myprop_step)splat
+)remove_comments,set_property
+myprop_step
