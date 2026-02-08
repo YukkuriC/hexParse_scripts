@@ -9,7 +9,7 @@
 */
 yjsp_media
 \vec_5_63_-89,mote/storage/bind/temp
-\vec_5.5_65.5_-89.5,sentinel/create/great
+\vec_5.5_65.5_-89.5,duplicate,const/vec/ny,add,sentinel/create/great,sentinel/create/great
 \myprop_collector(duplicate,get_entity/item,duplicate,bool_coerce,([mote/make,pop],pop)splat,if,eval)set_property
 \myprop_step,(yjsp_media
   sentinel/get_pos,duplicate,const/vec/px,add,duplicate,break_block,conjure_block
