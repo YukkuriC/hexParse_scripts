@@ -26,3 +26,12 @@
   comment_magichem
   "magichem:terantic_might","magichem:gigantic_vigor","magichem:radiant_resolve"
 )remove_comments,for_each,mask_vv
+
+// 不演了
+\SELF
+( yjsp_media(1,2,_sswqsswqsswssqwssqwssqwewasswsswwawsswwaw)splat,eval)(
+  "instant_health","resistance","absorption"
+  "mna:wind_wall"
+  "magichem:terantic_might","magichem:gigantic_vigor","magichem:radiant_resolve"
+  "goety:fortunate"
+)remove_comments,for_each,mask_vv
