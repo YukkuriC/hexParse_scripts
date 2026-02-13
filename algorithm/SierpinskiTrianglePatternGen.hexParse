@@ -14,7 +14,7 @@ comment_do-iter
 duplicate,duplicate,add,add,eval
 //duplicate,duplicate,duplicate,add,add,add,eval // max 4 iters
 
-comment_to-pattern-hexparse
+comment_to-pattern
 ( duplicate,("-+")splat,swap,index_of,num_0,less
   (pop,("w")splat)(#return)if,eval
   over,("-+")splat,swap,index_of,num_1,add
@@ -22,7 +22,16 @@ comment_to-pattern-hexparse
     [mask_vv,\"a"]
     [mask_vv,\"d"] )swap,index,eval
 )remove_comments,swap,pure_reduce
+
+comment_compile-hexparse
 (0,"_")splat,replace
 (add)swap,pure_reduce,splat,print
-comment_to-pattern
 compile,splat
+serialize_pattern
+
+// or...
+comment_compile-hexical
+(0,"w")splat,replace
+num_0,write/local
+(("wedsaq")splat,swap,index_of; read/local,add,duplicate,write/local)swap,pure_map,print
+deserialize_pattern
