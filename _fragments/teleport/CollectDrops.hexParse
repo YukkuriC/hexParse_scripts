@@ -1,0 +1,11 @@
+// #collect_drops
+// input: a vector
+
+duplicate
+num_1,zone_entity/item,swap
+(type/entity_experience_orb,31,2)splat,swizzle,zone_entity/type,add
+(gate_0_1_0_self[gate/mark])splat,rotate
+for_each,mask_v,gate/close
+
+// typical usage:
+// print,duplicate,#attacker,entity_pos/foot,#collect_drops
