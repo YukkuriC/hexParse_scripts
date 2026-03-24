@@ -1,0 +1,59 @@
+// requires hexal & hexical & hexflow
+// and HexOP for running property directly
+// single unit: #my_aim,raycast,const/vec/ny,rotate_block
+// yc:check_ambit=hexpose:env_ambit
+// enqueue,pop=mind_env/schedule
+
+comment_备菜
+(myprop_AlignChunk,[duplicate,deconstruct_vec,mask_v-v,swap
+\16,div,floor,\16,mul,deconstruct_vec,mask_-v- /* y x z */ num_2,swizzle,construct_vec,\vec_0.5_0_0.5,add])splat,set_property
+(myprop_OffsetMap,[(add,duplicate)(2,128)splat,duplicate,write/local,duplicate_n,read/local,last_n_list
+num_-2,construct,pure_reduce,unappend,pop
+(duplicate,num_16,div,floor swap,num_16,modulo,num_0,swap,construct_vec)swap,pure_map])splat,eval,set_property comment_偏移表（z隔行）
+(myprop_OddVec,[duplicate,deconstruct_vec,mask_vv-,floor,num_2,modulo,bool_coerce])splat,set_property
+(myprop_OddNormal,[duplicate,myprop_OddVec,(vec_0_0_-1,vec_0_0_1)splat,if])splat,set_property
+(myprop_GetPiston,[\type/item_piston,mote/contained/get,num_0,index])splat,set_property
+(myprop_GetRedstone,[\type/item_redstone_block,mote/contained/get,num_0,index])splat,set_property
+(myprop_PistonUnit1,[myprop_GetPiston,over,const/vec/0,mote/use_on,myprop_OddNormal,rotate_block
+myprop_GetRedstone,swap,const/vec/py,add,const/vec/0,mote/use_on])splat,set_property
+(myprop_PistonUnit2,[duplicate,const/vec/ny,rotate_block
+const/vec/py,add,break_block])splat,set_property
+(myprop_PistonHalf,
+  [([\myprop_tmp,observe_property,add,duplicate,type/to_item,bool_coerce
+    ([const/vec/py,add,duplicate,duplicate,type/to_item,bool_coerce
+      (break_block,pop)splat,if,eval
+      myprop_PistonUnit1
+    ]pop)splat,if,eval
+  ],myprop_OffsetMap)splat,observe_property,for_each,pop
+  comment_t1:rotate
+  \[\myprop_tmp,observe_property,const/vec/py,add
+    ([add,duplicate,type/to_item,\type/block_piston,equals
+      ([duplicate,const/vec/ny,rotate_block
+        const/vec/py,add,break_block]pop)splat,if,eval
+    ],myprop_OffsetMap)splat,observe_property,for_each,pop
+    comment_t2:break_piston
+    \[\myprop_tmp,observe_property,const/vec/py,add
+      ([add,duplicate,type/to_item,\type/block_piston,equals
+        (break_block,pop)splat,if,eval
+      ],myprop_OffsetMap)splat,observe_property,for_each,pop
+      comment_collect
+      sentinel/get_pos,\32,zone_entity/item
+      \[mote/make,duplicate,mote/contained/get,num_0,index,duplicate,bool_coerce,(add,pop)splat,if,eval]swap,for_each,pop
+      comment_切行或向下
+      myprop_OddVec,([sentinel/get_pos,const/vec/ny,add,duplicate,check_ambit
+        ([duplicate,sentinel/create/great
+          myprop_AlignChunk,\myprop_tmp,swap,set_property
+          myprop_PistonHalf]pop)splat,if,eval
+      ][\vec_0_-1_1,add,\myprop_tmp,swap,set_property,myprop_PistonHalf])splat,if,eval
+    ],num_3,mind_env/schedule
+  ],num_1,mind_env/schedule
+])splat,set_property
+comment_绑定含2组红石活塞的物元
+\vec_30.5_63.5_-51.5
+duplicate,#sentinel_near
+mote/storage/bind
+comment_落哨卫，启动
+#my_aim,raycast,myprop_AlignChunk 
+\vec_7.5_0_7.5,add,#sentinel_near
+sentinel/get_pos,myprop_AlignChunk,\myprop_tmp,swap,set_property
+myprop_PistonHalf
