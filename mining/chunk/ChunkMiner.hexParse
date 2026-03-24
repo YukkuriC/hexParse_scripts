@@ -10,7 +10,7 @@
     comment_split-to-256
     (add,duplicate)
     (1,16)splat,duplicate_n,\16,last_n_list
-    num_-1,construct,pure_reduce,write/local
+    num_-1,construct,pure_reduce,unappend,pop,write/local
     ( (num_0,swap,construct_vec,add)
     read/local,for_each,mask_vv-,splat)read/local,for_each
     comment_do-dig
