@@ -18,25 +18,25 @@ const/vec/py,add,break_block])splat,set_property
     ]pop)splat,if,eval
   ],myprop_OffsetMap)splat,observe_property,for_each,pop
   comment_t1:rotate
-  \[\myprop_tmp,observe_property,const/vec/py,add
+  const/vec/py,add
+  \[\"REPLACEME"
     ([add,duplicate,type/to_item,\type/block_piston,equals
       ([duplicate,const/vec/ny,rotate_block
         const/vec/py,add,break_block]pop)splat,if,eval
     ],myprop_OffsetMap)splat,observe_property,for_each,pop
     comment_t2:break_piston
-    \[\myprop_tmp,observe_property,const/vec/py,add
+    \[\"REPLACEME"
       ([add,duplicate,type/to_item,\type/block_piston,equals
         (break_block,pop)splat,if,eval
       ],myprop_OffsetMap)splat,observe_property,for_each,pop
       comment_collect
-      sentinel/get_pos,\32,zone_entity/item
-      \[mote/make,duplicate,mote/contained/get,num_0,index,duplicate,bool_coerce,(add,pop)splat,if,eval]swap,for_each,pop
-      comment_切行或向下
-      myprop_OddVec,([sentinel/get_pos,const/vec/ny,add,duplicate,check_ambit
+      sentinel/get_pos,myprop_MoteCollect
+      comment_QUINE
+      myprop_OddVec([sentinel/get_pos,const/vec/ny,add,duplicate,check_ambit
         ([duplicate,sentinel/create/great
           myprop_AlignChunk,\myprop_tmp,swap,set_property
           myprop_PistonHalf]pop)splat,if,eval
       ][\vec_0_-1_1,add,\myprop_tmp,swap,set_property,myprop_PistonHalf])splat,if,eval
-    ],num_3,mind_env/schedule
-  ],num_1,mind_env/schedule
+    ]num_1,rotate,replace,num_3,mind_env/schedule
+  ]num_1,rotate,replace,num_1,mind_env/schedule
 ])splat,remove_comments,set_property

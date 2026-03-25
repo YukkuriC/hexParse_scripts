@@ -8,3 +8,5 @@ num_-2,construct,pure_reduce,unappend,pop
 (duplicate,num_16,div,floor swap,num_16,modulo,num_0,swap,construct_vec)swap,pure_map])splat,eval,set_property comment_偏移表（z隔行）
 (myprop_OddVec,[duplicate,deconstruct_vec,mask_vv-,floor,num_2,modulo,bool_coerce])splat,set_property
 (myprop_OddNormal,[duplicate,myprop_OddVec,(vec_0_0_-1,vec_0_0_1)splat,if])splat,set_property
+(myprop_MoteCollect,[\16,zone_entity/item
+\[mote/make,duplicate,mote/contained/get,num_0,index,duplicate,bool_coerce(add,pop)splat,if,eval]swap,for_each,pop])splat,set_property
