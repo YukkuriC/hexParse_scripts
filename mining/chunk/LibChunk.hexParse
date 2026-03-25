@@ -1,0 +1,25 @@
+// requires hexal & hexical & hexflow & hexcellular
+// and HexOP for running property directly
+// yc:check_ambit=hexpose:env_ambit
+// enqueue,pop=mind_env/schedule
+
+// start by writing "myprop_tmp" as chunk corner
+(myprop_ChunkHalf[
+  \myprop_tmp,observe_property
+  ([add,num_4,duplicate_n
+    type/to_item,bool_coerce(break_block,mask_v)splat,if,eval
+    type/to_item,bool_coerce(destroy_water)(mask_v)if,eval
+  ]myprop_OffsetMap)splat,observe_property,for_each,mask_v
+  print
+  myprop_OddVec([
+    comment_collect
+    sentinel/get_pos,myprop_MoteCollect
+    comment_QUINE
+    sentinel/get_pos,const/vec/ny,add,duplicate,check_ambit
+    ([duplicate,sentinel/create/great
+      myprop_AlignChunk,\myprop_tmp,swap,set_property
+      (myprop_ChunkHalf)num_2,mind_env/schedule]pop)splat,if,eval
+  ][comment_HALF2
+    \vec_0_0_1,add,\myprop_tmp,swap,set_property,myprop_ChunkHalf
+  ])splat,if,eval
+])splat,remove_comments,set_property

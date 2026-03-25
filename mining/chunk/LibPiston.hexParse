@@ -9,6 +9,7 @@
 myprop_GetRedstone,swap,const/vec/py,add,const/vec/0,mote/use_on])splat,set_property
 (myprop_PistonUnit2,[duplicate,const/vec/ny,rotate_block
 const/vec/py,add,break_block])splat,set_property
+// start by writing "myprop_tmp"
 (myprop_PistonHalf,[
   \myprop_tmp,observe_property
   ([add,duplicate,type/to_item,bool_coerce
