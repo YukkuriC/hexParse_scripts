@@ -10,7 +10,6 @@
     type/to_item,bool_coerce(break_block,mask_v)splat,if,eval
     type/to_item,bool_coerce(destroy_water)(mask_v)if,eval
   ]myprop_OffsetMap)splat,observe_property,for_each,mask_v
-  print
   myprop_OddVec([
     comment_collect
     sentinel/get_pos,myprop_MoteCollect
