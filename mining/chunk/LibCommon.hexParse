@@ -1,0 +1,10 @@
+// requires hexal & hexical & hexflow & hexcellular
+// and HexOP for running property directly
+
+(myprop_AlignChunk,[duplicate,deconstruct_vec,mask_v-v,swap
+\16,div,floor,\16,mul,deconstruct_vec,mask_-v- /* y x z */ num_2,swizzle,construct_vec,\vec_0.5_0_0.5,add])splat,set_property
+(myprop_OffsetMap,[(add,duplicate)(2,128)splat,duplicate,write/local,duplicate_n,read/local,last_n_list
+num_-2,construct,pure_reduce,unappend,pop
+(duplicate,num_16,div,floor swap,num_16,modulo,num_0,swap,construct_vec)swap,pure_map])splat,eval,set_property comment_偏移表（z隔行）
+(myprop_OddVec,[duplicate,deconstruct_vec,mask_vv-,floor,num_2,modulo,bool_coerce])splat,set_property
+(myprop_OddNormal,[duplicate,myprop_OddVec,(vec_0_0_-1,vec_0_0_1)splat,if])splat,set_property

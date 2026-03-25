@@ -1,0 +1,5 @@
+// uses LibCommon & LibChunk
+
+#my_aim,raycast,myprop_AlignChunk,\myprop_tmp,over,set_property
+\vec_7.5_0_7.5,add,sentinel/create/great
+myprop_ChunkHalf
