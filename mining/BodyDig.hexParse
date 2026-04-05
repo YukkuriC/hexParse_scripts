@@ -2,7 +2,7 @@
 // and hexal/moreiotas for digging content check
 
 comment_check-sneaking
-get_caster,get_entity_height,num_1.75,less
+#is_sneaking
 comment_shift:do-dig
 (
     mind_stack/pop,mind_stack/pop
@@ -42,3 +42,21 @@ comment_normal:pick-pos
     get_caster,entity_pos/eye,get_caster,get_entity_look
     raycast,duplicate,sentinel/create,mind_stack/push
 )if,eval
+
+// MK2 version with cuboid thoth
+// requires hexflow
+comment_check-sneaking
+#is_sneaking
+comment_shift:do-dig
+( mind_stack/pop,mind_stack/pop
+  comment_1.dig
+  ( duplicate,type/to_item,bool_coerce // check not air
+    (break_block,pop)splat,if,eval ) // do dig
+  rotate_reverse,for_range/cube,pop
+  comment_2.clear-sentinel
+  sentinel/destroy
+)
+comment_normal:pick-pos
+( get_caster,entity_pos/eye,get_caster,get_entity_look
+  raycast,duplicate,sentinel/create,mind_stack/push )
+if,eval
