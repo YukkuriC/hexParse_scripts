@@ -2,7 +2,7 @@
 // use as #attacker (entity -> die)
 // #my_aim,raycast/entity
 
-(num_1,fisherman/copy,factor_cut)iris // target [loop] life
+(over,factor_cut)iris // target [loop] life
 comment_single-cut
 duplicate,num_1,greater,(comment_find-minimum
   (swap,num_2)iris // target [loop] [pick_factor] life num
@@ -18,7 +18,7 @@ duplicate,num_1,greater,(comment_find-minimum
 // #my_aim,raycast/entity
 
 (swap
-  (num_1,fisherman/copy,factor_cut)iris // [loop break] target [loop] life
+  (over,factor_cut)iris // [loop break] target [loop] life
   comment_break-if-life-low
   duplicate,num_1,less_eq (num_3,fisherman,eval)empty_list,if,eval
   comment_each-primes

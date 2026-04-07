@@ -31,7 +31,7 @@ num_1,greater_eq,\[read/local,eval]\[(place_mageblock),swap,for_each,pop]if,eval
 
 // recursion version
 (   ([comment_CODE,comment_DIST,comment_CENTER])splat,splat
-    num_1,fisherman/copy,num_1,greater_eq
+    over,num_1,greater_eq
     (   (   // code,dist,center,offset
             num_2,fisherman/copy,mul,add
             swap,num_3,div,swap
