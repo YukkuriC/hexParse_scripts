@@ -11,5 +11,5 @@ ooo ooo
 ( (add)(vec_-1_-1_-1 vec_1_-1_1)for_each // center, [bottoms]
   (type/to_item,bool_coerce,(1,0)splat,if)swap,splat,for_range/cube/pure
   (add)swap,pure_reduce,splat
-  num_1,equals,(place_block,pop)splat,if,eval
+  num_1,equals,([duplicate,type/to_item,bool_coerce,(pop,place_block)splat,if,eval],pop)splat,if,eval
 )swap,splat,for_range/cube
