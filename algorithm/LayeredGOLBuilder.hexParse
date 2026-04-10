@@ -12,6 +12,6 @@ const/vec/py,add,duplicate,\vec_15_0_15,add
   (add)swap,pure_reduce,splat
   over,const/vec/ny,add,type/to_item,bool_coerce,tuck,([num_-1,add],mask_-)splat,if,eval
   comment_new-pos_keep_count
-  swap,([num_2.5,sub,abs,num_0.5,equals][num_3,equals])splat,if,eval
+  swap,([2,3][3])splat,if,swap,index_of,num_0,greater_eq
   ([duplicate,type/to_item,bool_coerce,(pop,place_block)splat,if,eval],pop)splat,if,eval
 )rotate_reverse,for_range/cube
