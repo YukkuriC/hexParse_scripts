@@ -1,0 +1,17 @@
+// one layer in chun at a time
+// requires moreiotas & hexflow
+// #my_aim,raycast
+
+duplicate,deconstruct_vec,mask_v-v,swap
+num_16,div,floor,num_16,mul,deconstruct_vec,mask_-v-
+num_2,swizzle,construct_vec
+const/vec/py,add,duplicate,\vec_15_0_15,add
+( comment_count-around
+  (add)(vec_-1_-1_-1 vec_1_-1_1)for_each
+  (type/to_item,bool_coerce,(1,0)splat,if)swap,splat,for_range/cube/pure
+  (add)swap,pure_reduce,splat
+  over,const/vec/ny,add,type/to_item,bool_coerce,tuck,([num_-1,add],mask_-)splat,if,eval
+  comment_new-pos_keep_count
+  swap,([num_2.5,sub,abs,num_0.5,equals][num_3,equals])splat,if,eval
+  ([duplicate,type/to_item,bool_coerce,(pop,place_block)splat,if,eval],pop)splat,if,eval
+)rotate_reverse,for_range/cube
