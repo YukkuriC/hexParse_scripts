@@ -10,13 +10,19 @@ export const DIALECTS: Entry[] = [
         label: 'thoth',
         kind: CompletionItemKind.Keyword,
         detail: 'Dialect',
-        documentation: 'Thoth dialect for single token parsing',
+        documentation: 'dialect for `for_each`',
     },
     {
         label: 'iris',
         kind: CompletionItemKind.Keyword,
         detail: 'Dialect',
-        documentation: 'Iris dialect for single token parsing',
+        documentation: 'dialect for `eval/cc`',
+    },
+    {
+        label: 'hermes',
+        kind: CompletionItemKind.Keyword,
+        detail: 'Dialect',
+        documentation: 'dialect for `eval`',
     },
 ]
 
@@ -42,7 +48,6 @@ export const META_PATTERNS: Entry[] = [
     },
     { label: 'halt', kind: CompletionItemKind.Keyword, detail: 'Meta Pattern', documentation: 'Halt execution' },
     { label: 'del', kind: CompletionItemKind.Keyword, detail: 'Meta Pattern', documentation: 'Delete / drop' },
-    { label: 'hermes', kind: CompletionItemKind.Keyword, detail: 'Meta Pattern', documentation: 'Hermes pattern' },
 ]
 
 export const CONSTANTS: Entry[] = [

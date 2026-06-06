@@ -2,5 +2,5 @@
 src/**
 *.ts
 tsconfig.json
-build.bat
+*.bat
 .gitignore
