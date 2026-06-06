@@ -101,6 +101,8 @@ repository:
     patterns:
     - match: (if|eval(/cc)?|for_each|halt|del|hermes|thoth|iris)$
       name: keyword.control.meta
+    - match: (for_range/(line|cube|floodfill)(/pure)?|pure_(map|reduce)|call_stack)$
+      name: keyword.control.meta.hexflow
     - match: num(_[0-9e.\-]+)?$
       name: keyword.num.pattern
       captures:
