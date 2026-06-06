@@ -1,12 +1,20 @@
 {
     "name": "hexparse_highlight",
-    "version": "0.5.0",
+    "version": "1.0.0",
     "displayName": "HexParse Highlight Extension",
+    "description": "Syntax highlighting, LSP (completion/hover/diagnostics), and snippets for HexParse script language.",
     "icon": "icon.webp",
     "engines": {
-        "vscode": "^0.0"
+        "vscode": "^1.74.0"
     },
     "publisher": "YukkuriC",
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:HexParse"
+    ],
+    "main": "./out/extension.js",
     "contributes": {
         "languages": [
             {
@@ -15,10 +23,15 @@
                     ".hexParse",
                     ".hexparse"
                 ],
+                "aliases": [
+                    "HexParse",
+                    "hexparse"
+                ],
                 "icon": {
                     "dark": "icon.webp",
                     "light": "icon.webp"
-                }
+                },
+                "configuration": "./syntaxes/languageConfiguration.json"
             }
         ],
         "grammars": [
@@ -27,6 +40,28 @@
                 "scopeName": "source.HexParse",
                 "path": "./syntaxes/HexParse.tmGrammar.json"
             }
+        ],
+        "snippets": [
+            {
+                "language": "HexParse",
+                "path": "./snippets/hexparse.json"
+            }
         ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run grammar && npm run compile",
+        "grammar": "python syntaxes/parser.py",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./"
+    },
+    "devDependencies": {
+        "@types/node": "^20.x",
+        "@types/vscode": "^1.74.0",
+        "typescript": "^5.3.x"
+    },
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1",
+        "vscode-languageserver": "^9.0.1",
+        "vscode-languageserver-textdocument": "^1.0.11"
     }
 }

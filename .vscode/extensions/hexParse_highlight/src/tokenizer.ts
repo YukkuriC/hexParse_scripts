@@ -1,0 +1,115 @@
+// 生成于 GLM-5V-Turbo
+import { Position, Range } from 'vscode-languageserver/node'
+import { TextDocument } from 'vscode-languageserver-textdocument'
+import { connection } from './server'
+
+export interface Token {
+    text: string
+    start: Position
+    end: Position
+}
+
+export function tokenizeLine(line: string, lineNum: number): Token[] {
+    const tokens: Token[] = []
+    let i = 0
+    while (i < line.length) {
+        // skip whitespace
+        if (line[i] === ' ' || line[i] === '\t') {
+            i++
+            continue
+        }
+
+        // ── Layer 1: Comments (highest priority) ──
+
+        // block comment start → consume until end of line (simplified; multi-line handled at doc level)
+        if (line[i] === '/' && line[i + 1] === '*') {
+            tokens.push({
+                text: line.slice(i).replace(/\r$/, ''),
+                start: { line: lineNum, character: i },
+                end: { line: lineNum, character: line.length },
+            })
+            break
+        }
+        // line comment → rest is comment
+        if (line[i] === '/' && line[i + 1] === '/') {
+            tokens.push({
+                text: line.slice(i).replace(/\r$/, ''),
+                start: { line: lineNum, character: i },
+                end: { line: lineNum, character: line.length },
+            })
+            break
+        }
+
+        // ── Layer 2: Structural ──
+
+        // quoted string
+        if (line[i] === '"') {
+            let j = i + 1
+            while (j < line.length && line[j] !== '"') {
+                if (line[j] === '\\') j++
+                j++
+            }
+            j = Math.min(j + 1, line.length)
+            tokens.push({
+                text: line.slice(i, j).replace(/\r$/, ''),
+                start: { line: lineNum, character: i },
+                end: { line: lineNum, character: j },
+            })
+            i = j
+            continue
+        }
+        // structural chars
+        if ('[(){}]'.includes(line[i])) {
+            tokens.push({
+                text: line[i],
+                start: { line: lineNum, character: i },
+                end: { line: lineNum, character: i + 1 },
+            })
+            i++
+            continue
+        }
+        // escape char
+        if (line[i] === '\\') {
+            tokens.push({
+                text: '\\',
+                start: { line: lineNum, character: i },
+                end: { line: lineNum, character: i + 1 },
+            })
+            i++
+            continue
+        }
+
+        // ── Layer 3: Code content (lowest priority) ──
+
+        // word token (identifier / pattern) — stops at delimiters
+        // / only splits when followed by * or / (block/line comment start)
+        let j = i
+        while (j < line.length && !' \t,[(\\){}]'.includes(line[j])) {
+            if (line[j] === '/' && (line[j + 1] === '*' || line[j + 1] === '/')) break
+            j++
+        }
+        if (j > i) {
+            tokens.push({
+                text: line.slice(i, j).replace(/\r$/, ''), // strip trailing CR on Windows
+                start: { line: lineNum, character: i },
+                end: { line: lineNum, character: j },
+            })
+            i = j
+        } else {
+            i++
+        }
+    }
+    return tokens
+}
+
+export function getTokenAt(doc: TextDocument, pos: Position): Token | null {
+    const lineLen = doc.getText(Range.create(pos.line, 0, pos.line, 0)).length
+    const line = doc.getText(Range.create(pos.line, 0, pos.line, Math.max(lineLen, 1)))
+    connection.console.log(`[getTokenAt] pos=${pos.line}:${pos.character}, lineLen=${lineLen}, line="${line}"`)
+    const tokens = tokenizeLine(line, pos.line)
+    for (const t of tokens) {
+        if (pos.line === t.start.line && pos.character >= t.start.character && pos.character <= t.end.character)
+            return t
+    }
+    return null
+}

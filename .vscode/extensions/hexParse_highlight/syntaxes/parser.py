@@ -1,6 +1,7 @@
-import json, yaml
+import json, os, yaml
 from functools import partial
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 open = partial(open, encoding='utf-8')
 
 REVERSE = False

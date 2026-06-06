@@ -2,13 +2,18 @@ scopeName: source.HexParse
 patterns:
 - include: '#INIT'
 repository:
-  INIT:
+  # ── Layer 1: Comments (highest priority) ───────────
+  COMMENTS:
     patterns:
     - match: //.*$
       name: comment.line
     - begin: /\*
       end: \*/
       name: comment.multiline
+
+  # ── Layer 2: Structural (brackets, strings) ────────
+  STRUCTURAL:
+    patterns:
     - match: "\".*?\""
       name: string.literal.quotes
     - begin: \[
@@ -22,31 +27,44 @@ repository:
       name: nested.list
       patterns:
       - include: '#INIT'
-    - begin: \(
+    - begin: '[\(\{]'
       beginCaptures:
         '0':
-          name: keyword.control.paren.left
-      end: \)
+          name: keyword.control.group.left
+      end: '[\)\}]'
       endCaptures:
         '0':
-          name: keyword.control.paren.right
-      name: paren.list
+          name: keyword.control.group.right
+      name: group.list
       patterns:
       - include: '#INIT'
-    - match: '\[|\]|\(|\)'
-      name: invalid.single.paren
-    - include: '#CUTTER'
+
+  # ── Layer 3: Code content (lowest priority) ───────
   CUTTER:
     patterns:
     - name: code_cutter
-      match: \\|[\w./\-:\u0100-\uffff]+
+      match: \\|[\w./\-:#\u0100-\uffff]+
       captures:
         "0":
           patterns:
+          - include: '#macro'
           - include: '#comment_iota'
           - include: '#literal'
           - include: '#special_handler'
           - include: '#pattern'
+
+  # ── Entry point ────────────────────────────────────
+  INIT:
+    patterns:
+    - include: '#COMMENTS'
+    - include: '#STRUCTURAL'
+    - include: '#CUTTER'
+
+  # ── Sub-rules ──────────────────────────────────────
+  macro:
+    patterns:
+    - match: "#\\w+$"
+      name: keyword.control.macro
   comment_iota:
     patterns:
     - match: comment_.*
@@ -64,12 +82,20 @@ repository:
     - include: '#inner_literal'
   inner_literal:
     patterns:
+    - match: (?i)(true|false)$
+      name: constant.language.boolean
+    - match: (?i)null$
+      name: constant.language.null
+    - match: (?i)garbage$
+      name: constant.language.garbage
     - match: ([Mm][Yy])?[Ss][Ee][Ll][Ff]
       name: entity.name.type.myself
     - include: '#num'
   num:
     patterns:
-    - match: '[0-9.\-]+(e[0-9.\-]+)?'
+    # Match proper numbers: optional leading -, must start with digit, optional decimal part, optional exponent
+    # Avoids matching bare ".", ".5", "-" etc. as separate fragments inside vec_/gate_ args
+    - match: '-?[0-9]+(\.[0-9]*)?(e[+\-]?[0-9]+)?'
       name: constant.numeric
   pattern:
     patterns:
@@ -83,6 +109,10 @@ repository:
           - include: '#num'
     - match: mask_[-v]+$
       name: keyword.mask
+    - match: copy_mask_[-n]+$
+      name: keyword.copymask
+    - match: _[wedsaq]+$
+      name: keyword.rawpattern
     - match: .+$
       name: variable.pattern
   special_handler:
@@ -104,3 +134,29 @@ repository:
       captures:
         "3":
           name: entity.name.namespace.typeid
+    # ── Plugin types (addon mods) ──────────────────────
+    # Hexcellular: Property
+    - match: (my)?prop_.+$
+      name: keyword.property.literal
+    # Hex-Ars-Linker: Glyph Reference
+    - match: glyph_.+$
+      name: keyword.glyph.literal
+    # HexPose: Identifier (ResourceLocation)
+    - match: id_.+$
+      name: keyword.identifier.rl
+    # Oneironaut: Dimension
+    - match: dim_.+$
+      name: keyword.dim.literal
+    # Ephemera: Status/Potion
+    - match: potion_.+$
+      name: keyword.potion.literal
+    # MoreIotas: Matrix
+    - match: (mat|matrix)_(.+)$
+      name: keyword.matrix.literal
+      captures:
+        "2":
+          patterns:
+          - include: '#num'
+    # Hexal: Mote
+    - match: mote_.+$
+      name: keyword.mote.literal

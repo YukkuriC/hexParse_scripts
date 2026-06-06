@@ -1,0 +1,142 @@
+{
+    "Nested List": {
+        "prefix": "[",
+        "body": "[${1}]",
+        "description": "Nested list (ListIota)"
+    },
+    "Paren Pattern": {
+        "prefix": "(",
+        "body": "(${1})",
+        "description": "Non-functional pattern wrapper"
+    },
+    "Brace Pattern": {
+        "prefix": "{",
+        "body": "{${1}}",
+        "description": "Non-functional pattern wrapper (brace, equivalent to paren)"
+    },
+    "Vector (3-axis)": {
+        "prefix": "vec3",
+        "body": "vec_${1:x}_${2:y}_${3:z}",
+        "description": "Vector literal with 3 axes"
+    },
+    "Vector (2-axis)": {
+        "prefix": "vec2",
+        "body": "vec_${1:x}_${2:y}",
+        "description": "Vector literal with 2 axes"
+    },
+    "Vector (1-axis)": {
+        "prefix": "vec1",
+        "body": "vec_${1:x}",
+        "description": "Vector literal with 1 axis"
+    },
+    "Entity UUID": {
+        "prefix": "entity_",
+        "body": "entity_${1:00000000-0000-0000-0000-000000000000}",
+        "description": "Entity reference by UUID"
+    },
+    "Quoted String": {
+        "prefix": "strq",
+        "body": "\"${1}\"",
+        "description": "Double-quoted string literal"
+    },
+    "String Prefix": {
+        "prefix": "str_",
+        "body": "str_${1:content}",
+        "description": "String literal with str_ prefix"
+    },
+    "Number Pattern": {
+        "prefix": "num_",
+        "body": "num_${1:0}",
+        "description": "Numerical Reflection pattern"
+    },
+    "Mask Pattern": {
+        "prefix": "mask_",
+        "body": "mask_${1:--vv--}",
+        "description": "Bookkeeper's Gambit mask pattern"
+    },
+    "Raw Pattern": {
+        "prefix": "_raw",
+        "body": "_${1:wedsaq}",
+        "description": "Raw pattern by angle signature"
+    },
+    "Macro Ref": {
+        "prefix": "#",
+        "body": "#${1:macro_name}",
+        "description": "Macro reference"
+    },
+    "Comment Iota": {
+        "prefix": "comment_",
+        "body": "comment_${1:text}",
+        "description": "Comment iota (displayed as text)"
+    },
+    "Tab Indent": {
+        "prefix": "tab_",
+        "body": "tab_${1:4}",
+        "description": "Indent comment with linebreak + spaces"
+    },
+    "Gate (unbound)": {
+        "prefix": "gate",
+        "body": "gate",
+        "description": "Unbound gate (Hexal)"
+    },
+    "Gate (position)": {
+        "prefix": "gate_pos",
+        "body": "gate_${1:x}_${2:y}_${3:z}",
+        "description": "Position-bound gate (Hexal)"
+    },
+    "Gate (entity)": {
+        "prefix": "gate_ent",
+        "body": "gate_${1:self|uuid}_${2:x}_${3:y}_${4:z}",
+        "description": "Entity-bound gate (Hexal)"
+    },
+    "Matrix": {
+        "prefix": "matrix_",
+        "body": "matrix_${1:rows}_${2:cols}_${3:v1}_${4:v2}",
+        "description": "MoreIotas matrix literal"
+    },
+    "Type Iota": {
+        "prefix": "type/",
+        "body": "type/${1|iota,entity,item,block|}_${2:id}",
+        "description": "Type reference (MoreIotas/Hexal)"
+    },
+    "Glyph": {
+        "prefix": "glyph_",
+        "body": "glyph_${1:name}",
+        "description": "Glyph reference (Hex-Ars-Linker)"
+    },
+    "Property": {
+        "prefix": "prop_",
+        "body": "prop_${1:name}",
+        "description": "Property iota (Hexcellular)"
+    },
+    "My Property": {
+        "prefix": "myprop_",
+        "body": "myprop_${1:name}",
+        "description": "Player-specific property (Hexcellular)"
+    },
+    "Identifier RL": {
+        "prefix": "id_",
+        "body": "id_${1:resource_location}",
+        "description": "ResourceLocation identifier (HexPose)"
+    },
+    "Mote": {
+        "prefix": "mote_",
+        "body": "mote_${1:uuid}_${2:index}",
+        "description": "Mote reference (Hexal)"
+    },
+    "Dimension": {
+        "prefix": "dim_",
+        "body": "dim_${1:namespace}:${2:id}",
+        "description": "Dimension iota (Oneironaut)"
+    },
+    "Potion/Status": {
+        "prefix": "potion_",
+        "body": "potion_${1:namespace}:${2:id}",
+        "description": "Status/Potion iota (Ephemera)"
+    },
+    "Copy Mask": {
+        "prefix": "copy_mask_",
+        "body": "copy_mask_${1:nn----}",
+        "description": "Electric Fisherman copy mask (HexFlow)"
+    }
+}
