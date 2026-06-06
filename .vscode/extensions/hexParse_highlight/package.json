@@ -1,13 +1,25 @@
 {
-    "name": "hexparse_highlight",
+    "name": "hexparse-highlight",
     "version": "1.0.0",
     "displayName": "HexParse Highlight Extension",
     "description": "Syntax highlighting, LSP (completion/hover/diagnostics), and snippets for HexParse script language.",
     "icon": "icon.webp",
+    "license": "MIT",
+    "keywords": [
+        "hexcasting",
+        "hexparse",
+        "minecraft",
+        "syntax-highlighting",
+        "lsp"
+    ],
     "engines": {
         "vscode": "^1.74.0"
     },
     "publisher": "YukkuriC",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/YukkuriC/hexParse_scripts/tree/main/.vscode/extensions/hexParse_highlight"
+    },
     "categories": [
         "Programming Languages"
     ],

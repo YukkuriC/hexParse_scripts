@@ -1,0 +1,6 @@
+.vscode/**
+src/**
+*.ts
+tsconfig.json
+build.bat
+.gitignore
