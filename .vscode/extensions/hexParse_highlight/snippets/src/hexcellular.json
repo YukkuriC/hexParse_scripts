@@ -1,0 +1,14 @@
+{
+    "property": {
+        "prefix": "prop_",
+        "body": "prop_${1:name}",
+        "label": "Property",
+        "description": "Property iota (Hexcellular)"
+    },
+    "my_property": {
+        "prefix": "myprop_",
+        "body": "myprop_${1:name}",
+        "label": "My Property",
+        "description": "Player-specific property (Hexcellular)"
+    }
+}

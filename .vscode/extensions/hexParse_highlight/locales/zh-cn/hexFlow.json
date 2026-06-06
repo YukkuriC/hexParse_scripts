@@ -1,0 +1,7 @@
+{
+  "snippet.copyMask.label": "复制掩码",
+  "snippet.copyMask.description": "电鱼之策略复制掩码（HexFlow）",
+  "plugin.copyMask.detail": "复制掩码（HexFlow）",
+  "plugin.copyMask.doc": "电鱼之策略复制掩码。每个 n 表示从哪个栈位复制。",
+  "hover.copyMask": "**复制掩码**（HexFlow）—— 电鱼之策略复制掩码。\n每个 `n` 表示从对应栈位复制。"
+}

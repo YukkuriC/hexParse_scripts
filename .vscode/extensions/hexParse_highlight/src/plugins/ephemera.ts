@@ -10,8 +10,8 @@ export const ephemeraPrefixes: PrefixEntry[] = [
             {
                 label: 'potion_',
                 kind: 17, // CompletionItemKind.EnumMember
-                detail: 'Status/Potion (Ephemera)',
-                documentation: 'Status/Potion iota by ID. Namespace minecraft: can be omitted.',
+                detail: 'plugin.potion.detail',
+                documentation: 'plugin.potion.doc',
                 insertText: 'potion_${1:namespace}:${2:id}',
             },
         ],
@@ -19,5 +19,5 @@ export const ephemeraPrefixes: PrefixEntry[] = [
 ]
 
 export const ephemeraHovers: HoverEntry = {
-    potion_: '**Potion/Status** (Ephemera) — PotionIota. Namespace `minecraft:` omittable.',
+    potion_: 'hover.potion',
 }

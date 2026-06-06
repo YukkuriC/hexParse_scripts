@@ -1,0 +1,8 @@
+{
+  "plugin.matrix.detail": "矩阵（MoreIotas）",
+  "plugin.matrix.doc": "按行列后跟逐行数字构成的矩阵。示例：matrix_2_2_1_0_0_1",
+  "plugin.matrixAlias.detail": "矩阵别名（MoreIotas）",
+  "plugin.matrixAlias.doc": "matrix_ 的简写。格式相同。",
+  "hover.matrix": "**矩阵**（`matrix_<行数>_<列数>_<值...>`）—— MoreIotas MatrixIota。",
+  "hover.matrixAlias": "**矩阵**（别名）—— `matrix_` 的简写形式。"
+}

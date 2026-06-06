@@ -10,9 +10,8 @@ export const hexFlowPrefixes: PrefixEntry[] = [
             {
                 label: 'copy_mask_',
                 kind: 24, // CompletionItemKind.Operator
-                detail: 'Copy Mask (HexFlow)',
-                documentation:
-                    'Electric Fisherman copy mask. Each n indicates a stack position to copy from.',
+                detail: 'plugin.copyMask.detail',
+                documentation: 'plugin.copyMask.doc',
                 insertText: 'copy_mask_${1:nn----}',
             },
         ],
@@ -20,6 +19,5 @@ export const hexFlowPrefixes: PrefixEntry[] = [
 ]
 
 export const hexFlowHovers: HoverEntry = {
-    copy_mask_:
-        '**Copy Mask** (HexFlow) — Electric Fisherman copy mask.\nEach `n` = stack position to copy from.',
+    copy_mask_: 'hover.copyMask',
 }

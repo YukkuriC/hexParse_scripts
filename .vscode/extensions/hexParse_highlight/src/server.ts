@@ -14,6 +14,14 @@ import { buildCompletionItems } from './completion'
 import { handleHover } from './hover'
 import { validateDoc } from './validation'
 import { getTokenAt } from './tokenizer'
+import { registerBundle, setLocale } from './i18n'
+import * as nlsEn from '../package.nls.json'
+import * as nlsZh from '../package.nls.zh-cn.json'
+
+// ─── Register locale bundles ─────────────────────────────────
+
+registerBundle('en', nlsEn as unknown as Record<string, string>)
+registerBundle('zh-cn', nlsZh as unknown as Record<string, string>)
 
 // ─── Connection & Document Setup ──────────────────────────────
 
@@ -25,6 +33,11 @@ let hasDiagnosticsCapability = false
 connection.onInitialize((params: InitializeParams) => {
     const capabilities = params.capabilities
     hasDiagnosticsCapability = !!(capabilities.textDocument && capabilities.textDocument.diagnostic)
+
+    // Set locale from client initialization options (default: en)
+    const locale = (params.initializationOptions?.locale as string) || 'en'
+    setLocale(locale)
+
     const result: InitializeResult = {
         capabilities: {
             textDocumentSync: TextDocumentSyncKind.Incremental,

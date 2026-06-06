@@ -10,8 +10,8 @@ export const oneironautPrefixes: PrefixEntry[] = [
             {
                 label: 'dim_',
                 kind: 16, // CompletionItemKind.Enum
-                detail: 'Dimension (Oneironaut)',
-                documentation: 'Dimension iota by ID. Namespace minecraft: can be omitted.',
+                detail: 'plugin.dim.detail',
+                documentation: 'plugin.dim.doc',
                 insertText: 'dim_${1:namespace}:${2:id}',
             },
         ],
@@ -19,5 +19,5 @@ export const oneironautPrefixes: PrefixEntry[] = [
 ]
 
 export const oneironautHovers: HoverEntry = {
-    dim_: '**Dimension** (Oneironaut) — DimIota. Namespace `minecraft:` omittable.',
+    dim_: 'hover.dim',
 }

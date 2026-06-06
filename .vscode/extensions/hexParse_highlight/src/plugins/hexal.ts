@@ -1,5 +1,6 @@
 // 生成于 GLM-5V-Turbo
 import { PrefixEntry, HoverEntry } from '../types'
+// No t() import — values are i18n keys, resolved at consumption time
 
 // ─── Hexal: Gate & Mote ──────────────────────────────────────
 
@@ -10,22 +11,21 @@ export const hexalPrefixes: PrefixEntry[] = [
             {
                 label: 'gate',
                 kind: 3, // CompletionItemKind.Function
-                detail: 'Gate (unbound)',
-                documentation:
-                    'Unbound gate (Hexal). NOTE: Extra cost for making gates. Parsed gates have negative IDs.',
+                detail: 'plugin.gate.detail',
+                documentation: 'plugin.gate.doc',
             },
             {
                 label: 'gate_pos',
                 kind: 3,
-                detail: 'Gate (position-bound)',
-                documentation: 'Position-bound gate. Format: gate_x_y_z',
+                detail: 'plugin.gatePos.detail',
+                documentation: 'plugin.gatePos.doc',
                 insertText: 'gate_${1:x}_${2:y}_${3:z}',
             },
             {
                 label: 'gate_entity',
                 kind: 3,
-                detail: 'Gate (entity-bound)',
-                documentation: 'Entity-bound gate. Format: gate_uuid[_x_y_z]',
+                detail: 'plugin.gateEnt.detail',
+                documentation: 'plugin.gateEnt.doc',
                 insertText: 'gate_${1:self|uuid}_${2:x}_${3:y}_${4:z}',
             },
         ],
@@ -36,8 +36,8 @@ export const hexalPrefixes: PrefixEntry[] = [
             {
                 label: 'mote_',
                 kind: 7, // CompletionItemKind.Class
-                detail: 'Mote (Hexal)',
-                documentation: 'Mote from a nexus. Format: mote_uuid_idx',
+                detail: 'plugin.mote.detail',
+                documentation: 'plugin.mote.doc',
                 insertText: 'mote_${1:uuid}_${2:index}',
             },
         ],
@@ -48,29 +48,29 @@ export const hexalPrefixes: PrefixEntry[] = [
             {
                 label: 'type/iota_',
                 kind: 9, // CompletionItemKind.Interface
-                detail: 'Iota Type',
-                documentation: 'Iota type by ID (MoreIotas/Hexal). Namespace hexcasting: can be omitted.',
+                detail: 'plugin.iotaType.detail',
+                documentation: 'plugin.iotaType.doc',
                 insertText: 'type/iota_${1:id}',
             },
             {
                 label: 'type/entity_',
                 kind: 9,
-                detail: 'Entity Type',
-                documentation: 'Entity type by ID. Namespace minecraft: can be omitted.',
+                detail: 'plugin.entityType.detail',
+                documentation: 'plugin.entityType.doc',
                 insertText: 'type/entity_${1:id}',
             },
             {
                 label: 'type/item_',
                 kind: 9,
-                detail: 'Item Type',
-                documentation: 'Item type by ID. Namespace minecraft: can be omitted.',
+                detail: 'plugin.itemType.detail',
+                documentation: 'plugin.itemType.doc',
                 insertText: 'type/item_${1:id}',
             },
             {
                 label: 'type/block_',
                 kind: 9,
-                detail: 'Block Type',
-                documentation: 'Block type by ID. Namespace minecraft: can be omitted.',
+                detail: 'plugin.blockType.detail',
+                documentation: 'plugin.blockType.doc',
                 insertText: 'type/block_${1:id}',
             },
         ],
@@ -78,9 +78,7 @@ export const hexalPrefixes: PrefixEntry[] = [
 ]
 
 export const hexalHovers: HoverEntry = {
-    gate:
-        '**Gate** (Hexal) — GateIota. Unbound or position/entity bound.\nFormat: `gate`, `gate_x_y_z`, `gate_uuid[_x_y_z]`\nNOTE: Extra cost. Parsed gates have negative IDs.',
-    'type/':
-        '**Type Reference** (`type/<kind>_<id>`) — MoreIotas/Hexal type iota.\nKinds: `iota`, `entity`, `item`, `block`.',
-    mote_: '**Mote** (Hexal) — MoteIota from a nexus. Format: `mote_<uuid>_<idx>`.',
+    gate: 'hover.gate',
+    'type/': 'hover.typeRef',
+    mote_: 'hover.mote',
 }

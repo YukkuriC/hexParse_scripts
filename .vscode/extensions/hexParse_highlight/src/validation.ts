@@ -2,6 +2,7 @@
 import { Diagnostic, DiagnosticSeverity, Position, Range } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { tokenizeLine } from './tokenizer'
+import { t } from './i18n'
 
 /** Find all block comment ranges in the document for skipping */
 function findBlockCommentRanges(text: string): { start: number; end: number }[] {
@@ -52,66 +53,66 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
             // Skip validation inside block comments
             if (isInBlockComment(posToOffset(tok.start), blockComments)) continue
 
-            const t = tok.text
+            const t_text = tok.text
 
             // Validate entity UUID format (only if suffix looks like a UUID - contains hyphens)
-            if (t.startsWith('entity_') && t.includes('-')) {
-                const uuid = t.slice(7)
+            if (t_text.startsWith('entity_') && t_text.includes('-')) {
+                const uuid = t_text.slice(7)
                 const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
                 if (!uuidRegex.test(uuid)) {
                     diagnostics.push({
                         severity: DiagnosticSeverity.Error,
                         range: Range.create(tok.start, tok.end),
-                        message: `Invalid UUID format after entity_: "${uuid}". Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`,
+                        message: t('validation.invalidUuid', { uuid }),
                         source: 'hexparse',
                     })
                 }
             }
 
             // Warn about str_ with spaces (not supported)
-            if (t.startsWith('str_') && /\s/.test(t.slice(4))) {
+            if (t_text.startsWith('str_') && /\s/.test(t_text.slice(4))) {
                 diagnostics.push({
                     severity: DiagnosticSeverity.Warning,
                     range: Range.create(tok.start, tok.end),
-                    message: 'str_ prefix does not support spaces. Use double-quoted strings instead.',
+                    message: t('validation.strSpaces'),
                     source: 'hexparse',
                 })
             }
 
             // Warn about raw pattern with non-angle chars
-            if (t.startsWith('_') && t.length > 1) {
-                const sig = t.slice(1)
+            if (t_text.startsWith('_') && t_text.length > 1) {
+                const sig = t_text.slice(1)
                 if (!/^[qwedsa]+$/.test(sig)) {
                     diagnostics.push({
                         severity: DiagnosticSeverity.Warning,
                         range: Range.create(tok.start, tok.end),
-                        message: `Raw pattern contains invalid angle signature characters: "${sig}". Valid: q w e d s a`,
+                        message: t('validation.rawChars', { sig }),
                         source: 'hexparse',
                     })
                 }
             }
 
             // Validate mask pattern chars
-            if (t.startsWith('mask_') && t.length > 5) {
-                const m = t.slice(5)
+            if (t_text.startsWith('mask_') && t_text.length > 5) {
+                const m = t_text.slice(5)
                 if (!/^[v\-]+$/.test(m)) {
                     diagnostics.push({
                         severity: DiagnosticSeverity.Error,
                         range: Range.create(tok.start, tok.end),
-                        message: `Mask pattern invalid characters: "${m}". Only - (dash) and v allowed.`,
+                        message: t('validation.maskChars', { m }),
                         source: 'hexparse',
                     })
                 }
             }
 
             // Validate copy_mask pattern chars
-            if (t.startsWith('copy_mask_') && t.length > 10) {
-                const m = t.slice(10)
+            if (t_text.startsWith('copy_mask_') && t_text.length > 10) {
+                const m = t_text.slice(10)
                 if (!/^[n\-]+$/.test(m)) {
                     diagnostics.push({
                         severity: DiagnosticSeverity.Error,
                         range: Range.create(tok.start, tok.end),
-                        message: `Copy mask invalid characters: "${m}". Only - (dash) and n allowed.`,
+                        message: t('validation.copyMaskChars', { m }),
                         source: 'hexparse',
                     })
                 }
@@ -123,7 +124,8 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
     let depthSq = 0
     let depthGroup = 0
     const sqOpenStack: Position[] = [] // track [ positions for precise error
-    const groupOpenStack: Position[] = [] // track ( or { positions
+    const groupOpenStack: Position[] = // track ( or { positions
+        []
 
     for (let ci = 0; ci < text.length; ci++) {
         // Skip block comment content entirely
@@ -164,7 +166,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(pos, { line: pos.line, character: pos.character + 1 }),
-            message: `Unmatched '[' — missing closing ']'`,
+            message: t('validation.unmatchedSqOpen'),
             source: 'hexparse',
         })
     }
@@ -173,7 +175,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(lastLine, 0, lastLine, Math.max(lines[lastLine].length, 1)),
-            message: `Unmatched ']' — extra closing bracket`,
+            message: t('validation.unmatchedSqClose'),
             source: 'hexparse',
         })
     }
@@ -182,7 +184,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(pos, { line: pos.line, character: pos.character + 1 }),
-            message: `Unmatched '(' or '{' — missing closing ')' or '}'`,
+            message: t('validation.unmatchedGroupOpen'),
             source: 'hexparse',
         })
     }
@@ -191,7 +193,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(lastLine, 0, lastLine, Math.max(lines[lastLine].length, 1)),
-            message: `Unmatched ')' or '}' — extra closing group bracket`,
+            message: t('validation.unmatchedGroupClose'),
             source: 'hexparse',
         })
     }

@@ -2,27 +2,29 @@
 import { CompletionItem, CompletionItemKind } from 'vscode-languageserver/node'
 import { Entry, PrefixEntry } from './types'
 import { allPluginPrefixes } from './plugins'
+import { t } from './i18n'
 
 // ─── Core Completion Data (Hexcasting built-in) ──────────────
+// detail/documentation store i18n keys; resolved by t() at consumption time
 
 export const DIALECTS: Entry[] = [
     {
         label: 'thoth',
         kind: CompletionItemKind.Keyword,
-        detail: 'Dialect',
-        documentation: 'dialect for `for_each`',
+        detail: 'completion.dialect.detail',
+        documentation: 'completion.thoth.doc',
     },
     {
         label: 'iris',
         kind: CompletionItemKind.Keyword,
-        detail: 'Dialect',
-        documentation: 'dialect for `eval/cc`',
+        detail: 'completion.dialect.detail',
+        documentation: 'completion.iris.doc',
     },
     {
         label: 'hermes',
         kind: CompletionItemKind.Keyword,
-        detail: 'Dialect',
-        documentation: 'dialect for `eval`',
+        detail: 'completion.dialect.detail',
+        documentation: 'completion.hermes.doc',
     },
 ]
 
@@ -30,46 +32,46 @@ export const META_PATTERNS: Entry[] = [
     {
         label: 'if',
         kind: CompletionItemKind.Keyword,
-        detail: 'Meta Pattern',
-        documentation: 'Conditional execution pattern',
+        detail: 'completion.meta.detail',
+        documentation: 'completion.if.doc',
     },
-    { label: 'eval', kind: CompletionItemKind.Keyword, detail: 'Meta Pattern', documentation: 'Evaluation pattern' },
+    { label: 'eval', kind: CompletionItemKind.Keyword, detail: 'completion.meta.detail', documentation: 'completion.eval.doc' },
     {
         label: 'eval/cc',
         kind: CompletionItemKind.Keyword,
-        detail: 'Meta Pattern',
-        documentation: 'Eval with continuation',
+        detail: 'completion.meta.detail',
+        documentation: 'completion.evalcc.doc',
     },
     {
         label: 'for_each',
         kind: CompletionItemKind.Keyword,
-        detail: 'Meta Pattern',
-        documentation: 'Iteration over list',
+        detail: 'completion.meta.detail',
+        documentation: 'completion.foreach.doc',
     },
-    { label: 'halt', kind: CompletionItemKind.Keyword, detail: 'Meta Pattern', documentation: 'Halt execution' },
-    { label: 'del', kind: CompletionItemKind.Keyword, detail: 'Meta Pattern', documentation: 'Delete / drop' },
+    { label: 'halt', kind: CompletionItemKind.Keyword, detail: 'completion.meta.detail', documentation: 'completion.halt.doc' },
+    { label: 'del', kind: CompletionItemKind.Keyword, detail: 'completion.meta.detail', documentation: 'completion.del.doc' },
 ]
 
 export const CONSTANTS: Entry[] = [
     {
         label: 'true',
         kind: CompletionItemKind.Constant,
-        detail: 'Boolean',
-        documentation: 'Boolean true (case insensitive)',
+        detail: 'completion.boolean.detail',
+        documentation: 'completion.true.doc',
     },
     {
         label: 'false',
         kind: CompletionItemKind.Constant,
-        detail: 'Boolean',
-        documentation: 'Boolean false (case insensitive)',
+        detail: 'completion.boolean.detail',
+        documentation: 'completion.false.doc',
     },
-    { label: 'null', kind: CompletionItemKind.Constant, detail: 'Null', documentation: 'NullIota (case insensitive)' },
-    { label: 'NULL', kind: CompletionItemKind.Constant, detail: 'Null', documentation: 'NullIota (case insensitive)' },
+    { label: 'null', kind: CompletionItemKind.Constant, detail: 'completion.null.detail', documentation: 'completion.null.doc' },
+    { label: 'NULL', kind: CompletionItemKind.Constant, detail: 'completion.nullLabel.detail', documentation: 'completion.nullLabel.doc' },
     {
         label: 'garbage',
         kind: CompletionItemKind.Constant,
-        detail: 'Garbage',
-        documentation: 'GarbageIota (case insensitive)',
+        detail: 'completion.garbage.detail',
+        documentation: 'completion.garbage.doc',
     },
 ]
 
@@ -77,20 +79,20 @@ export const ENTITY_REFS: Entry[] = [
     {
         label: 'self',
         kind: CompletionItemKind.Variable,
-        detail: 'Entity Reference',
-        documentation: 'The player caster as EntityIota',
+        detail: 'completion.entity.detail',
+        documentation: 'completion.self.doc',
     },
     {
         label: 'myself',
         kind: CompletionItemKind.Variable,
-        detail: 'Entity Reference',
-        documentation: 'Alias for self (case insensitive)',
+        detail: 'completion.entity.detail',
+        documentation: 'completion.myself.doc',
     },
     {
         label: 'entity_',
         kind: CompletionItemKind.Variable,
-        detail: 'Entity UUID',
-        documentation: 'Entity reference by UUID format: entity_<uuid>',
+        detail: 'completion.entityUuid.detail',
+        documentation: 'completion.entityUuid.doc',
         insertText: 'entity_${1:00000000-0000-0000-0000-000000000000}',
     },
 ]
@@ -103,8 +105,8 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: 'num_',
                 kind: CompletionItemKind.Method,
-                detail: 'Number Pattern',
-                documentation: 'Numerical Reflection pattern. Output: PatternIota. Example: num_1.375',
+                detail: 'completion.num.detail',
+                documentation: 'completion.num.doc',
                 insertText: 'num_${1:value}',
             },
         ],
@@ -115,8 +117,8 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: 'mask_',
                 kind: CompletionItemKind.Method,
-                detail: 'Mask Pattern',
-                documentation: "Bookkeeper's Gambit mask. Use - and v chars. Example: mask_--vv--",
+                detail: 'completion.mask.detail',
+                documentation: 'completion.mask.doc',
                 insertText: 'mask_${1:--vv--}',
             },
         ],
@@ -127,8 +129,8 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: 'str_',
                 kind: CompletionItemKind.Constant,
-                detail: 'String Literal',
-                documentation: 'String literal via str_ prefix. No spaces/escaping supported.',
+                detail: 'completion.str.detail',
+                documentation: 'completion.str.doc',
                 insertText: 'str_${1:content}',
             },
         ],
@@ -139,28 +141,28 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: 'vec',
                 kind: CompletionItemKind.Class,
-                detail: 'Vector (zero)',
-                documentation: 'Zero vector Vec3Iota',
+                detail: 'completion.vec0.detail',
+                documentation: 'completion.vec0.doc',
             },
             {
                 label: 'vec_x',
                 kind: CompletionItemKind.Class,
-                detail: 'Vector (1-axis)',
-                documentation: 'Vec3Iota with x axis only',
+                detail: 'completion.vec1.detail',
+                documentation: 'completion.vec1.doc',
                 insertText: 'vec_${1:x}',
             },
             {
                 label: 'vec_x_y',
                 kind: CompletionItemKind.Class,
-                detail: 'Vector (2-axis)',
-                documentation: 'Vec3Iota with x,y axes',
+                detail: 'completion.vec2.detail',
+                documentation: 'completion.vec2.doc',
                 insertText: 'vec_${1:x}_${2:y}',
             },
             {
                 label: 'vec_x_y_z',
                 kind: CompletionItemKind.Class,
-                detail: 'Vector (3-axis)',
-                documentation: 'Vec3Iota with x,y,z axes',
+                detail: 'completion.vec3.detail',
+                documentation: 'completion.vec3.doc',
                 insertText: 'vec_${1:x}_${2:y}_${3:z}',
             },
         ],
@@ -171,8 +173,8 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: 'comment_',
                 kind: CompletionItemKind.Snippet,
-                detail: 'Comment Iota',
-                documentation: 'Comment displayed as text but not executed. Same limitations as strings.',
+                detail: 'completion.comment.detail',
+                documentation: 'completion.comment.doc',
                 insertText: 'comment_${1:text}',
             },
         ],
@@ -183,14 +185,14 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: 'tab',
                 kind: CompletionItemKind.Snippet,
-                detail: 'Tab Indent Comment',
-                documentation: 'Comment containing linebreak + leading spaces of given amount.',
+                detail: 'completion.tab.detail',
+                documentation: 'completion.tab.doc',
             },
             {
                 label: 'tab_',
                 kind: CompletionItemKind.Snippet,
-                detail: 'Tab Indent Comment (explicit)',
-                documentation: 'Same as tab but with explicit count.',
+                detail: 'completion.tabExplicit.detail',
+                documentation: 'completion.tabExplicit.doc',
                 insertText: 'tab_${1:count}',
             },
         ],
@@ -201,8 +203,8 @@ const corePrefixes: PrefixEntry[] = [
             {
                 label: '_',
                 kind: CompletionItemKind.Value,
-                detail: 'Raw Pattern',
-                documentation: 'Pattern with given angle signature (e.g. _wedsaq). Output: PatternIota',
+                detail: 'completion.raw.detail',
+                documentation: 'completion.raw.doc',
                 insertText: '_${1:wedsaq}',
             },
         ],
@@ -211,6 +213,11 @@ const corePrefixes: PrefixEntry[] = [
 
 /** All prefix entries: core + plugins */
 export const ALL_PREFIXES: PrefixEntry[] = [...corePrefixes, ...allPluginPrefixes]
+
+/** Resolve an i18n key through t() */
+function tr(key: string, params?: Record<string, string | number>): string {
+    return t(key, params)
+}
 
 // ─── Build Completion Items ──────────────────────────────────
 
@@ -226,8 +233,8 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
                 items.push({
                     label: e.label,
                     kind: e.kind,
-                    detail: e.detail,
-                    documentation: { kind: 'markdown', value: e.documentation ?? '' },
+                    detail: e.detail ? tr(e.detail) : undefined,
+                    documentation: { kind: 'markdown', value: e.documentation ? tr(e.documentation) : '' },
                     insertText: e.insertText ?? e.label,
                     insertTextFormat: e.insertText ? 2 : undefined, // Snippet
                 })
@@ -242,8 +249,8 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
                 items.push({
                     label: e.label,
                     kind: e.kind,
-                    detail: e.detail,
-                    documentation: { kind: 'markdown', value: e.documentation ?? '' },
+                    detail: e.detail ? tr(e.detail) : undefined,
+                    documentation: { kind: 'markdown', value: e.documentation ? tr(e.documentation) : '' },
                     insertText: e.insertText ?? e.label,
                     insertTextFormat: e.insertText ? 2 : undefined,
                 })
@@ -256,8 +263,8 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
         items.push({
             label: '#macro_name',
             kind: CompletionItemKind.Text,
-            detail: 'Macro Reference',
-            documentation: 'User-defined macro. Replace macro_name with your defined macro.',
+            detail: tr('completion.macro.detail'),
+            documentation: { kind: 'markdown', value: tr('completion.macro.doc') },
             insertText: '#${1:macro_name}',
             insertTextFormat: 2,
         })
@@ -268,8 +275,8 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
         items.push({
             label: 'escape',
             kind: CompletionItemKind.Keyword,
-            detail: 'Escape Character',
-            documentation: 'Alternative to \\\\ for non-functional patterns',
+            detail: tr('completion.escape.detail'),
+            documentation: tr('completion.escape.doc'),
         })
     }
 

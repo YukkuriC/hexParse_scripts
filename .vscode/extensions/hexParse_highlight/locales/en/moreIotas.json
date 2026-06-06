@@ -1,0 +1,8 @@
+{
+  "plugin.matrix.detail": "Matrix (MoreIotas)",
+  "plugin.matrix.doc": "Matrix with row & col followed by all numbers row-by-row. Example: matrix_2_2_1_0_0_1",
+  "plugin.matrixAlias.detail": "Matrix alias (MoreIotas)",
+  "plugin.matrixAlias.doc": "Short alias for matrix_. Same format.",
+  "hover.matrix": "**Matrix** (`matrix_<rows>_<cols>_<values...>`) — MoreIotas MatrixIota.",
+  "hover.matrixAlias": "**Matrix** (alias) — Short form of `matrix_`."
+}

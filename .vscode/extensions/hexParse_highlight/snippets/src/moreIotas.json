@@ -1,0 +1,8 @@
+{
+    "matrix": {
+        "prefix": "matrix_",
+        "body": "matrix_${1:rows}_${2:cols}_${3:v1}_${4:v2}",
+        "label": "Matrix",
+        "description": "MoreIotas matrix literal"
+    }
+}

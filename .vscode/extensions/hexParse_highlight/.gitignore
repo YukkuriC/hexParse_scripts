@@ -2,4 +2,7 @@ node_modules
 out
 package-lock.json
 syntaxes/HexParse.tmGrammar.json
+package.nls.json
+package.nls.*.json
+snippets/hexparse.json
 *.vsix

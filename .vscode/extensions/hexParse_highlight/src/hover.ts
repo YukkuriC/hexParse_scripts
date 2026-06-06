@@ -4,38 +4,44 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
 import { HoverEntry } from './types'
 import { allPluginHovers } from './plugins'
 import { getTokenAt } from './tokenizer'
+import { t } from './i18n'
 
 // ─── Core Hover Data (Hexcasting built-in) ───────────────────
+// Values store i18n keys; resolved by t() at consumption time
 
 const coreHovers: HoverEntry = {
-    thoth: '**Thoth** dialect — built-in dialect for single token parsing',
-    iris: '**Iris** dialect — built-in dialect for single token parsing',
-    if: '**If** — Conditional execution meta pattern',
-    eval: '**Eval** — Evaluation meta pattern',
-    'eval/cc': '**Eval/CC** — Eval with continuation',
-    for_each: '**For Each** — Iterate over list elements',
-    halt: '**Halt** — Stop execution',
-    del: '**Del** — Drop top of stack',
-    hermes: '**Hermes** — Hermes meta pattern',
-    true: '**true** — BooleanIota `true`',
-    false: '**false** — BooleanIota `false`',
-    null: '**null** — NullIota',
-    garbage: '**garbage** — GarbageIota',
-    self: '**self** — EntityIota of the casting player',
-    myself: '**myself** — Alias for `self`',
-    num_: '**Number Pattern** (`num_<value>`) — Numerical Reflection → PatternIota\n\nExample: `num_1.375`',
-    mask_:
-        "**Mask Pattern** (`mask_<pattern>`) — Bookkeeper's Gambit → PatternIota\n\nUse `-` (dash) and `v` characters.\n\nExample: `mask_--vv--`",
-    vec: '**Vector** (`vec[_x][_y][_z]`) — Vec3Iota. Unassigned axes default to 0.',
-    str_: '**String** (`str_<content>`) — StringIota. No spaces or escaping.',
-    entity_: '**Entity UUID** (`entity_<uuid>`) — EntityIota by UUID.',
-    comment_: '**Comment Iota** — CommentIota displayed as text, not executed.',
-    tab: '**Tab Indent** — CommentIota with linebreak + leading spaces. Auto-added on multi-line input.',
-    escape: '**Escape** — Alternative to `\\\\` for Introspection/Retrospection/Consideration.',
+    thoth: 'hover.thoth',
+    iris: 'hover.iris',
+    if: 'hover.if',
+    eval: 'hover.eval',
+    'eval/cc': 'hover.evalcc',
+    for_each: 'hover.foreach',
+    halt: 'hover.halt',
+    del: 'hover.del',
+    hermes: 'hover.hermes',
+    true: 'hover.true',
+    false: 'hover.false',
+    null: 'hover.null',
+    garbage: 'hover.garbage',
+    self: 'hover.self',
+    myself: 'hover.myself',
+    num_: 'hover.num',
+    mask_: 'hover.mask',
+    vec: 'hover.vec',
+    str_: 'hover.str',
+    entity_: 'hover.entity',
+    comment_: 'hover.comment',
+    tab: 'hover.tab',
+    escape: 'hover.escape',
 }
 
-/** All hover entries: core + plugins */
+/** All hover entries: core + plugins (values are i18n keys) */
 const HOVER_MAP: Map<string, string> = new Map([...Object.entries(coreHovers), ...Object.entries(allPluginHovers)])
+
+/** Resolve an i18n key through t() */
+function tr(key: string, params?: Record<string, string | number>): string {
+    return t(key, params)
+}
 
 // ─── Hover Handler ───────────────────────────────────────────
 
@@ -51,7 +57,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     // Exact match
     if (HOVER_MAP.has(text)) {
         return {
-            contents: { kind: 'markdown', value: HOVER_MAP.get(text)! },
+            contents: { kind: 'markdown', value: tr(HOVER_MAP.get(text)!) },
         }
     }
 
@@ -59,7 +65,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     for (const [key, val] of HOVER_MAP) {
         if (text.startsWith(key)) {
             return {
-                contents: { kind: 'markdown', value: val },
+                contents: { kind: 'markdown', value: tr(val) },
             }
         }
     }
@@ -69,7 +75,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         return {
             contents: {
                 kind: 'markdown',
-                value: '**Raw Pattern** — Pattern with angle signature `' + text.slice(1) + '`\n\n→ PatternIota',
+                value: tr('hover.rawPattern', { sig: text.slice(1) }),
             },
         }
     }
@@ -79,7 +85,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         return {
             contents: {
                 kind: 'markdown',
-                value: '**Macro** — User-defined macro reference: `' + text + '`\n\n→ resolved at parse time',
+                value: tr('hover.macro', { text }),
             },
         }
     }
@@ -89,7 +95,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         return {
             contents: {
                 kind: 'markdown',
-                value: '**Group Open** — Non-functional pattern wrapper (`' + token.text + '`)\n\nEquivalent to Introspection. Must be closed by `)` or `}`.',
+                value: tr('hover.groupOpen', { bracket: token.text }),
             },
         }
     }
@@ -97,25 +103,24 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         return {
             contents: {
                 kind: 'markdown',
-                value: '**Group Close** — Closes a group opened by `(` or `{`\n\nEquivalent to Retrospection.',
+                value: tr('hover.groupClose'),
             },
         }
     }
 
     // Nested list bracket
     if (text === '[') {
-        return { contents: { kind: 'markdown', value: '**Nested List Open** — Begins a ListIota. Must be closed by `]`.' } }
+        return { contents: { kind: 'markdown', value: tr('hover.listOpen') } }
     }
     if (text === ']') {
-        return { contents: { kind: 'markdown', value: '**Nested List Close** — Ends a ListIota.' } }
+        return { contents: { kind: 'markdown', value: tr('hover.listClose') } }
     }
 
     // Generic pattern
     return {
         contents: {
             kind: 'markdown',
-            value:
-                '**Pattern** — Normal static pattern matched by registration key: `' + token.text + '`\n\n→ PatternIota',
+            value: tr('hover.pattern', { text: token.text }),
         },
     }
 }

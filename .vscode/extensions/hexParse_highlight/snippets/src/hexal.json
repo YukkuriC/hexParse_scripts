@@ -1,0 +1,32 @@
+{
+    "gate": {
+        "prefix": "gate",
+        "body": "gate",
+        "label": "Gate (unbound)",
+        "description": "Unbound gate (Hexal)"
+    },
+    "gate_pos": {
+        "prefix": "gate_pos",
+        "body": "gate_${1:x}_${2:y}_${3:z}",
+        "label": "Gate (position)",
+        "description": "Position-bound gate (Hexal)"
+    },
+    "gate_entity": {
+        "prefix": "gate_ent",
+        "body": "gate_${1:self|uuid}_${2:x}_${3:y}_${4:z}",
+        "label": "Gate (entity)",
+        "description": "Entity-bound gate (Hexal)"
+    },
+    "mote": {
+        "prefix": "mote_",
+        "body": "mote_${1:uuid}_${2:index}",
+        "label": "Mote",
+        "description": "Mote reference (Hexal)"
+    },
+    "type_iota": {
+        "prefix": "type/",
+        "body": "type/${1|iota,entity,item,block|}_${2:id}",
+        "label": "Type Iota",
+        "description": "Type reference (MoreIotas/Hexal)"
+    }
+}

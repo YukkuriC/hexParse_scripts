@@ -10,8 +10,8 @@ export const hexPosePrefixes: PrefixEntry[] = [
             {
                 label: 'id_',
                 kind: 18, // CompletionItemKind.Reference
-                detail: 'Identifier RL (HexPose)',
-                documentation: 'ResourceLocation identifier. Namespace minecraft can be omitted.',
+                detail: 'plugin.idRl.detail',
+                documentation: 'plugin.idRl.doc',
                 insertText: 'id_${1:resource_location}',
             },
         ],
@@ -19,5 +19,5 @@ export const hexPosePrefixes: PrefixEntry[] = [
 ]
 
 export const hexPoseHovers: HoverEntry = {
-    id_: '**Identifier** (HexPose) — IdentifierIota (ResourceLocation).',
+    id_: 'hover.idRl',
 }

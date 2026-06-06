@@ -1,0 +1,8 @@
+{
+    "copy_mask": {
+        "prefix": "copy_mask_",
+        "body": "copy_mask_${1:nn----}",
+        "label": "Copy Mask",
+        "description": "Electric Fisherman copy mask (HexFlow)"
+    }
+}

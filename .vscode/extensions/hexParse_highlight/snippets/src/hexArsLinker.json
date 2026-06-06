@@ -1,0 +1,8 @@
+{
+    "glyph": {
+        "prefix": "glyph_",
+        "body": "glyph_${1:name}",
+        "label": "Glyph",
+        "description": "Glyph reference (Hex-Ars-Linker)"
+    }
+}

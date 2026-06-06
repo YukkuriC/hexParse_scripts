@@ -10,16 +10,15 @@ export const moreIotasPrefixes: PrefixEntry[] = [
             {
                 label: 'matrix_',
                 kind: 11, // CompletionItemKind.Struct
-                detail: 'Matrix (MoreIotas)',
-                documentation:
-                    'Matrix with row & col followed by all numbers row-by-row. Example: matrix_2_2_1_0_0_1',
+                detail: 'plugin.matrix.detail',
+                documentation: 'plugin.matrix.doc',
                 insertText: 'matrix_${1:rows}_${2:cols}_${3:values...}',
             },
             {
                 label: 'mat_',
                 kind: 11,
-                detail: 'Matrix alias (MoreIotas)',
-                documentation: 'Short alias for matrix_. Same format.',
+                detail: 'plugin.matrixAlias.detail',
+                documentation: 'plugin.matrixAlias.doc',
                 insertText: 'mat_${1:rows}_${2:cols}_${3:values...}',
             },
         ],
@@ -27,6 +26,6 @@ export const moreIotasPrefixes: PrefixEntry[] = [
 ]
 
 export const moreIotasHovers: HoverEntry = {
-    matrix_: '**Matrix** (`matrix_<rows>_<cols>_<values...>`) — MoreIotas MatrixIota.',
-    mat_: '**Matrix** (alias) — Short form of `matrix_`.',
+    matrix_: 'hover.matrix',
+    mat_: 'hover.matrixAlias',
 }

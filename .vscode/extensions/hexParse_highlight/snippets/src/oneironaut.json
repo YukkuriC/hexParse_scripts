@@ -1,0 +1,8 @@
+{
+    "dimension": {
+        "prefix": "dim_",
+        "body": "dim_${1:namespace}:${2:id}",
+        "label": "Dimension",
+        "description": "Dimension iota (Oneironaut)"
+    }
+}

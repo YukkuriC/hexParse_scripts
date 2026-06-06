@@ -1,0 +1,7 @@
+{
+  "snippet.copyMask.label": "Copy Mask",
+  "snippet.copyMask.description": "Electric Fisherman copy mask (HexFlow)",
+  "plugin.copyMask.detail": "Copy Mask (HexFlow)",
+  "plugin.copyMask.doc": "Electric Fisherman copy mask. Each n indicates a stack position to copy from.",
+  "hover.copyMask": "**Copy Mask** (HexFlow) — Electric Fisherman copy mask.\nEach `n` = stack position to copy from."
+}

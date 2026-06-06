@@ -1,0 +1,8 @@
+{
+    "id_rl": {
+        "prefix": "id_",
+        "body": "id_${1:resource_location}",
+        "label": "Identifier RL",
+        "description": "ResourceLocation identifier (HexPose)"
+    }
+}

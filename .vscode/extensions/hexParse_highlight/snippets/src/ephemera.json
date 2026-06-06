@@ -1,0 +1,8 @@
+{
+    "potion": {
+        "prefix": "potion_",
+        "body": "potion_${1:namespace}:${2:id}",
+        "label": "Potion/Status",
+        "description": "Status/Potion iota (Ephemera)"
+    }
+}

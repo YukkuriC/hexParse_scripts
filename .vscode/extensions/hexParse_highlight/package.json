@@ -1,8 +1,8 @@
 {
     "name": "hexparse-highlight",
-    "version": "1.0.0",
-    "displayName": "HexParse Highlight Extension",
-    "description": "Syntax highlighting, LSP (completion/hover/diagnostics), and snippets for HexParse script language.",
+    "version": "1.1.0",
+    "displayName": "%ext.displayName%",
+    "description": "%ext.description%",
     "icon": "icon.webp",
     "license": "MIT",
     "keywords": [
@@ -61,9 +61,10 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "npm run grammar && npm run compile",
+        "compile": "npm run locale && npm run grammar && npm run final_compile",
+        "locale": "node scripts/merge-jsons.js",
         "grammar": "python syntaxes/parser.py",
-        "compile": "tsc -p ./",
+        "final_compile": "tsc -p ./",
         "watch": "tsc -watch -p ./"
     },
     "devDependencies": {

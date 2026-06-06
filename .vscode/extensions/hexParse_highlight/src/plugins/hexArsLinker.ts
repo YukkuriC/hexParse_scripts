@@ -10,9 +10,8 @@ export const hexArsLinkerPrefixes: PrefixEntry[] = [
             {
                 label: 'glyph_',
                 kind: 13, // CompletionItemKind.Event
-                detail: 'Glyph Ref (Hex-Ars-Linker)',
-                documentation:
-                    'Glyph iota. ars_nouveau namespace and glyph_ prefix can be omitted.',
+                detail: 'plugin.glyph.detail',
+                documentation: 'plugin.glyph.doc',
                 insertText: 'glyph_${1:name}',
             },
         ],
@@ -20,6 +19,5 @@ export const hexArsLinkerPrefixes: PrefixEntry[] = [
 ]
 
 export const hexArsLinkerHovers: HoverEntry = {
-    glyph_:
-        '**Glyph** (Hex-Ars-Linker) — GlyphIota.\nNamespace `ars_nouveau` and `glyph_` prefix can be omitted.',
+    glyph_: 'hover.glyph',
 }
