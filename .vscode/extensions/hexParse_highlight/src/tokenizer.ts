@@ -103,10 +103,12 @@ export function tokenizeLine(line: string, lineNum: number): Token[] {
 }
 
 export function getTokenAt(doc: TextDocument, pos: Position): Token | null {
-    const lineLen = doc.getText(Range.create(pos.line, 0, pos.line, 0)).length
-    const line = doc.getText(Range.create(pos.line, 0, pos.line, Math.max(lineLen, 1)))
-    connection.console.log(`[getTokenAt] pos=${pos.line}:${pos.character}, lineLen=${lineLen}, line="${line}"`)
-    const tokens = tokenizeLine(line, pos.line)
+    const startOffset = doc.offsetAt({ line: pos.line, character: 0 })
+    const endOffset = pos.line + 1 < doc.lineCount
+        ? doc.offsetAt({ line: pos.line + 1, character: 0 })
+        : doc.getText().length
+    const lineText = doc.getText().substring(startOffset, endOffset).replace(/\r?\n$/, '')
+    const tokens = tokenizeLine(lineText, pos.line)
     for (const t of tokens) {
         if (pos.line === t.start.line && pos.character >= t.start.character && pos.character <= t.end.character)
             return t

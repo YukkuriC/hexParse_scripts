@@ -23,9 +23,9 @@ const coreHovers: HoverEntry = {
     garbage: '**garbage** — GarbageIota',
     self: '**self** — EntityIota of the casting player',
     myself: '**myself** — Alias for `self`',
-    num_: '**Number Pattern** (`num_<value>`) — Numerical Reflection → PatternIota\nExample: `num_1.375`',
+    num_: '**Number Pattern** (`num_<value>`) — Numerical Reflection → PatternIota\n\nExample: `num_1.375`',
     mask_:
-        "**Mask Pattern** (`mask_<pattern>`) — Bookkeeper's Gambit → PatternIota\nUse `-` (dash) and `v` characters.\nExample: `mask_--vv--`",
+        "**Mask Pattern** (`mask_<pattern>`) — Bookkeeper's Gambit → PatternIota\n\nUse `-` (dash) and `v` characters.\n\nExample: `mask_--vv--`",
     vec: '**Vector** (`vec[_x][_y][_z]`) — Vec3Iota. Unassigned axes default to 0.',
     str_: '**String** (`str_<content>`) — StringIota. No spaces or escaping.',
     entity_: '**Entity UUID** (`entity_<uuid>`) — EntityIota by UUID.',
@@ -51,7 +51,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     // Exact match
     if (HOVER_MAP.has(text)) {
         return {
-            contents: { language: 'plaintext', value: HOVER_MAP.get(text)! },
+            contents: { kind: 'markdown', value: HOVER_MAP.get(text)! },
         }
     }
 
@@ -59,7 +59,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     for (const [key, val] of HOVER_MAP) {
         if (text.startsWith(key)) {
             return {
-                contents: { language: 'plaintext', value: val },
+                contents: { kind: 'markdown', value: val },
             }
         }
     }
@@ -68,8 +68,8 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     if (text.startsWith('_') && text.length > 1) {
         return {
             contents: {
-                language: 'plaintext',
-                value: '**Raw Pattern** — Pattern with angle signature `' + text.slice(1) + '`\n→ PatternIota',
+                kind: 'markdown',
+                value: '**Raw Pattern** — Pattern with angle signature `' + text.slice(1) + '`\n\n→ PatternIota',
             },
         }
     }
@@ -78,8 +78,8 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     if (text.startsWith('#')) {
         return {
             contents: {
-                language: 'plaintext',
-                value: '**Macro** — User-defined macro reference: `' + text + '`\n→ resolved at parse time',
+                kind: 'markdown',
+                value: '**Macro** — User-defined macro reference: `' + text + '`\n\n→ resolved at parse time',
             },
         }
     }
@@ -88,34 +88,34 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     if (text === '(' || text === '{') {
         return {
             contents: {
-                language: 'plaintext',
-                value: '**Group Open** — Non-functional pattern wrapper (`' + token.text + '`)\nEquivalent to Introspection. Must be closed by `)` or `}`.',
+                kind: 'markdown',
+                value: '**Group Open** — Non-functional pattern wrapper (`' + token.text + '`)\n\nEquivalent to Introspection. Must be closed by `)` or `}`.',
             },
         }
     }
     if (text === ')' || text === '}') {
         return {
             contents: {
-                language: 'plaintext',
-                value: '**Group Close** — Closes a group opened by `(` or `{`\nEquivalent to Retrospection.',
+                kind: 'markdown',
+                value: '**Group Close** — Closes a group opened by `(` or `{`\n\nEquivalent to Retrospection.',
             },
         }
     }
 
     // Nested list bracket
     if (text === '[') {
-        return { contents: { language: 'plaintext', value: '**Nested List Open** — Begins a ListIota. Must be closed by `]`.' } }
+        return { contents: { kind: 'markdown', value: '**Nested List Open** — Begins a ListIota. Must be closed by `]`.' } }
     }
     if (text === ']') {
-        return { contents: { language: 'plaintext', value: '**Nested List Close** — Ends a ListIota.' } }
+        return { contents: { kind: 'markdown', value: '**Nested List Close** — Ends a ListIota.' } }
     }
 
     // Generic pattern
     return {
         contents: {
-            language: 'plaintext',
+            kind: 'markdown',
             value:
-                '**Pattern** — Normal static pattern matched by registration key: `' + token.text + '`\n→ PatternIota',
+                '**Pattern** — Normal static pattern matched by registration key: `' + token.text + '`\n\n→ PatternIota',
         },
     }
 }
