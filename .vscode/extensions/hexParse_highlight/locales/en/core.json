@@ -115,5 +115,7 @@
     "validation.unmatchedSqOpen": "Unmatched '[' — missing closing ']'",
     "validation.unmatchedSqClose": "Unmatched ']' — extra closing bracket",
     "validation.unmatchedGroupOpen": "Unmatched '(' or '{' — missing closing ')' or '}'",
-    "validation.unmatchedGroupClose": "Unmatched ')' or '}' — extra closing group bracket"
+    "validation.unmatchedGroupClose": "Unmatched ')' or '}' — extra closing group bracket",
+    "command.lehmer.title": "Calculate Lehmer Code from Selection",
+    "config.lehmerTemplate.description": "Template for Lehmer code output. Use {result} as placeholder for the calculated Lehmer code value."
 }

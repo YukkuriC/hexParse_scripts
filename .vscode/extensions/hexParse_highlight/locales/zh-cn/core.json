@@ -115,5 +115,7 @@
     "validation.unmatchedSqOpen": "'[' 未匹配 —— 缺少关闭的 ']'",
     "validation.unmatchedSqClose": "']' 多余 —— 多余的关闭方括号",
     "validation.unmatchedGroupOpen": "'(' 或 '{' 未匹配 —— 缺少关闭的 ')' 或 '}'",
-    "validation.unmatchedGroupClose": "')' 或 '}' 多余 —— 多余的关闭分组括号"
+    "validation.unmatchedGroupClose": "')' 或 '}' 多余 —— 多余的关闭分组括号",
+    "command.lehmer.title": "从选中内容计算 Lehmer 码",
+    "config.lehmerTemplate.description": "Lehmer 码输出模板。使用 {result} 作为计算结果的占位符。"
 }

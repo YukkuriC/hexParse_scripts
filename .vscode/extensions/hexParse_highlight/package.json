@@ -69,6 +69,30 @@
                 "language": "HexParse",
                 "path": "./snippets/hexparse.json"
             }
+        ],
+        "configuration": {
+            "title": "HexParse",
+            "properties": {
+                "hexparse.lehmerTemplate": {
+                    "type": "string",
+                    "default": "({result})splat,swizzle",
+                    "description": "%config.lehmerTemplate.description%"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "hexparse.calculateLehmer",
+                "title": "%command.lehmer.title%",
+                "category": "HexParse"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "hexparse.calculateLehmer",
+                "key": "ctrl+shift+l",
+                "when": "editorTextFocus && editorLangId == HexParse"
+            }
         ]
     },
     "scripts": {

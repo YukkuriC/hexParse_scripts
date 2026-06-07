@@ -58,9 +58,7 @@ connection.onCompletion((textDocumentPosition): import('vscode-languageserver/no
     if (!doc) return []
 
     const token = getTokenAt(doc, textDocumentPosition.position)
-    if (!token) return buildCompletionItems('')
-
-    return buildCompletionItems(token.text)
+    return buildCompletionItems(token?.text ?? '')
 })
 
 connection.onCompletionResolve((item) => item)
