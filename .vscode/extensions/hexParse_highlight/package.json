@@ -96,9 +96,10 @@
         ]
     },
     "scripts": {
+        "linkSelf": "node scripts/linkSelf.js",
         "compile": "npm run locale && npm run grammar && npm run final_compile",
         "locale": "node scripts/merge-jsons.js",
-        "grammar": "python syntaxes/parser.py",
+        "grammar": "node scripts/grammar.js",
         "final_compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "reformat-jsons": "node scripts/reformat-jsons.js"
@@ -106,6 +107,7 @@
     "devDependencies": {
         "@types/node": "^20.x",
         "@types/vscode": "^1.74.0",
+        "js-yaml": "^4.2.0",
         "typescript": "^5.3.x"
     },
     "dependencies": {
