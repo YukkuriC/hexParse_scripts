@@ -6,3 +6,4 @@ package.nls.json
 package.nls.*.json
 snippets/hexparse.json
 *.vsix
+CHANGELOG.md

@@ -71,7 +71,6 @@
     "devDependencies": {
         "@types/node": "^20.x",
         "@types/vscode": "^1.74.0",
-        "standard-version": "^9.5.0",
         "typescript": "^5.3.x"
     },
     "dependencies": {
