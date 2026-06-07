@@ -7,3 +7,6 @@ tsconfig.json
 locales/**
 scripts/**
 snippets/src/**
+CHANGELOG.md
+.versionrc
+.versionrc.json
