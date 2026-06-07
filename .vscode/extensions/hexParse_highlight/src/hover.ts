@@ -28,7 +28,6 @@ const coreHovers: HoverEntry = {
     num_: 'hover.num',
     mask_: 'hover.mask',
     vec: 'hover.vec',
-    str_: 'hover.str',
     entity_: 'hover.entity',
     comment_: 'hover.comment',
     tab: 'hover.tab',

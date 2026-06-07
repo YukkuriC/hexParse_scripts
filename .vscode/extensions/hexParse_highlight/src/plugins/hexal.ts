@@ -42,43 +42,9 @@ export const hexalPrefixes: PrefixEntry[] = [
             },
         ],
     },
-    {
-        prefix: 'type/',
-        entries: [
-            {
-                label: 'type/iota_',
-                kind: 9, // CompletionItemKind.Interface
-                detail: 'plugin.iotaType.detail',
-                documentation: 'plugin.iotaType.doc',
-                insertText: 'type/iota_${1:id}',
-            },
-            {
-                label: 'type/entity_',
-                kind: 9,
-                detail: 'plugin.entityType.detail',
-                documentation: 'plugin.entityType.doc',
-                insertText: 'type/entity_${1:id}',
-            },
-            {
-                label: 'type/item_',
-                kind: 9,
-                detail: 'plugin.itemType.detail',
-                documentation: 'plugin.itemType.doc',
-                insertText: 'type/item_${1:id}',
-            },
-            {
-                label: 'type/block_',
-                kind: 9,
-                detail: 'plugin.blockType.detail',
-                documentation: 'plugin.blockType.doc',
-                insertText: 'type/block_${1:id}',
-            },
-        ],
-    },
 ]
 
 export const hexalHovers: HoverEntry = {
     gate: 'hover.gate',
-    'type/': 'hover.typeRef',
     mote_: 'hover.mote',
 }

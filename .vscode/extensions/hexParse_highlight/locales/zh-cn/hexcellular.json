@@ -1,12 +1,12 @@
 {
-  "snippet.property.label": "质性",
-  "snippet.property.description": "质性Iota（Hexcellular）",
-  "snippet.myProperty.label": "我的质性",
-  "snippet.myProperty.description": "玩家专属质性（Hexcellular）",
-  "plugin.prop.detail": "质性（Hexcellular）",
-  "plugin.prop.doc": "质性Iota。注意：额外媒质消耗。所有解析后的质性均以下划线开头，可能产生冲突。",
-  "plugin.myProp.detail": "我的质性（Hexcellular）",
-  "plugin.myProp.doc": "玩家专属质性Iota。注意事项同 prop_。",
-  "hover.prop": "**质性**（Hexcellular）—— PropertyIota。\n注意：额外媒质消耗。以下划线开头。",
-  "hover.myProp": "**我的质性**（Hexcellular）—— 玩家专属 PropertyIota。"
+    "snippet.property.label": "质性",
+    "snippet.property.description": "质性Iota（Hexcellular）",
+    "snippet.myProperty.label": "我的质性",
+    "snippet.myProperty.description": "玩家专属质性（Hexcellular）",
+    "plugin.prop.detail": "质性（Hexcellular）",
+    "plugin.prop.doc": "质性Iota。注意：额外媒质消耗。所有解析后的质性均以下划线开头，可能产生冲突。",
+    "plugin.myProp.detail": "我的质性（Hexcellular）",
+    "plugin.myProp.doc": "玩家专属质性Iota。注意事项同 prop_。",
+    "hover.prop": "**质性**（Hexcellular）—— PropertyIota。\n注意：额外媒质消耗。以下划线开头。",
+    "hover.myProp": "**我的质性**（Hexcellular）—— 玩家专属 PropertyIota。"
 }

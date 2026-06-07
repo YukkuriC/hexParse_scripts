@@ -1,7 +1,7 @@
 {
-  "snippet.dimension.label": "维度",
-  "snippet.dimension.description": "维度Iota（Oneironaut）",
-  "plugin.dim.detail": "维度（Oneironaut）",
-  "plugin.dim.doc": "通过ID获取维度Iota。minecraft 命名空间可省略。",
-  "hover.dim": "**维度**（Oneironaut）—— DimIota。`minecraft:` 命名空间可省略。"
+    "snippet.dimension.label": "维度",
+    "snippet.dimension.description": "维度Iota（Oneironaut）",
+    "plugin.dim.detail": "维度（Oneironaut）",
+    "plugin.dim.doc": "通过ID获取维度Iota。minecraft 命名空间可省略。",
+    "hover.dim": "**维度**（Oneironaut）—— DimIota。`minecraft:` 命名空间可省略。"
 }

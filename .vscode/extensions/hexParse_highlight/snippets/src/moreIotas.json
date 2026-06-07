@@ -4,5 +4,17 @@
         "body": "matrix_${1:rows}_${2:cols}_${3:v1}_${4:v2}",
         "label": "Matrix",
         "description": "MoreIotas matrix literal"
+    },
+    "type_iota": {
+        "prefix": "type/",
+        "body": "type/${1|iota,entity,item,block|}_${2:id}",
+        "label": "Type Iota",
+        "description": "Type reference (MoreIotas/Hexal)"
+    },
+    "string_prefix": {
+        "prefix": "str_",
+        "body": "str_${1:content}",
+        "label": "String Prefix",
+        "description": "String literal with str_ prefix (MoreIotas)"
     }
 }

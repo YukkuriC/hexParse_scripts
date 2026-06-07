@@ -47,12 +47,6 @@
         "label": "Quoted String",
         "description": "Double-quoted string literal"
     },
-    "string_prefix": {
-        "prefix": "str_",
-        "body": "str_${1:content}",
-        "label": "String Prefix",
-        "description": "String literal with str_ prefix"
-    },
     "number_pattern": {
         "prefix": "num_",
         "body": "num_${1:0}",

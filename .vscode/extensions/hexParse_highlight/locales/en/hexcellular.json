@@ -1,12 +1,12 @@
 {
-  "snippet.property.label": "Property",
-  "snippet.property.description": "Property iota (Hexcellular)",
-  "snippet.myProperty.label": "My Property",
-  "snippet.myProperty.description": "Player-specific property (Hexcellular)",
-  "plugin.prop.detail": "Property (Hexcellular)",
-  "plugin.prop.doc": "Property iota. NOTE: Extra cost. All parsed properties start with underscore and may conflict.",
-  "plugin.myProp.detail": "My Property (Hexcellular)",
-  "plugin.myProp.doc": "Player-specific property iota. Same notes as prop_.",
-  "hover.prop": "**Property** (Hexcellular) — PropertyIota.\nNOTE: Extra cost. Starts with underscore.",
-  "hover.myProp": "**My Property** (Hexcellular) — Player-specific PropertyIota."
+    "snippet.property.label": "Property",
+    "snippet.property.description": "Property iota (Hexcellular)",
+    "snippet.myProperty.label": "My Property",
+    "snippet.myProperty.description": "Player-specific property (Hexcellular)",
+    "plugin.prop.detail": "Property (Hexcellular)",
+    "plugin.prop.doc": "Property iota. NOTE: Extra cost. All parsed properties start with underscore and may conflict.",
+    "plugin.myProp.detail": "My Property (Hexcellular)",
+    "plugin.myProp.doc": "Player-specific property iota. Same notes as prop_.",
+    "hover.prop": "**Property** (Hexcellular) — PropertyIota.\nNOTE: Extra cost. Starts with underscore.",
+    "hover.myProp": "**My Property** (Hexcellular) — Player-specific PropertyIota."
 }

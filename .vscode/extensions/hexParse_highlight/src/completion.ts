@@ -124,18 +124,6 @@ const corePrefixes: PrefixEntry[] = [
         ],
     },
     {
-        prefix: 'str_',
-        entries: [
-            {
-                label: 'str_',
-                kind: CompletionItemKind.Constant,
-                detail: 'completion.str.detail',
-                documentation: 'completion.str.doc',
-                insertText: 'str_${1:content}',
-            },
-        ],
-    },
-    {
         prefix: 'vec',
         entries: [
             {

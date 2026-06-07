@@ -1,7 +1,7 @@
 {
-  "snippet.idRl.label": "Identifier RL",
-  "snippet.idRl.description": "ResourceLocation identifier (HexPose)",
-  "plugin.idRl.detail": "Identifier RL (HexPose)",
-  "plugin.idRl.doc": "ResourceLocation identifier. Namespace minecraft can be omitted.",
-  "hover.idRl": "**Identifier** (HexPose) — IdentifierIota (ResourceLocation)."
+    "snippet.idRl.label": "Identifier RL",
+    "snippet.idRl.description": "ResourceLocation identifier (HexPose)",
+    "plugin.idRl.detail": "Identifier RL (HexPose)",
+    "plugin.idRl.doc": "ResourceLocation identifier. Namespace minecraft can be omitted.",
+    "hover.idRl": "**Identifier** (HexPose) — IdentifierIota (ResourceLocation)."
 }

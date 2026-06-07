@@ -65,7 +65,8 @@
         "locale": "node scripts/merge-jsons.js",
         "grammar": "python syntaxes/parser.py",
         "final_compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./"
+        "watch": "tsc -watch -p ./",
+        "reformat-jsons": "node scripts/reformat-jsons.js"
     },
     "devDependencies": {
         "@types/node": "^20.x",

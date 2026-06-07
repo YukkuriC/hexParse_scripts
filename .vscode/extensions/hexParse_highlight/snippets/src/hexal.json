@@ -22,11 +22,5 @@
         "body": "mote_${1:uuid}_${2:index}",
         "label": "Mote",
         "description": "Mote reference (Hexal)"
-    },
-    "type_iota": {
-        "prefix": "type/",
-        "body": "type/${1|iota,entity,item,block|}_${2:id}",
-        "label": "Type Iota",
-        "description": "Type reference (MoreIotas/Hexal)"
     }
 }
