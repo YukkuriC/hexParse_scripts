@@ -21,6 +21,6 @@
     "plugin.str.doc": "String literal via str_ prefix. No spaces/escaping supported.",
     "hover.matrix": "**Matrix** (`matrix_<rows>_<cols>_<values...>`) — MoreIotas MatrixIota.",
     "hover.matrixAlias": "**Matrix** (alias) — Short form of `matrix_`.",
-    "hover.typeRef": "**Type Reference** (`type/<kind>_<id>`) — MoreIotas/Hexal type iota.\nKinds: `iota`, `entity`, `item`, `block`.",
+    "hover.typeRef": "**Type Reference** (`type/<kind>_<id>`) — MoreIotas/Hexal type iota.\n\nKinds: `iota`, `entity`, `item`, `block`.",
     "hover.str": "**String** (`str_<content>`) — StringIota (MoreIotas). No spaces or escaping."
 }

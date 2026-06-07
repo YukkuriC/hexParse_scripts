@@ -116,5 +116,6 @@
     "validation.copyMaskChars": "复制掩码包含无效字符：\"{m}\"。仅允许 -（短横线）和 n。",
     "validation.unmatchedSqOpen": "'[' 未匹配 —— 缺少关闭的 ']'",
     "validation.unmatchedSqClose": "']' 多余 —— 多余的关闭方括号",
-    "validation.unmatchedGroupOpen": "')' 或 '}' 多余 —— 多余的关闭分组括号"
+    "validation.unmatchedGroupOpen": "'(' 或 '{' 未匹配 —— 缺少关闭的 ')' 或 '}'",
+    "validation.unmatchedGroupClose": "')' 或 '}' 多余 —— 多余的关闭分组括号"
 }

@@ -21,6 +21,6 @@
     "plugin.str.doc": "使用 str_ 前缀的字符串。不支持空格或转义。",
     "hover.matrix": "**矩阵**（`matrix_<行数>_<列数>_<值...>`）—— MoreIotas MatrixIota。",
     "hover.matrixAlias": "**矩阵**（别名）—— `matrix_` 的简写形式。",
-    "hover.typeRef": "**类型引用**（`type/<种类>_<id>`）—— MoreIotas/Hexal 类型Iota。\n种类：`iota`、`entity`、`item`、`block`。",
+    "hover.typeRef": "**类型引用**（`type/<种类>_<id>`）—— MoreIotas/Hexal 类型Iota。\n\n种类：`iota`、`entity`、`item`、`block`。",
     "hover.str": "**字符串**（`str_<内容>`）—— StringIota（MoreIotas）。不支持空格或转义。"
 }
