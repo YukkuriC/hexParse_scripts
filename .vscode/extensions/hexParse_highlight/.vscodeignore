@@ -7,4 +7,6 @@ tsconfig.json
 locales/**
 scripts/**
 snippets/src/**
+**/*.py
+**/*.yaml
 syntaxes/README.md
