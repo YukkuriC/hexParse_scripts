@@ -1,3 +1,3 @@
 # Oneironaut: Dimension
 - match: dim_.+$
-  name: constant.language.oneironaut.dimension
+  name: support.type.oneironaut.dimension

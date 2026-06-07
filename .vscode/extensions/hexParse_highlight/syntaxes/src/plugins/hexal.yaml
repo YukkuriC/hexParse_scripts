@@ -1,3 +1,9 @@
-# Hexal: Mote
+# Hexal: Mote & Gate
 - match: mote_.+$
-  name: constant.other.hexal.mote
+  name: entity.name.type.hexal.mote
+- match: gate(_.+){0,4}$
+  name: keyword.hexal.gate
+  captures:
+    "0":
+      patterns:
+      - include: '#inner_literal'

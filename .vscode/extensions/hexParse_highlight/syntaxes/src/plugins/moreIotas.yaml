@@ -1,6 +1,6 @@
 # MoreIotas: Matrix, Type References, String Literal
 - match: (mat|matrix)_(.+)$
-  name: constant.numeric.moreiotas.matrix
+  name: keyword.moreiotas.matrix
   captures:
     "2":
       patterns:

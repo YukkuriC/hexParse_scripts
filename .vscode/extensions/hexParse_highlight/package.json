@@ -37,6 +37,7 @@
                 ],
                 "aliases": [
                     "HexParse",
+                    "hexParse",
                     "hexparse"
                 ],
                 "icon": {
@@ -51,6 +52,16 @@
                 "language": "HexParse",
                 "scopeName": "source.HexParse",
                 "path": "./syntaxes/HexParse.tmGrammar.json"
+            },
+            {
+                "scopeName": "markdown.hexparse.codeblock.injection",
+                "path": "./syntaxes/HexParse-injection.tmLanguage.json",
+                "injectTo": [
+                    "text.html.markdown"
+                ],
+                "embeddedLanguages": {
+                    "meta.embedded.block.hexparse": "HexParse"
+                }
             }
         ],
         "snippets": [

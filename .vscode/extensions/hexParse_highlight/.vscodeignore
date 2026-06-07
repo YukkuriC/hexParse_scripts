@@ -7,3 +7,4 @@ tsconfig.json
 locales/**
 scripts/**
 snippets/src/**
+syntaxes/README.md

@@ -1,14 +1,8 @@
 special_handler:
   patterns:
   - match: vec(_[0-9e.\-]+){0,3}$
-    name: keyword.vector.literal
+    name: keyword.vector
     captures:
       "0":
         patterns:
         - include: '#num'
-  - match: gate(_.+){0,4}$
-    name: keyword.gate.literal
-    captures:
-      "0":
-        patterns:
-        - include: '#inner_literal'

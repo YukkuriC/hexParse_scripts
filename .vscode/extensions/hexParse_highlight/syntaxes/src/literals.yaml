@@ -2,7 +2,7 @@
 macro:
   patterns:
   - match: "#\\w+$"
-    name: keyword.control.macro
+    name: support.function.macro
 comment_iota:
   patterns:
   - match: comment_.*

@@ -1,3 +1,3 @@
 # Hexcellular: Property
 - match: (my)?prop_.+$
-  name: variable.other.hexcellular.property
+  name: support.function.hexcellular.property
