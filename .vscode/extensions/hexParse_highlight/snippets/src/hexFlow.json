@@ -1,4 +1,58 @@
 {
+    "for_range_cube": {
+        "prefix": "for_range/cube",
+        "body": "for_range/cube",
+        "label": "For Range (Cube)",
+        "description": "Rubik's Gambit - iterate over cuboid (HexFlow)"
+    },
+    "for_range_cube_pure": {
+        "prefix": "for_range/cube/pure",
+        "body": "for_range/cube/pure",
+        "label": "For Range (Cube, Pure)",
+        "description": "Pure Rubik's Gambit - iterate over cuboid, no stack copy (HexFlow)"
+    },
+    "for_range_line": {
+        "prefix": "for_range/line",
+        "body": "for_range/line",
+        "label": "For Range (Line)",
+        "description": "Measuring Ruler's Gambit - iterate over line (HexFlow)"
+    },
+    "for_range_line_pure": {
+        "prefix": "for_range/line/pure",
+        "body": "for_range/line/pure",
+        "label": "For Range (Line, Pure)",
+        "description": "Pure Ruler's Gambit - iterate over line, no stack copy (HexFlow)"
+    },
+    "for_range_floodfill": {
+        "prefix": "for_range/floodfill",
+        "body": "for_range/floodfill",
+        "label": "For Range (Floodfill)",
+        "description": "Ultimine's Gambit - flood-fill iteration (HexFlow)"
+    },
+    "for_range_floodfill_pure": {
+        "prefix": "for_range/floodfill/pure",
+        "body": "for_range/floodfill/pure",
+        "label": "For Range (Floodfill, Pure)",
+        "description": "Pure Ultimine's Gambit - flood-fill iteration, no stack copy (HexFlow)"
+    },
+    "pure_map": {
+        "prefix": "pure_map",
+        "body": "pure_map",
+        "label": "Pure Map",
+        "description": "Nehmetawy's Gambit - for_each without stack copy (HexFlow)"
+    },
+    "pure_reduce": {
+        "prefix": "pure_reduce",
+        "body": "pure_reduce",
+        "label": "Pure Reduce",
+        "description": "Conway's Gambit - fold/reduce variant of for_each (HexFlow)"
+    },
+    "call_stack": {
+        "prefix": "call_stack",
+        "body": "call_stack",
+        "label": "Call Stack",
+        "description": "Hanoi's Gambit - execute in independent stack (HexFlow)"
+    },
     "copy_mask": {
         "prefix": "copy_mask_",
         "body": "copy_mask_${1:nn----}",
