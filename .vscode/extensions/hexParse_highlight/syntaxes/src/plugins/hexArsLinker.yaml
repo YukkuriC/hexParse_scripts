@@ -1,0 +1,3 @@
+# Hex-Ars-Linker: Glyph Reference
+- match: glyph_.+$
+  name: support.function.hexarslinker.glyph

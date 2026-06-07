@@ -1,0 +1,3 @@
+# Ephemera: Status/Potion
+- match: potion_.+$
+  name: constant.language.ephemera.potion

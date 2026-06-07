@@ -1,0 +1,3 @@
+# Hexcellular: Property
+- match: (my)?prop_.+$
+  name: variable.other.hexcellular.property

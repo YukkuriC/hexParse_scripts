@@ -1,0 +1,19 @@
+# MoreIotas: Matrix, Type References, String Literal
+- match: (mat|matrix)_(.+)$
+  name: constant.numeric.moreiotas.matrix
+  captures:
+    "2":
+      patterns:
+      - include: '#num'
+- _inject_into: structural
+  match: "\".*?\""
+  name: string.quoted.moreiotas.double
+- _inject_into: literal
+  match: str_.*$
+  name: string.unquoted.moreiotas.string
+- _inject_into: special_handler
+  match: type(/(iota|entity|block|item))?_(.*)$
+  name: support.type.moreiotas.typeid
+  captures:
+    "3":
+      name: entity.name.namespace.typeid

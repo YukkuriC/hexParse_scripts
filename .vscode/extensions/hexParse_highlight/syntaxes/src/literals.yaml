@@ -1,0 +1,35 @@
+# ── Sub-rules ──────────────────────────────────────
+macro:
+  patterns:
+  - match: "#\\w+$"
+    name: keyword.control.macro
+comment_iota:
+  patterns:
+  - match: comment_.*
+    name: comment.iota
+  - match: tab(_.*)?
+    name: comment.iota.tab
+literal:
+  patterns:
+  - match: \\|escape$
+    name: constant.character.escape
+  - match: entity_[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+    name: entity.name.type.entity
+  - include: '#inner_literal'
+inner_literal:
+  patterns:
+  - match: (?i)(true|false)$
+    name: constant.language.boolean
+  - match: (?i)null$
+    name: constant.language.null
+  - match: (?i)garbage$
+    name: constant.language.garbage
+  - match: ([Mm][Yy])?[Ss][Ee][Ll][Ff]
+    name: entity.name.type.myself
+  - include: '#num'
+num:
+  patterns:
+  # Match proper numbers: optional leading -, must start with digit, optional decimal part, optional exponent
+  # Avoids matching bare ".", ".5", "-" etc. as separate fragments inside vec_/gate_ args
+  - match: '-?[0-9]+(\.[0-9]*)?(e[+\-]?[0-9]+)?'
+    name: constant.numeric

@@ -1,0 +1,7 @@
+# HexFlow: Meta Patterns & Copy Mask
+- _inject_into: pattern
+  match: (for_range/(line|cube|floodfill)(/pure)?|pure_(map|reduce)|call_stack)$
+  name: keyword.control.hexflow.meta
+- _inject_into: pattern
+  match: copy_mask_[-n]+$
+  name: keyword.operator.hexflow.copymask

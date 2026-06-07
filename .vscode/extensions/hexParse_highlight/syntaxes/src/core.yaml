@@ -1,0 +1,57 @@
+# ── Layer 1: Comments (highest priority) ───────────
+comments:
+  patterns:
+  - match: //.*$
+    name: comment.line
+  - begin: /\*
+    end: \*/
+    name: comment.multiline
+
+# ── Layer 2: Structural (brackets, strings) ────────
+structural:
+  patterns:
+  - begin: \[
+    beginCaptures:
+      '0':
+        name: keyword.control.nested.left
+    end: \]
+    endCaptures:
+      '0':
+        name: keyword.control.nested.right
+    name: nested.list
+    patterns:
+    - include: '#init'
+  - begin: '[\(\{]'
+    beginCaptures:
+      '0':
+        name: keyword.control.group.left
+    end: '[\)\}]'
+    endCaptures:
+      '0':
+        name: keyword.control.group.right
+    name: group.list
+    patterns:
+    - include: '#init'
+
+# ── Layer 3: Code content (lowest priority) ───────
+# Includes '/' in token chars, but stops before comment-starting /* or //
+# This allows path-like tokens (const/vec/ny) while still letting COMMENTS take priority
+cutter:
+  patterns:
+  - name: code_cutter
+    match: \\|(?:[\w.\-:#\u0100-\uffff]+|/(?![/*]))+
+    captures:
+      "0":
+        patterns:
+        - include: '#macro'
+        - include: '#comment_iota'
+        - include: '#literal'
+        - include: '#special_handler'
+        - include: '#pattern'
+
+# ── Entry point ────────────────────────────────────
+init:
+  patterns:
+  - include: '#comments'
+  - include: '#structural'
+  - include: '#cutter'

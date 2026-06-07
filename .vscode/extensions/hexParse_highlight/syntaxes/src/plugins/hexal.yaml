@@ -1,0 +1,3 @@
+# Hexal: Mote
+- match: mote_.+$
+  name: constant.other.hexal.mote

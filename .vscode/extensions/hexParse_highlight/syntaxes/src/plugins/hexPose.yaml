@@ -1,0 +1,3 @@
+# HexPose: Identifier (ResourceLocation)
+- match: id_.+$
+  name: entity.name.hexpose.identifier

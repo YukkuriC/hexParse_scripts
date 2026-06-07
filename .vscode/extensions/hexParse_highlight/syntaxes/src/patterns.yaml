@@ -1,0 +1,16 @@
+pattern:
+  patterns:
+  - match: (if|eval(/cc)?|for_each|halt|del|hermes|thoth|iris)$
+    name: keyword.control.meta
+  - match: num(_[0-9e.\-]+)?$
+    name: keyword.num.pattern
+    captures:
+      "0":
+        patterns:
+        - include: '#num'
+  - match: mask_[-v]+$
+    name: keyword.mask
+  - match: _[wedsaq]+$
+    name: keyword.rawpattern
+  - match: .+$
+    name: variable.pattern
