@@ -132,6 +132,13 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         return { contents: { kind: 'markdown', value: tr('hover.listClose') } }
     }
 
+    // Bare numeric literal → numeric constant (not a pattern; use num_ prefix for PatternIota)
+    if (/^-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?$/.test(text)) {
+        return {
+            contents: { kind: 'markdown', value: tr('hover.numericLiteral', { text }) },
+        }
+    }
+
     // Generic pattern
     return {
         contents: {

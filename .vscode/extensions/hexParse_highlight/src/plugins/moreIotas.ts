@@ -76,6 +76,9 @@ export const moreIotasPrefixes: PrefixEntry[] = [
 export const moreIotasHovers: HoverEntry = {
     matrix_: 'hover.matrix',
     mat_: 'hover.matrixAlias',
-    'type/': 'hover.typeRef',
+    'type/iota_': 'hover.typeRef',
+    'type/entity_': 'hover.typeRef',
+    'type/item_': 'hover.typeRef',
+    'type/block_': 'hover.typeRef',
     str_: 'hover.str',
 }
