@@ -100,6 +100,7 @@
     "hover.comment": "**注释Iota** —— 以文本显示但不执行的 CommentIota。",
     "hover.tab": "**缩进注释** —— 带换行和前导空格的 CommentIota。多行输入时自动添加。",
     "hover.escape": "**转义** —— 用于考察/内省/反思的 `\\\\` 替代写法。",
+    "hover.string": "**字符串字面量**（`{text}`）—— StringIota\n\n文本原样保留，不进行图案匹配。",
     "hover.rawPattern": "**原始图案** —— 角度为 `{sig}` 的图案\n\n→ PatternIota",
     "hover.macro": "**宏** —— 用户自定义宏引用：`{text}`\n\n→ 解析时展开",
     "hover.groupOpen": "**分组开始** —— 非功能性图案包装器（`{bracket}`)\n\n等效于内省。必须以 `)` 或 `}` 关闭。",

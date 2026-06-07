@@ -12,20 +12,28 @@ function reformatDir(dir) {
         if (entry.isDirectory()) {
             reformatDir(full)
         } else if (entry.name.endsWith('.json')) {
-            try {
-                const raw = fs.readFileSync(full, 'utf8')
-                const obj = JSON.parse(raw)
-                const formatted = JSON.stringify(obj, null, 4) + '\n'
-                if (raw !== formatted) {
-                    fs.writeFileSync(full, formatted, 'utf8')
-                    console.log('reformatted:', path.relative(path.join(__dirname, '..'), full))
-                }
-            } catch (err) {
-                console.error('skip (invalid json):', path.relative(path.join(__dirname, '..'), full), err.message)
-            }
+            reformatFile(full)
         }
     }
 }
+function reformatFile(full) {
+    try {
+        const raw = fs.readFileSync(full, 'utf8')
+        const obj = JSON.parse(raw)
+        const formatted = JSON.stringify(obj, null, 4) + '\n'
+        if (raw !== formatted) {
+            fs.writeFileSync(full, formatted, 'utf8')
+            console.log('reformatted:', path.relative(path.join(__dirname, '..'), full))
+        }
+    } catch (err) {
+        console.error('skip (invalid json):', path.relative(path.join(__dirname, '..'), full), err.message)
+    }
+}
 
-for (const d of DIRS) reformatDir(d)
+const target = process.argv[2]
+if (target) {
+    reformatFile(path.resolve(target))
+} else {
+    for (const d of DIRS) reformatDir(d)
+}
 console.log('done.')

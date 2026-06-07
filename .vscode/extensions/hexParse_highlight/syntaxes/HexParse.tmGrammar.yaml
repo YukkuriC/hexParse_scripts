@@ -40,10 +40,12 @@ repository:
       - include: '#INIT'
 
   # ── Layer 3: Code content (lowest priority) ───────
+  # Includes '/' in token chars, but stops before comment-starting /* or //
+  # This allows path-like tokens (const/vec/ny) while still letting COMMENTS take priority
   CUTTER:
     patterns:
     - name: code_cutter
-      match: \\|[\w./\-:#\u0100-\uffff]+
+      match: \\|(?:[\w.\-:#\u0100-\uffff]+|/(?![/*]))+
       captures:
         "0":
           patterns:

@@ -51,18 +51,35 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     const token = getTokenAt(doc, textDocumentPosition.position)
     if (!token) return null
 
-    const text = token.text.toLowerCase()
+    const text = token.text
+
+    // ── Comment token (line or block) → skip pattern matching ──
+    if (text.startsWith('//') || text.startsWith('/*')) {
+        return null
+    }
+
+    // ── Quoted string literal → skip pattern matching ──
+    if (text.length >= 2 && text.startsWith('"') && text.endsWith('"')) {
+        return {
+            contents: {
+                kind: 'markdown',
+                value: tr('hover.string', { text }),
+            },
+        }
+    }
+
+    const lowered = text.toLowerCase()
 
     // Exact match
-    if (HOVER_MAP.has(text)) {
+    if (HOVER_MAP.has(lowered)) {
         return {
-            contents: { kind: 'markdown', value: tr(HOVER_MAP.get(text)!) },
+            contents: { kind: 'markdown', value: tr(HOVER_MAP.get(lowered)!) },
         }
     }
 
     // Prefix match
     for (const [key, val] of HOVER_MAP) {
-        if (text.startsWith(key)) {
+        if (lowered.startsWith(key)) {
             return {
                 contents: { kind: 'markdown', value: tr(val) },
             }
@@ -70,17 +87,17 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     }
 
     // Raw pattern
-    if (text.startsWith('_') && text.length > 1) {
+    if (lowered.startsWith('_') && lowered.length > 1) {
         return {
             contents: {
                 kind: 'markdown',
-                value: tr('hover.rawPattern', { sig: text.slice(1) }),
+                value: tr('hover.rawPattern', { sig: lowered.slice(1) }),
             },
         }
     }
 
     // Macro
-    if (text.startsWith('#')) {
+    if (lowered.startsWith('#')) {
         return {
             contents: {
                 kind: 'markdown',

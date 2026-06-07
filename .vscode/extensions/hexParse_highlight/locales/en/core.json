@@ -100,6 +100,7 @@
     "hover.comment": "**Comment Iota** — CommentIota displayed as text, not executed.",
     "hover.tab": "**Tab Indent** — CommentIota with linebreak + leading spaces. Auto-added on multi-line input.",
     "hover.escape": "**Escape** — Alternative to `\\\\` for Introspection/Retrospection/Consideration.",
+    "hover.string": "**String Literal** (`{text}`) — StringIota\n\nText is preserved as-is without pattern matching.",
     "hover.rawPattern": "**Raw Pattern** — Pattern with angle signature `{sig}`\n\n→ PatternIota",
     "hover.macro": "**Macro** — User-defined macro reference: `{text}`\n\n→ resolved at parse time",
     "hover.groupOpen": "**Group Open** — Non-functional pattern wrapper (`{bracket}`)\n\nEquivalent to Introspection. Must be closed by `)` or `}`.",

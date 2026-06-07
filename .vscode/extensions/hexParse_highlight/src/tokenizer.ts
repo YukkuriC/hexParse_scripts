@@ -21,14 +21,18 @@ export function tokenizeLine(line: string, lineNum: number): Token[] {
 
         // ── Layer 1: Comments (highest priority) ──
 
-        // block comment start → consume until end of line (simplified; multi-line handled at doc level)
+        // block comment → consume until */ or end of line
         if (line[i] === '/' && line[i + 1] === '*') {
+            let j = i + 2
+            while (j < line.length && !(line[j] === '*' && line[j + 1] === '/')) j++
+            j = Math.min(j + 2, line.length)
             tokens.push({
-                text: line.slice(i).replace(/\r$/, ''),
+                text: line.slice(i, j).replace(/\r$/, ''),
                 start: { line: lineNum, character: i },
-                end: { line: lineNum, character: line.length },
+                end: { line: lineNum, character: j },
             })
-            break
+            i = j
+            continue
         }
         // line comment → rest is comment
         if (line[i] === '/' && line[i + 1] === '/') {
