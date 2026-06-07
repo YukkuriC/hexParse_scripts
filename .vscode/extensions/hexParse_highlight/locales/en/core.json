@@ -110,8 +110,6 @@
     "hover.pattern": "**Pattern** — Normal static pattern matched by registration key: `{text}`\n\n→ PatternIota",
     "hover.numericLiteral": "**Numeric Constant** (`{text}`) — Bare number literal\n\nNot a pattern. Use `num_{text}` for a numerical reflection PatternIota.",
     "validation.invalidUuid": "Invalid UUID format after entity_: \"{uuid}\". Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "validation.strSpaces": "str_ prefix does not support spaces. Use double-quoted strings instead.",
-    "validation.rawChars": "Raw pattern contains invalid angle signature characters: \"{sig}\". Valid: q w e d s a",
     "validation.maskChars": "Mask pattern invalid characters: \"{m}\". Only - (dash) and v allowed.",
     "validation.copyMaskChars": "Copy mask invalid characters: \"{m}\". Only - (dash) and n allowed.",
     "validation.unmatchedSqOpen": "Unmatched '[' — missing closing ']'",

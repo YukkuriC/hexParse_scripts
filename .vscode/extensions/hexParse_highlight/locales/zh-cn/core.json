@@ -110,8 +110,6 @@
     "hover.pattern": "**图案** —— 通过注册键匹配的普通静态图案：`{text}`\n\n→ PatternIota",
     "hover.numericLiteral": "**数字常量**（`{text}`）—— 裸数字字面量\n\n不是图案。如需数字之精思图案请使用 `num_{text}`。",
     "validation.invalidUuid": "entity_ 后的UUID格式无效：\"{uuid}\"。预期格式：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
-    "validation.strSpaces": "str_ 前缀不支持空格。请改用双引号字符串。",
-    "validation.rawChars": "原始图案包含无效的角度签名字符：\"{sig}\"。有效字符：q w e d s a",
     "validation.maskChars": "掩码图案包含无效字符：\"{m}\"。仅允许 -（短横线）和 v。",
     "validation.copyMaskChars": "复制掩码包含无效字符：\"{m}\"。仅允许 -（短横线）和 n。",
     "validation.unmatchedSqOpen": "'[' 未匹配 —— 缺少关闭的 ']'",

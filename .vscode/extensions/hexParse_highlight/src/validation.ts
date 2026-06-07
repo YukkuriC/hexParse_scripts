@@ -69,29 +69,6 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
                 }
             }
 
-            // Warn about str_ with spaces (not supported)
-            if (t_text.startsWith('str_') && /\s/.test(t_text.slice(4))) {
-                diagnostics.push({
-                    severity: DiagnosticSeverity.Warning,
-                    range: Range.create(tok.start, tok.end),
-                    message: t('validation.strSpaces'),
-                    source: 'hexparse',
-                })
-            }
-
-            // Warn about raw pattern with non-angle chars
-            if (t_text.startsWith('_') && t_text.length > 1) {
-                const sig = t_text.slice(1)
-                if (!/^[qwedsa]+$/.test(sig)) {
-                    diagnostics.push({
-                        severity: DiagnosticSeverity.Warning,
-                        range: Range.create(tok.start, tok.end),
-                        message: t('validation.rawChars', { sig }),
-                        source: 'hexparse',
-                    })
-                }
-            }
-
             // Validate mask pattern chars
             if (t_text.startsWith('mask_') && t_text.length > 5) {
                 const m = t_text.slice(5)
