@@ -97,9 +97,10 @@
     },
     "scripts": {
         "linkSelf": "node scripts/linkSelf.js",
-        "compile": "npm run locale && npm run grammar && npm run final_compile",
+        "compile": "npm run locale && npm run grammar && npm run generate-plugins && npm run final_compile",
         "locale": "node scripts/merge-jsons.js",
         "grammar": "node scripts/grammar.js",
+        "generate-plugins": "node scripts/generate-plugins.js",
         "final_compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "reformat-jsons": "node scripts/reformat-jsons.js"

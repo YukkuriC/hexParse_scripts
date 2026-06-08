@@ -9,13 +9,16 @@ The Language Server follows a **plugin registry** architecture. Each mod integra
 ```
 src/
   types.ts          -- PluginDef / ValueExtractor / TokenValidator interfaces
+  pluginsGen.ts     -- [auto-generated] Plugin imports & ALL_PLUGINS list
+  pluginLoader.ts   -- Flat accessors (prefixes, hovers, validators, ...)
   plugins/
-    index.ts        -- Registry: aggregates all plugins, exports flat accessors
     core.ts         -- Built-in types (num_, mask_, vec, entity_, etc.)
     *.ts            -- One file per external mod plugin (hexal, moreIotas, ...)
   hover.ts          -- Hover handler (table-driven dispatch)
   validation.ts     -- Validation handler (table-driven dispatch)
   completion.ts     -- Completion handler (prefix matching)
+scripts/
+  generate-plugins.js  -- Scans plugins/*.ts -> generates src/pluginsGen.ts
 ```
 
 ---
@@ -158,8 +161,8 @@ validators: [
 
 ## Adding a New Plugin
 
-1. Create `src/plugins/myMod.ts`, export a `PluginDef`
-2. Add it to the `ALL_PLUGINS` array in [`plugins/index.ts`](plugins/index.ts)
+1. Create `src/plugins/myMod.ts`, export a `PluginDef` named `myModPlugin`
+2. Run `npm run generate-plugins` (or `npm run compile`) to regenerate [`pluginsGen.ts`](pluginsGen.ts)
 3. Add i18n strings to both `locales/en/myMod.json` and `locales/zh-cn/myMod.json`
 
 The hover, validation, and completion handlers pick up the new plugin automatically through table-driven dispatch.

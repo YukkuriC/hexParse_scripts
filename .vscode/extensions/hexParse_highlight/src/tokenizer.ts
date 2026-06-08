@@ -1,7 +1,6 @@
 // 生成于 GLM-5V-Turbo
-import { Position, Range } from 'vscode-languageserver/node'
+import { Position } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { connection } from './server'
 
 export interface Token {
     text: string
