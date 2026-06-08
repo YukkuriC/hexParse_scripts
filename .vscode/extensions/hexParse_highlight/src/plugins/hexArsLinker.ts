@@ -1,23 +1,22 @@
 // 生成于 GLM-5V-Turbo
-import { PrefixEntry, HoverEntry } from '../types'
+import { PluginDef } from '../types'
+import { CompletionItemKind } from 'vscode-languageserver/node'
 
 // ─── Hex-Ars-Linker: Glyph ───────────────────────────────────
 
-export const hexArsLinkerPrefixes: PrefixEntry[] = [
-    {
-        prefix: 'glyph_',
-        entries: [
-            {
-                label: 'glyph_',
-                kind: 13, // CompletionItemKind.Event
-                detail: 'plugin.glyph.detail',
-                documentation: 'plugin.glyph.doc',
-                insertText: 'glyph_${1:name}',
-            },
-        ],
-    },
-]
+export const hexArsLinkerPlugin: PluginDef = {
+    name: 'hexArsLinker',
 
-export const hexArsLinkerHovers: HoverEntry = {
-    glyph_: 'hover.glyph',
+    prefixes: [
+        {
+            prefix: 'glyph_',
+            entries: [
+                { label: 'glyph_', kind: CompletionItemKind.Event, detail: 'plugin.glyph.detail', documentation: 'plugin.glyph.doc', insertText: 'glyph_${1:name}' },
+            ],
+        },
+    ],
+
+    hovers: {
+        glyph_: 'hover.glyph',
+    },
 }

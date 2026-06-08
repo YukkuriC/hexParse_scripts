@@ -39,7 +39,7 @@
     "plugin.pureReduce.doc": "Conway's Gambit. Similar to Thoth's Gambit; executes n-1 times for a list of length n.",
     "plugin.callStack.detail": "Call Stack (HexFlow)",
     "plugin.callStack.doc": "Hanoi's Gambit. Executes given pattern/list/Jump iota in an independent stack, then recovers original stack at bottom.",
-    "hover.copyMask": "**Copy Mask** (HexFlow) — Electric Fisherman copy mask.\n\nEach `n` = stack position to copy from.",
+    "hover.copyMask": "**Copy Mask** (HexFlow) — Electric Fisherman copy mask.\n\nValue: `{value}`",
     "hover.forRangeCube": "**Rubik's Gambit** (HexFlow) — Iterate over cuboid points.\n\nFormat: `for_range/cube`",
     "hover.forRangeCubePure": "**Pure Rubik's Gambit** (HexFlow) — Same, no stack copy.\n\nFormat: `for_range/cube/pure`",
     "hover.forRangeLine": "**Measuring Ruler's Gambit** (HexFlow) — Iterate over line points.\n\nFormat: `for_range/line`",
@@ -48,5 +48,6 @@
     "hover.forRangeFloodfillPure": "**Pure Ultimine's Gambit** (HexFlow) — Same, no stack copy.\n\nFormat: `for_range/floodfill/pure`",
     "hover.pureMap": "**Nehmetawy's Gambit** (HexFlow) — Thoth-like without stack copy.\n\nFormat: `pure_map`",
     "hover.pureReduce": "**Conway's Gambit** (HexFlow) — Fold/reduce variant (n-1 executions).\n\nFormat: `pure_reduce`",
-    "hover.callStack": "**Hanoi's Gambit** (HexFlow) — Execute in independent stack.\n\nFormat: `call_stack`"
+    "hover.callStack": "**Hanoi's Gambit** (HexFlow) — Execute in independent stack.\n\nFormat: `call_stack`",
+    "validation.copyMaskChars": "Copy mask invalid characters: \"{m}\". Only - (dash) and n allowed."
 }

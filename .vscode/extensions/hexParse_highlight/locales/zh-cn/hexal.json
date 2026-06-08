@@ -15,6 +15,6 @@
     "plugin.gateEnt.doc": "实体绑定门径。格式：gate_uuid[_x_y_z]",
     "plugin.mote.detail": "物元（Hexal）",
     "plugin.mote.doc": "来自物元枢纽的物元。格式：mote_uuid_idx",
-    "hover.gate": "**门径**（Hexal）—— GateIota。可无绑定或按位置/实体绑定。\n\n格式：`gate`、`gate_x_y_z`、`gate_uuid[_x_y_z]`\n\n注意：额外媒质消耗。解析后的门径ID为负数。",
-    "hover.mote": "**物元**（Hexal）—— 来自物元枢纽的 MoteIota。格式：`mote_<uuid>_<idx>`。"
+    "hover.gate": "**门径**（Hexal）—— GateIota。\n\n值：`{value}`",
+    "hover.mote": "**物元**（Hexal）—— 来自物元枢纽的 MoteIota。\n\n值：`{value}`"
 }

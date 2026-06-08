@@ -3,5 +3,5 @@
     "snippet.potion.description": "Status/Potion iota (Ephemera)",
     "plugin.potion.detail": "Status/Potion (Ephemera)",
     "plugin.potion.doc": "Status/Potion iota by ID. Namespace minecraft: can be omitted.",
-    "hover.potion": "**Potion/Status** (Ephemera) — PotionIota. Namespace `minecraft:` omittable."
+    "hover.potion": "**Potion/Status** (Ephemera) — PotionIota.\n\nValue: `{value}`"
 }

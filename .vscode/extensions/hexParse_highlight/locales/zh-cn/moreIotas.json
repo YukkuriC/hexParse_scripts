@@ -19,8 +19,10 @@
     "plugin.blockType.doc": "通过ID获取方块类型。命名空间 minecraft 可省略。",
     "plugin.str.detail": "字符串字面量（MoreIotas）",
     "plugin.str.doc": "使用 str_ 前缀的字符串。不支持空格或转义。",
-    "hover.matrix": "**矩阵**（`matrix_<行数>_<列数>_<值...>`）—— MoreIotas MatrixIota。",
-    "hover.matrixAlias": "**矩阵**（别名）—— `matrix_` 的简写形式。",
-    "hover.typeRef": "**类型引用**（`type/<种类>_<id>`）—— MoreIotas/Hexal 类型Iota。\n\n种类：`iota`、`entity`、`item`、`block`。",
-    "hover.str": "**字符串**（`str_<内容>`）—— StringIota（MoreIotas）。不支持空格或转义。"
+    "hover.matrix": "**矩阵**（`matrix_`）—— MoreIotas MatrixIota。\n\n值：\n{value}",
+    "hover.matrixAlias": "**矩阵**（别名）—— `matrix_` 的简写形式。\n\n值：\n{value}",
+    "hover.typeRef": "**类型引用**（`type/`）—— MoreIotas/Hexal 类型Iota。\n\n值：`{value}`",
+    "hover.str": "**字符串**（`str_`）—— StringIota（MoreIotas）。\n\n值：`{value}`",
+    "validation.matrixOverflow": "矩阵数据溢出：提供了 {actual} 个值，但只有 {expected} 个位置（{rows}x{cols}）。",
+    "validation.matrixSize": "矩阵{dim}数必须为正整数，得到的是 \"{value}\"。"
 }

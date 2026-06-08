@@ -3,5 +3,5 @@
     "snippet.dimension.description": "Dimension iota (Oneironaut)",
     "plugin.dim.detail": "Dimension (Oneironaut)",
     "plugin.dim.doc": "Dimension iota by ID. Namespace minecraft: can be omitted.",
-    "hover.dim": "**Dimension** (Oneironaut) — DimIota. Namespace `minecraft:` omittable."
+    "hover.dim": "**Dimension** (Oneironaut) — DimIota.\n\nValue: `{value}`"
 }

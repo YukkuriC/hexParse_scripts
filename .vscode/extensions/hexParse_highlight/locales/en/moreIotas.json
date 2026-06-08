@@ -19,8 +19,10 @@
     "plugin.blockType.doc": "Block type by ID. Namespace minecraft: can be omitted.",
     "plugin.str.detail": "String Literal (MoreIotas)",
     "plugin.str.doc": "String literal via str_ prefix. No spaces/escaping supported.",
-    "hover.matrix": "**Matrix** (`matrix_<rows>_<cols>_<values...>`) — MoreIotas MatrixIota.",
-    "hover.matrixAlias": "**Matrix** (alias) — Short form of `matrix_`.",
-    "hover.typeRef": "**Type Reference** (`type/<kind>_<id>`) — MoreIotas/Hexal type iota.\n\nKinds: `iota`, `entity`, `item`, `block`.",
-    "hover.str": "**String** (`str_<content>`) — StringIota (MoreIotas). No spaces or escaping."
+    "hover.matrix": "**Matrix** (`matrix_`) — MoreIotas MatrixIota.\n\nValue:\n{value}",
+    "hover.matrixAlias": "**Matrix** (alias) — Short form of `matrix_`.\n\nValue:\n{value}",
+    "hover.typeRef": "**Type Reference** (`type/`) — MoreIotas/Hexal type iota.\n\nValue: `{value}`",
+    "hover.str": "**String** (`str_`) — StringIota (MoreIota).\n\nValue: `{value}`",
+    "validation.matrixOverflow": "Matrix data overflow: {actual} values given but only {expected} slots ({rows}x{cols}).",
+    "validation.matrixSize": "Matrix {dim} count must be a positive integer, got \"{value}\"."
 }

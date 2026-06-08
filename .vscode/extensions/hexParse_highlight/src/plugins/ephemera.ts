@@ -1,23 +1,22 @@
 // 生成于 GLM-5V-Turbo
-import { PrefixEntry, HoverEntry } from '../types'
+import { PluginDef } from '../types'
+import { CompletionItemKind } from 'vscode-languageserver/node'
 
 // ─── Ephemera: Potion/Status ─────────────────────────────────
 
-export const ephemeraPrefixes: PrefixEntry[] = [
-    {
-        prefix: 'potion_',
-        entries: [
-            {
-                label: 'potion_',
-                kind: 17, // CompletionItemKind.EnumMember
-                detail: 'plugin.potion.detail',
-                documentation: 'plugin.potion.doc',
-                insertText: 'potion_${1:namespace}:${2:id}',
-            },
-        ],
-    },
-]
+export const ephemeraPlugin: PluginDef = {
+    name: 'ephemera',
 
-export const ephemeraHovers: HoverEntry = {
-    potion_: 'hover.potion',
+    prefixes: [
+        {
+            prefix: 'potion_',
+            entries: [
+                { label: 'potion_', kind: CompletionItemKind.EnumMember, detail: 'plugin.potion.detail', documentation: 'plugin.potion.doc', insertText: 'potion_${1:namespace}:${2:id}' },
+            ],
+        },
+    ],
+
+    hovers: {
+        potion_: 'hover.potion',
+    },
 }

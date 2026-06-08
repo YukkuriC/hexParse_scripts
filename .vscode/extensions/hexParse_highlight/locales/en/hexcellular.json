@@ -7,6 +7,6 @@
     "plugin.prop.doc": "Property iota. NOTE: Extra cost. All parsed properties start with underscore and may conflict.",
     "plugin.myProp.detail": "My Property (Hexcellular)",
     "plugin.myProp.doc": "Player-specific property iota. Same notes as prop_.",
-    "hover.prop": "**Property** (Hexcellular) — PropertyIota.\n\nNOTE: Extra cost. Starts with underscore.",
-    "hover.myProp": "**My Property** (Hexcellular) — Player-specific PropertyIota."
+    "hover.prop": "**Property** (Hexcellular) — PropertyIota.\n\nNOTE: Extra cost. Starts with underscore.\n\nValue: `{value}`",
+    "hover.myProp": "**My Property** (Hexcellular) — Player-specific PropertyIota.\n\nValue: `{value}`"
 }

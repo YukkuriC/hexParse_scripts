@@ -3,5 +3,5 @@
     "snippet.glyph.description": "符文引用（Hex-Ars-Linker）",
     "plugin.glyph.detail": "符文引用（Hex-Ars-Linker）",
     "plugin.glyph.doc": "符文Iota。ars_nouveau 命名空间和 glyph_ 前缀可省略。",
-    "hover.glyph": "**符文**（Hex-Ars-Linker）—— GlyphIota。\n\n命名空间 `ars_nouveau` 和 `glyph_` 前缀可省略。"
+    "hover.glyph": "**符文**（Hex-Ars-Linker）—— GlyphIota。\n\n值：`{value}`"
 }

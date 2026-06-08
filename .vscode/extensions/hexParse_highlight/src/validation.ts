@@ -2,6 +2,7 @@
 import { Diagnostic, DiagnosticSeverity, Position, Range } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { tokenizeLine } from './tokenizer'
+import { allValidators } from './plugins'
 import { t } from './i18n'
 
 /** Find all block comment ranges in the document for skipping */
@@ -45,6 +46,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         return (lineOffsets[pos.line] ?? 0) + pos.character
     }
 
+    // ── Token-level validation (table-driven via plugin validators) ──
     for (let lineNum = 0; lineNum < lines.length; lineNum++) {
         const line = lines[lineNum]
         const tokens = tokenizeLine(line, lineNum)
@@ -53,43 +55,15 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
             // Skip validation inside block comments
             if (isInBlockComment(posToOffset(tok.start), blockComments)) continue
 
-            const t_text = tok.text
-
-            // Validate entity UUID format (only if suffix looks like a UUID - contains hyphens)
-            if (t_text.startsWith('entity_') && t_text.includes('-')) {
-                const uuid = t_text.slice(7)
-                const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
-                if (!uuidRegex.test(uuid)) {
+            // Dispatch to all registered plugin validators
+            for (const v of allValidators) {
+                if (!v.test(tok.text)) continue
+                const result = v.validate(tok.text)
+                if (result) {
                     diagnostics.push({
-                        severity: DiagnosticSeverity.Error,
+                        severity: v.severity ?? DiagnosticSeverity.Error,
                         range: Range.create(tok.start, tok.end),
-                        message: t('validation.invalidUuid', { uuid }),
-                        source: 'hexparse',
-                    })
-                }
-            }
-
-            // Validate mask pattern chars
-            if (t_text.startsWith('mask_') && t_text.length > 5) {
-                const m = t_text.slice(5)
-                if (!/^[v\-]+$/.test(m)) {
-                    diagnostics.push({
-                        severity: DiagnosticSeverity.Error,
-                        range: Range.create(tok.start, tok.end),
-                        message: t('validation.maskChars', { m }),
-                        source: 'hexparse',
-                    })
-                }
-            }
-
-            // Validate copy_mask pattern chars
-            if (t_text.startsWith('copy_mask_') && t_text.length > 10) {
-                const m = t_text.slice(10)
-                if (!/^[n\-]+$/.test(m)) {
-                    diagnostics.push({
-                        severity: DiagnosticSeverity.Error,
-                        range: Range.create(tok.start, tok.end),
-                        message: t('validation.copyMaskChars', { m }),
+                        message: t(result.key, result.params),
                         source: 'hexparse',
                     })
                 }
@@ -97,7 +71,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         }
     }
 
-    // Document-level bracket balance check (cross-line aware, skips block comments)
+    // ── Document-level bracket balance check (cross-line aware, skips block comments) ──
     let depthSq = 0
     let depthGroup = 0
     const sqOpenStack: Position[] = [] // track [ positions for precise error

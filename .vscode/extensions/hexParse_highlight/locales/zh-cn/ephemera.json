@@ -3,5 +3,5 @@
     "snippet.potion.description": "药水效果Iota（Ephemera）",
     "plugin.potion.detail": "药水效果（Ephemera）",
     "plugin.potion.doc": "通过ID获取药水效果Iota。minecraft 命名空间可省略。",
-    "hover.potion": "**药水效果**（Ephemera）—— PotionIota。`minecraft:` 命名空间可省略。"
+    "hover.potion": "**药水效果**（Ephemera）—— PotionIota。\n\n值：`{value}`"
 }

@@ -1,41 +1,12 @@
 // 生成于 GLM-5V-Turbo
 import { TextDocumentPositionParams, Hover } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { HoverEntry } from './types'
-import { allPluginHovers } from './plugins'
+import { allPluginHovers, allValueExtractors, allEmptyDefaults } from './plugins'
 import { getTokenAt } from './tokenizer'
 import { t } from './i18n'
 
-// ─── Core Hover Data (Hexcasting built-in) ───────────────────
-// Values store i18n keys; resolved by t() at consumption time
-
-const coreHovers: HoverEntry = {
-    thoth: 'hover.thoth',
-    iris: 'hover.iris',
-    if: 'hover.if',
-    eval: 'hover.eval',
-    'eval/cc': 'hover.evalcc',
-    for_each: 'hover.foreach',
-    halt: 'hover.halt',
-    del: 'hover.del',
-    hermes: 'hover.hermes',
-    true: 'hover.true',
-    false: 'hover.false',
-    null: 'hover.null',
-    garbage: 'hover.garbage',
-    self: 'hover.self',
-    myself: 'hover.myself',
-    num_: 'hover.num',
-    mask_: 'hover.mask',
-    vec: 'hover.vec',
-    entity_: 'hover.entity',
-    comment_: 'hover.comment',
-    tab: 'hover.tab',
-    escape: 'hover.escape',
-}
-
 /** All hover entries: core + plugins (values are i18n keys) */
-const HOVER_MAP: Map<string, string> = new Map([...Object.entries(coreHovers), ...Object.entries(allPluginHovers)])
+const HOVER_MAP: Map<string, string> = new Map(Object.entries(allPluginHovers))
 
 /** Resolve an i18n key through t() */
 function tr(key: string, params?: Record<string, string | number>): string {
@@ -77,12 +48,17 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         }
     }
 
-    // Prefix match
+    // Prefix match — table-driven value extraction
     for (const [key, val] of HOVER_MAP) {
-        if (lowered.startsWith(key)) {
-            return {
-                contents: { kind: 'markdown', value: tr(val) },
-            }
+        if (!lowered.startsWith(key)) continue
+        let suffix = lowered.slice(key.length)
+        // Apply empty default (e.g. num_ with no number → "0")
+        if (!suffix && key in allEmptyDefaults) suffix = allEmptyDefaults[key]
+        // Dispatch to registered extractor, or use raw suffix as fallback
+        const extracted = key in allValueExtractors ? allValueExtractors[key](suffix) : suffix
+
+        return {
+            contents: { kind: 'markdown', value: tr(val, { value: extracted }) },
         }
     }
 

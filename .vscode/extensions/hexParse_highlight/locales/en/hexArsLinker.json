@@ -3,5 +3,5 @@
     "snippet.glyph.description": "Glyph reference (Hex-Ars-Linker)",
     "plugin.glyph.detail": "Glyph Ref (Hex-Ars-Linker)",
     "plugin.glyph.doc": "Glyph iota. ars_nouveau namespace and glyph_ prefix can be omitted.",
-    "hover.glyph": "**Glyph** (Hex-Ars-Linker) — GlyphIota.\n\nNamespace `ars_nouveau` and `glyph_` prefix can be omitted."
+    "hover.glyph": "**Glyph** (Hex-Ars-Linker) — GlyphIota.\n\nValue: `{value}`"
 }

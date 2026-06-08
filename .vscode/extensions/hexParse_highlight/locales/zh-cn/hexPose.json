@@ -3,5 +3,5 @@
     "snippet.idRl.description": "ResourceLocation 标识符（HexPose）",
     "plugin.idRl.detail": "Identifier（HexPose）",
     "plugin.idRl.doc": "ResourceLocation 标识符。minecraft 命名空间可省略。",
-    "hover.idRl": "**Identifier**（HexPose）—— IdentifierIota（ResourceLocation）。"
+    "hover.idRl": "**Identifier**（HexPose）—— IdentifierIota（ResourceLocation）。\n\n值：`{value}`"
 }

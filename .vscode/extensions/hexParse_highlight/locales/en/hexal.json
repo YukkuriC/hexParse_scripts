@@ -15,6 +15,6 @@
     "plugin.gateEnt.doc": "Entity-bound gate. Format: gate_uuid[_x_y_z]",
     "plugin.mote.detail": "Mote (Hexal)",
     "plugin.mote.doc": "Mote from a nexus. Format: mote_uuid_idx",
-    "hover.gate": "**Gate** (Hexal) — GateIota. Unbound or position/entity bound.\n\nFormat: `gate`, `gate_x_y_z`, `gate_uuid[_x_y_z]`\n\nNOTE: Extra cost. Parsed gates have negative IDs.",
-    "hover.mote": "**Mote** (Hexal) — MoteIota from a nexus. Format: `mote_<uuid>_<idx>`."
+    "hover.gate": "**Gate** (Hexal) — GateIota.\n\nValue: `{value}`",
+    "hover.mote": "**Mote** (Hexal) — MoteIota from a nexus.\n\nValue: `{value}`"
 }

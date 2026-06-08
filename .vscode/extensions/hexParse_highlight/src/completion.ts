@@ -1,5 +1,5 @@
 // 生成于 GLM-5V-Turbo
-import { CompletionItem, CompletionItemKind } from 'vscode-languageserver/node'
+import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver/node'
 import { Entry, PrefixEntry } from './types'
 import { allPluginPrefixes } from './plugins'
 import { t } from './i18n'
@@ -224,7 +224,7 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
                     detail: e.detail ? tr(e.detail) : undefined,
                     documentation: { kind: 'markdown', value: e.documentation ? tr(e.documentation) : '' },
                     insertText: e.insertText ?? e.label,
-                    insertTextFormat: e.insertText ? 2 : undefined, // Snippet
+                    insertTextFormat: e.insertText ? InsertTextFormat.Snippet : undefined, // Snippet
                 })
             }
         }
@@ -240,7 +240,7 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
                     detail: e.detail ? tr(e.detail) : undefined,
                     documentation: { kind: 'markdown', value: e.documentation ? tr(e.documentation) : '' },
                     insertText: e.insertText ?? e.label,
-                    insertTextFormat: e.insertText ? 2 : undefined,
+                    insertTextFormat: e.insertText ? InsertTextFormat.Snippet : undefined,
                 })
             }
         }
@@ -254,7 +254,7 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
             detail: tr('completion.macro.detail'),
             documentation: { kind: 'markdown', value: tr('completion.macro.doc') },
             insertText: '#${1:macro_name}',
-            insertTextFormat: 2,
+            insertTextFormat: InsertTextFormat.Snippet,
         })
     }
 
