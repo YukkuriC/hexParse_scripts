@@ -2,6 +2,9 @@
 import { Position } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 
+/** Source: HexParseMod/.../parsers/CodeCutter.kt pTokens */
+const RE_WORD = /^[\w./\-:#\u0100-\uffff]+/
+
 export interface Token {
     text: string
     start: Position
@@ -12,12 +15,6 @@ export function tokenizeLine(line: string, lineNum: number): Token[] {
     const tokens: Token[] = []
     let i = 0
     while (i < line.length) {
-        // skip whitespace
-        if (line[i] === ' ' || line[i] === '\t') {
-            i++
-            continue
-        }
-
         // ── Layer 1: Comments (highest priority) ──
 
         // block comment → consume until */ or end of line
@@ -84,20 +81,23 @@ export function tokenizeLine(line: string, lineNum: number): Token[] {
 
         // ── Layer 3: Code content (lowest priority) ──
 
-        // word token (identifier / pattern) — stops at delimiters
-        // / only splits when followed by * or / (block/line comment start)
-        let j = i
-        while (j < line.length && !' \t,[(\\){}]'.includes(line[j])) {
-            if (line[j] === '/' && (line[j + 1] === '*' || line[j + 1] === '/')) break
-            j++
-        }
-        if (j > i) {
-            tokens.push({
-                text: line.slice(i, j).replace(/\r$/, ''), // strip trailing CR on Windows
-                start: { line: lineNum, character: i },
-                end: { line: lineNum, character: j },
-            })
-            i = j
+        // word token — whitelist regex matching Kotlin pTokens
+        // / is in the set but must stop before comment starts (/* or //)
+        const wordMatch = line.slice(i).match(RE_WORD)
+        if (wordMatch) {
+            let len = wordMatch[0].length
+            // trim trailing / that would start a comment
+            if (line[i + len - 1] === '/' && (line[i + len] === '*' || line[i + len] === '/')) len--
+            if (len > 0) {
+                tokens.push({
+                    text: line.slice(i, i + len).replace(/\r$/, ''),
+                    start: { line: lineNum, character: i },
+                    end: { line: lineNum, character: i + len },
+                })
+                i += len
+            } else {
+                i++
+            }
         } else {
             i++
         }
