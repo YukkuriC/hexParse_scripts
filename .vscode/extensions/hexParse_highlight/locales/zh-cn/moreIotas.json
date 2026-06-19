@@ -23,6 +23,7 @@
     "hover.matrixAlias": "**矩阵**（别名）—— `matrix_` 的简写形式。\n\n值：\n{value}",
     "hover.typeRef": "**类型引用**（`type/`）—— MoreIotas/Hexal 类型Iota。\n\n值：`{value}`",
     "hover.str": "**字符串**（`str_`）—— StringIota（MoreIotas）。\n\n值：`{value}`",
-    "validation.matrixOverflow": "矩阵数据溢出：提供了 {actual} 个值，但只有 {expected} 个位置（{rows}x{cols}）。",
-    "validation.matrixSize": "矩阵{dim}数必须为正整数，得到的是 \"{value}\"。"
+    "validation.matrixOverflow": "矩阵数据溢出：提供了 {actual} 个值，但只需 {expected} 个（{rows}x{cols}），多余部分将被忽略。",
+    "validation.matrixUnderflow": "矩阵数据不足：仅提供了 {actual} 个值，但需要 {expected} 个（{rows}x{cols}）。",
+    "validation.matrixSize": "矩阵{dim}数必须为非负整数，得到的是 \"{value}\"。"
 }

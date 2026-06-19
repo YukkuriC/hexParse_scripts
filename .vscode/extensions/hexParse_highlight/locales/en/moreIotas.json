@@ -23,6 +23,7 @@
     "hover.matrixAlias": "**Matrix** (alias) — Short form of `matrix_`.\n\nValue:\n{value}",
     "hover.typeRef": "**Type Reference** (`type/`) — MoreIotas/Hexal type iota.\n\nValue: `{value}`",
     "hover.str": "**String** (`str_`) — StringIota (MoreIota).\n\nValue: `{value}`",
-    "validation.matrixOverflow": "Matrix data overflow: {actual} values given but only {expected} slots ({rows}x{cols}).",
-    "validation.matrixSize": "Matrix {dim} count must be a positive integer, got \"{value}\"."
+    "validation.matrixOverflow": "Matrix data overflow: {actual} values given but only {expected} needed ({rows}x{cols}), excess will be ignored.",
+    "validation.matrixUnderflow": "Matrix data underflow: only {actual} values given but {expected} required ({rows}x{cols}).",
+    "validation.matrixSize": "Matrix {dim} count must be a non-negative integer, got \"{value}\"."
 }

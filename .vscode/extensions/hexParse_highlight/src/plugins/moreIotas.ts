@@ -11,10 +11,10 @@ const extractMatrix: ValueExtractor = (suffix) => {
     const cols = parseInt(parts[1], 10)
     const vals = parts.slice(2)
     const total = rows * cols
-    // Pad with 0
+    // Pad with ?
     const grid: string[] = []
     for (let i = 0; i < total; i++) {
-        grid.push(i < vals.length && vals[i] ? vals[i] : '0')
+        grid.push(i < vals.length && vals[i] ? vals[i] : '?')
     }
     // Format as plain text rows, \n\n for markdown paragraph break + leading \n for alignment
     const lines: string[] = ['']
@@ -77,21 +77,39 @@ export const moreIotasPlugin: PluginDef = {
                 if (parts.length < 2) return null
                 const rows = parseInt(parts[0], 10)
                 const cols = parseInt(parts[1], 10)
-                // Check for non-positive dimensions
-                if (isNaN(rows) || rows <= 0) {
+                // Check for negative dimensions
+                if (isNaN(rows) || rows < 0) {
                     return { key: 'validation.matrixSize', params: { dim: 'row', value: parts[0] } }
                 }
-                if (isNaN(cols) || cols <= 0) {
+                if (isNaN(cols) || cols < 0) {
                     return { key: 'validation.matrixSize', params: { dim: 'col', value: parts[1] } }
                 }
-                // Check data overflow
+                // Check data count
+                const valCount = parts.length - 2
+                const total = rows * cols
+                if (valCount < total) {
+                    return { key: 'validation.matrixUnderflow', params: { actual: valCount, expected: total, rows, cols } }
+                }
+                return null
+            },
+            severity: DiagnosticSeverity.Error,
+        },
+        {
+            test: (t) => t.startsWith('matrix_') || t.startsWith('mat_'),
+            validate: (t_text): { key: string; params: Record<string, string | number> } | null => {
+                const prefixLen = t_text.startsWith('matrix_') ? 7 : 4
+                const parts = t_text.slice(prefixLen).split('_').filter(Boolean)
+                if (parts.length < 2) return null
+                const rows = parseInt(parts[0], 10)
+                const cols = parseInt(parts[1], 10)
+                if (isNaN(rows) || rows < 0 || isNaN(cols) || cols < 0) return null
                 const valCount = parts.length - 2
                 if (valCount > rows * cols) {
                     return { key: 'validation.matrixOverflow', params: { actual: valCount, expected: rows * cols, rows, cols } }
                 }
                 return null
             },
-            severity: DiagnosticSeverity.Error,
+            severity: DiagnosticSeverity.Warning,
         },
     ],
 }
