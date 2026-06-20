@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [1.2.1]
+
+### Features
+
+- **Matrix validation upgrade**: underflow (missing values) now reported as Error, overflow changed from Error to Warning; zero-size matrices now permitted
+- **Tokenizer whitelist rewrite**: switched from character blacklist to whitelist regex matching Kotlin pTokens, improving Unicode and special character handling
+- Matrix hover preview uses `?` instead of `0` for missing cells
+
+### Fixes
+
+- Whitespace no longer prematurely breaks word tokens during tokenization
+
+---
+
 ## [1.2.0]
 
 ### Features
