@@ -40,7 +40,7 @@ function prependPatternName(base: string, query: string): string {
             const entry = shortHits[0]
             return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }) + base
         }
-        return tr('hover.patternNameList', { list: shortHits.map(formatPatternEntry).join('\n') }) + base
+        return tr('hover.patternNameList', { list: shortHits.map(formatPatternEntry).join(', ') }) + base
     }
     // 未命中：若导出中断仍有剩余未导出包，与无索引时提示相同信息
     if (getDumpRemaining() > 0) return tr('hover.patternIndexHint') + base

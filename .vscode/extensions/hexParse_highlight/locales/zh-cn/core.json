@@ -111,7 +111,7 @@
     "hover.pattern": "**图案** —— 通过注册键匹配的普通静态图案：`{text}`\n\n→ PatternIota",
     "hover.numericLiteral": "**数字常量**（`{text}`）—— 裸数字字面量\n\n不是图案。如需数字之精思图案请使用 `num_{text}`。",
     "hover.patternName": "图案：**{name}** ({modid})\n\n",
-    "hover.patternNameList": "可能的图案：\n{list}\n\n",
+    "hover.patternNameList": "可能的图案：{list}\n\n",
     "hover.patternIndexHint": "> 提示：运行「从 PyPI 导出 HexDoc 图案数据」命令以启用图案名称显示。\n\n",
     "validation.invalidUuid": "entity_ 后的UUID格式无效：\"{uuid}\"。预期格式：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
     "validation.maskChars": "掩码图案包含无效字符：\"{m}\"。仅允许 -（短横线）和 v。",
