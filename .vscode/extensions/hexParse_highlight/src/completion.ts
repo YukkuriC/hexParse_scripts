@@ -3,7 +3,8 @@ import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-lan
 import { Entry, PrefixEntry } from './types'
 import { allPluginPrefixes } from './plugins'
 import { t } from './i18n'
-import { getPatternIndex, pickPatternName, PatternEntry } from './patternIndex'
+import { getPatternIndex, pickPatternName, patternLangKey, PatternEntry } from './patternIndex'
+import { Token } from './tokenizer'
 
 // ─── Core Completion Data (Hexcasting built-in) ──────────────
 // detail/documentation store i18n keys; resolved by t() at consumption time
@@ -36,7 +37,12 @@ export const META_PATTERNS: Entry[] = [
         detail: 'completion.meta.detail',
         documentation: 'completion.if.doc',
     },
-    { label: 'eval', kind: CompletionItemKind.Keyword, detail: 'completion.meta.detail', documentation: 'completion.eval.doc' },
+    {
+        label: 'eval',
+        kind: CompletionItemKind.Keyword,
+        detail: 'completion.meta.detail',
+        documentation: 'completion.eval.doc',
+    },
     {
         label: 'eval/cc',
         kind: CompletionItemKind.Keyword,
@@ -49,8 +55,18 @@ export const META_PATTERNS: Entry[] = [
         detail: 'completion.meta.detail',
         documentation: 'completion.foreach.doc',
     },
-    { label: 'halt', kind: CompletionItemKind.Keyword, detail: 'completion.meta.detail', documentation: 'completion.halt.doc' },
-    { label: 'del', kind: CompletionItemKind.Keyword, detail: 'completion.meta.detail', documentation: 'completion.del.doc' },
+    {
+        label: 'halt',
+        kind: CompletionItemKind.Keyword,
+        detail: 'completion.meta.detail',
+        documentation: 'completion.halt.doc',
+    },
+    {
+        label: 'del',
+        kind: CompletionItemKind.Keyword,
+        detail: 'completion.meta.detail',
+        documentation: 'completion.del.doc',
+    },
 ]
 
 export const CONSTANTS: Entry[] = [
@@ -66,8 +82,18 @@ export const CONSTANTS: Entry[] = [
         detail: 'completion.boolean.detail',
         documentation: 'completion.false.doc',
     },
-    { label: 'null', kind: CompletionItemKind.Constant, detail: 'completion.null.detail', documentation: 'completion.null.doc' },
-    { label: 'NULL', kind: CompletionItemKind.Constant, detail: 'completion.nullLabel.detail', documentation: 'completion.nullLabel.doc' },
+    {
+        label: 'null',
+        kind: CompletionItemKind.Constant,
+        detail: 'completion.null.detail',
+        documentation: 'completion.null.doc',
+    },
+    {
+        label: 'NULL',
+        kind: CompletionItemKind.Constant,
+        detail: 'completion.nullLabel.detail',
+        documentation: 'completion.nullLabel.doc',
+    },
     {
         label: 'garbage',
         kind: CompletionItemKind.Constant,
@@ -210,43 +236,101 @@ function tr(key: string, params?: Record<string, string | number>): string {
 
 // ─── Build Completion Items ──────────────────────────────────
 
-/** 补全时最多返回的图案数量 */
-const MAX_PATTERN_SUGGESTIONS = 50
+/** 短 ID（id 冒号后半部分）；无冒号时原样返回 */
+function shortId(id: string): string {
+    const i = id.indexOf(':')
+    return i >= 0 ? id.slice(i + 1) : id
+}
+
+interface PickedPattern {
+    label: string
+    entry: PatternEntry
+    /** 优先级：1 = ID 匹配，2 = 当前语言译名匹配，3 = en_us 译名匹配 */
+    prio: number
+}
+
+/** 将某译名表中的子串命中加入 picked（跳过已收集的条目） */
+function pushNameMatches(
+    table: Map<string, PatternEntry[]> | undefined,
+    query: string,
+    raw: boolean,
+    seen: Set<string>,
+    picked: PickedPattern[],
+    prio: number,
+): void {
+    if (!table) return
+    for (const [name, list] of table) {
+        if (!name.includes(query)) continue
+        for (const entry of list) {
+            if (seen.has(entry.id)) continue
+            seen.add(entry.id)
+            picked.push({ label: (raw ? '_' : '') + shortId(entry.id), entry, prio })
+            picked.push({ label: (raw ? '_' : '') + entry.id, entry, prio })
+        }
+    }
+}
 
 /**
- * 从 hexdoc dump 索引中按已输入文本收集图案补全项。
- * 长短名称统一按子串（includes）匹配，命中后同时提供短名称与长名称（完整 id）两种形式；`_` 前缀 → 原始图案。
+ * 收集图案补全项（子串匹配，长/短 ID 与译名统一）：
+ * 1) 长/短 ID 子串匹配（最高优先级）
+ * 2) 当前语言译名子串匹配（次之，已满额则跳过）
+ * 3) 非英文时额外匹配 en_us 译名（再次之，已满额则跳过）
+ * 命中后同时给出短名称与长名称（完整 id）两种形式；`_` 前缀 → 原始图案。
+ * 通过 textEdit 将已输入 token 整体替换为选定的补全文本。
  * 索引不可用（未导出）时静默返回空。
  */
-function patternSuggestions(textSoFar: string): CompletionItem[] {
+function patternSuggestions(textSoFar: string, token: Token | null | undefined): CompletionItem[] {
     const index = getPatternIndex()
     if (!index) return []
 
     const raw = textSoFar.startsWith('_')
     const query = (raw ? textSoFar.slice(1) : textSoFar).toLowerCase()
-    const picked: Array<{ label: string; entry: PatternEntry }> = []
+    const picked: PickedPattern[] = []
+    const seen = new Set<string>()
+
+    // 1) 长/短 ID 子串匹配
     for (const [short, list] of index.byShort) {
         for (const entry of list) {
             if (entry.id.toLowerCase().includes(query) || short.includes(query)) {
-                picked.push({ label: (raw ? '_' : '') + short, entry })
-                picked.push({ label: (raw ? '_' : '') + entry.id, entry })
+                seen.add(entry.id)
+                picked.push({ label: (raw ? '_' : '') + short, entry, prio: 1 })
+                picked.push({ label: (raw ? '_' : '') + entry.id, entry, prio: 1 })
             }
         }
     }
 
-    return picked.slice(0, MAX_PATTERN_SUGGESTIONS).map(({ label, entry }) => ({
-        label,
-        kind: CompletionItemKind.Value,
-        detail: tr('completion.pattern.detail', { name: pickPatternName(entry), modid: entry.modid }),
-        documentation: {
-            kind: 'markdown',
-            value: tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }),
-        },
-        insertText: label,
-    }))
+    // 2) 当前语言译名子串匹配
+    const lang = patternLangKey()
+    pushNameMatches(index.byName.get(lang), query, raw, seen, picked, 2)
+
+    // 3) 非英文时额外匹配 en_us 译名
+    if (lang !== 'en_us') {
+        pushNameMatches(index.byName.get('en_us'), query, raw, seen, picked, 3)
+    }
+
+    return picked.map(({ label, entry, prio }) => {
+        // VS Code 按 filterText（缺省为 label）过滤已输入文本：
+        // 附加各语言译名后，中文/英文译名输入也能命中，而补全文本仍是长/短 ID
+        const names = Object.values(entry.name ?? {}).filter((n): n is string => typeof n === 'string' && n.length > 0)
+        const filterText = names.length > 0 ? `${label} ${names.join(' ')}` : label
+        return {
+            label,
+            kind: CompletionItemKind.Value,
+            detail: tr('completion.pattern.detail', { name: pickPatternName(entry), modid: entry.modid }),
+            documentation: {
+                kind: 'markdown',
+                value: tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }),
+            },
+            sortText: String(prio) + ':' + label,
+            insertText: label,
+            // 将已输入的整个 token 替换为选定的补全文本（长/短 ID）
+            textEdit: token ? { range: { start: token.start, end: token.end }, newText: label } : undefined,
+            filterText,
+        }
+    })
 }
 
-export function buildCompletionItems(textSoFar: string): CompletionItem[] {
+export function buildCompletionItems(textSoFar: string, token?: Token | null): CompletionItem[] {
     const items: CompletionItem[] = []
     const lower = textSoFar.toLowerCase()
 
@@ -307,7 +391,7 @@ export function buildCompletionItems(textSoFar: string): CompletionItem[] {
 
     // Pattern name suggestions (from hexdoc dump index); skip macro/escape
     if (!lower.startsWith('#') && !lower.startsWith('\\')) {
-        items.push(...patternSuggestions(textSoFar))
+        items.push(...patternSuggestions(textSoFar, token))
     }
 
     return items

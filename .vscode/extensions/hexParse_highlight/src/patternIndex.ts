@@ -21,13 +21,20 @@ export interface PatternIndex {
     byId: Map<string, PatternEntry>
     /** 短名称（id 中 ':' 后半部分）→ pattern 对象列表 */
     byShort: Map<string, PatternEntry[]>
+    /** 译名索引：lang（如 zh_cn / en_us）→ 译名（小写）→ pattern 对象列表 */
+    byName: Map<string, Map<string, PatternEntry[]>>
+}
+
+/** 当前 locale 对应的译名表键：en → en_us，其余原样返回 */
+export function patternLangKey(): string {
+    const locale = getLocale().toLowerCase().replace(/-/g, '_')
+    return locale === 'en' ? 'en_us' : locale
 }
 
 /** 从多语言名称表中挑选当前语言下的名称，兜底 en_us / 首个值 / id */
 export function pickPatternName(entry: PatternEntry): string {
-    const lang = getLocale() === 'zh-cn' ? 'zh_cn' : 'en_us'
     const name = entry.name ?? {}
-    if (name[lang]) return name[lang]
+    if (name[patternLangKey()]) return name[patternLangKey()]
     if (name.en_us) return name.en_us
     const first = Object.values(name)[0]
     return first ?? entry.id
@@ -68,6 +75,7 @@ function readPatternIndex(filePath: string): PatternIndex {
     const raw = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, DumpPattern[]>
     const byId = new Map<string, PatternEntry>()
     const byShort = new Map<string, PatternEntry[]>()
+    const byName = new Map<string, Map<string, PatternEntry[]>>()
     for (const [pkg, patterns] of Object.entries(raw)) {
         if (!Array.isArray(patterns)) continue
         const modid = pkg.startsWith('hexdoc-') ? pkg.slice('hexdoc-'.length) : pkg
@@ -80,9 +88,22 @@ function readPatternIndex(filePath: string): PatternIndex {
             const list = byShort.get(short)
             if (list) list.push(entry)
             else byShort.set(short, [entry])
+            // 译名索引：lang → 译名（小写） → 列表
+            for (const [lang, name] of Object.entries(entry.name)) {
+                if (!name) continue
+                const key = name.toLowerCase()
+                let table = byName.get(lang)
+                if (!table) {
+                    table = new Map()
+                    byName.set(lang, table)
+                }
+                const nameList = table.get(key)
+                if (nameList) nameList.push(entry)
+                else table.set(key, [entry])
+            }
         }
     }
-    return { byId, byShort }
+    return { byId, byShort, byName }
 }
 
 /**
