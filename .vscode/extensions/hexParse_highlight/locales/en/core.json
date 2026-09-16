@@ -116,5 +116,9 @@
     "validation.unmatchedGroupOpen": "Unmatched '(' or '{' — missing closing ')' or '}'",
     "validation.unmatchedGroupClose": "Unmatched ')' or '}' — extra closing group bracket",
     "command.lehmer.title": "Calculate Lehmer Code from Selection",
+    "command.hexdocDump.title": "Dump HexDoc Pattern Data from PyPI",
+    "command.hexdocDumpAbort.title": "Abort HexDoc Export",
+    "command.hexdocDumpOpen.title": "Open HexDoc Patterns JSON",
+    "command.hexdocDumpClear.title": "Clear Exported HexDoc Data",
     "config.lehmerTemplate.description": "Template for Lehmer code output. Use {result} as placeholder for the calculated Lehmer code value."
 }

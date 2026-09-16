@@ -85,6 +85,26 @@
                 "command": "hexparse.calculateLehmer",
                 "title": "%command.lehmer.title%",
                 "category": "HexParse"
+            },
+            {
+                "command": "hexparse.dumpHexDocData",
+                "title": "%command.hexdocDump.title%",
+                "category": "HexParse"
+            },
+            {
+                "command": "hexparse.abortHexDocDump",
+                "title": "%command.hexdocDumpAbort.title%",
+                "category": "HexParse"
+            },
+            {
+                "command": "hexparse.openHexDocDump",
+                "title": "%command.hexdocDumpOpen.title%",
+                "category": "HexParse"
+            },
+            {
+                "command": "hexparse.clearHexDocDump",
+                "title": "%command.hexdocDumpClear.title%",
+                "category": "HexParse"
             }
         ],
         "keybindings": [
@@ -106,12 +126,14 @@
         "reformat-jsons": "node scripts/reformat-jsons.js"
     },
     "devDependencies": {
+        "@types/adm-zip": "^0.5.8",
         "@types/node": "^20.x",
         "@types/vscode": "^1.74.0",
         "js-yaml": "^4.2.0",
         "typescript": "^5.3.x"
     },
     "dependencies": {
+        "adm-zip": "^0.5.18",
         "vscode-languageclient": "^9.0.1",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-textdocument": "^1.0.11"

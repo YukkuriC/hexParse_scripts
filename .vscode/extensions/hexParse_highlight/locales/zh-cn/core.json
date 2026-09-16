@@ -116,5 +116,9 @@
     "validation.unmatchedGroupOpen": "'(' 或 '{' 未匹配 —— 缺少关闭的 ')' 或 '}'",
     "validation.unmatchedGroupClose": "')' 或 '}' 多余 —— 多余的关闭分组括号",
     "command.lehmer.title": "从选中内容计算 Lehmer 码",
+    "command.hexdocDump.title": "从 PyPI 导出 HexDoc 图案数据",
+    "command.hexdocDumpAbort.title": "中断 HexDoc 导出",
+    "command.hexdocDumpOpen.title": "打开 HexDoc 图案 JSON",
+    "command.hexdocDumpClear.title": "清除已导出的 HexDoc 内容",
     "config.lehmerTemplate.description": "Lehmer 码输出模板。使用 {result} 作为计算结果的占位符。"
 }
