@@ -3,7 +3,8 @@ import { TextDocumentPositionParams, Hover } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { allPluginHovers, allValueExtractors, allEmptyDefaults } from './plugins'
 import { getTokenAt } from './tokenizer'
-import { t } from './i18n'
+import { t, getLocale } from './i18n'
+import { getPatternIndex, getDumpRemaining, PatternEntry } from './patternIndex'
 
 /** All hover entries: core + plugins (values are i18n keys) */
 const HOVER_MAP: Map<string, string> = new Map(Object.entries(allPluginHovers))
@@ -11,6 +12,49 @@ const HOVER_MAP: Map<string, string> = new Map(Object.entries(allPluginHovers))
 /** Resolve an i18n key through t() */
 function tr(key: string, params?: Record<string, string | number>): string {
     return t(key, params)
+}
+
+// ─── Pattern Name Resolution (via hexdoc dump index) ────────
+
+/** 从多语言名称表中挑选当前语言下的名称，兜底 en_us / 首个值 / id */
+function pickPatternName(entry: PatternEntry): string {
+    const lang = getLocale() === 'zh-cn' ? 'zh_cn' : 'en_us'
+    const name = entry.name ?? {}
+    if (name[lang]) return name[lang]
+    if (name.en_us) return name.en_us
+    const first = Object.values(name)[0]
+    return first ?? entry.id
+}
+
+/** 单条名称行：`名称 (modid)` */
+function formatPatternEntry(entry: PatternEntry): string {
+    return `${pickPatternName(entry)} (${entry.modid})`
+}
+
+/**
+ * 为 pattern 类型 hover 前置图案名称区段，返回完整 markdown。
+ * 索引构建失败 → 前置提示；长ID命中或短ID唯一命中 → 前置单条；短ID多命中 → 前置列表；未命中 → 原样返回。
+ */
+function prependPatternName(base: string, query: string): string {
+    const index = getPatternIndex()
+    if (!index) return tr('hover.patternIndexHint') + base
+
+    const q = query.toLowerCase()
+    const hit = index.byId.get(q)
+    if (hit) {
+        return tr('hover.patternName', { name: pickPatternName(hit), modid: hit.modid }) + base
+    }
+    const shortHits = index.byShort.get(q)
+    if (shortHits && shortHits.length > 0) {
+        if (shortHits.length === 1) {
+            const entry = shortHits[0]
+            return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }) + base
+        }
+        return tr('hover.patternNameList', { list: shortHits.map(formatPatternEntry).join('\n') }) + base
+    }
+    // 未命中：若导出中断仍有剩余未导出包，与无索引时提示相同信息
+    if (getDumpRemaining() > 0) return tr('hover.patternIndexHint') + base
+    return base
 }
 
 // ─── Hover Handler ───────────────────────────────────────────
@@ -67,7 +111,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
         return {
             contents: {
                 kind: 'markdown',
-                value: tr('hover.rawPattern', { sig: lowered.slice(1) }),
+                value: prependPatternName(tr('hover.rawPattern', { sig: lowered.slice(1) }), lowered.slice(1)),
             },
         }
     }
@@ -119,7 +163,7 @@ export function handleHover(textDocumentPosition: TextDocumentPositionParams, do
     return {
         contents: {
             kind: 'markdown',
-            value: tr('hover.pattern', { text: token.text }),
+            value: prependPatternName(tr('hover.pattern', { text: token.text }), text),
         },
     }
 }

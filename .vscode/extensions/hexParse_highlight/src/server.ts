@@ -15,6 +15,7 @@ import { handleHover } from './hover'
 import { validateDoc } from './validation'
 import { getTokenAt } from './tokenizer'
 import { registerBundle, setLocale } from './i18n'
+import { initPatternIndex } from './patternIndex'
 import * as nlsEn from '../package.nls.json'
 import * as nlsZh from '../package.nls.zh-cn.json'
 
@@ -37,6 +38,9 @@ connection.onInitialize((params: InitializeParams) => {
     // Set locale from client initialization options (default: en)
     const locale = (params.initializationOptions?.locale as string) || 'en'
     setLocale(locale)
+
+    // Locate the hexdoc dump file (written by hexparse.dumpHexDocData)
+    initPatternIndex(params.initializationOptions?.dumpFile as string | undefined)
 
     const result: InitializeResult = {
         capabilities: {

@@ -236,6 +236,23 @@ function loadExistingDump(outputPath: string): Record<string, HexDocPattern[]> {
 }
 
 /**
+ * 记录/清除中断状态：中断结算后写入剩余未导出包数，供 server 端 hover 提示。
+ * 状态文件路径 = 导出文件路径去掉 .json 追加 .status.json（与 server 端规则一致）。
+ */
+function writeDumpStatus(outputPath: string, remaining: number): void {
+    const statusPath = outputPath.replace(/\.json$/, '.status.json')
+    if (remaining > 0) {
+        fs.writeFileSync(statusPath, JSON.stringify({ remaining }), 'utf-8')
+    } else {
+        try {
+            fs.unlinkSync(statusPath)
+        } catch {
+            // 状态文件不存在，无需处理
+        }
+    }
+}
+
+/**
  * 拉取 HexBug-data 及其 hexdoc-* 依赖的图案数据，写入 outputDir/dump_hexbug_patterns.json。
  * 中断时结算已完成部分到同一文件；断点续传跳过已导出的完整包。
  * @param outputDir 输出目录（扩展 globalStoragePath）
@@ -258,12 +275,14 @@ export async function runHexDocDump(outputDir: string, options: DumpOptions = {}
     const requires: string[] = info.requires_dist || []
     if (requires.length === 0) {
         console.log('No dependencies found.')
+        writeDumpStatus(outputPath, 0)
         return { outputPath, status: 'completed', exported: 0, total: 0 }
     }
 
     const hexDocDeps = findHexDocDeps(requires)
     if (hexDocDeps.length === 0) {
         console.log("No 'hexdoc-' prefixed dependencies found.")
+        writeDumpStatus(outputPath, 0)
         return { outputPath, status: 'completed', exported: 0, total: 0 }
     }
 
@@ -274,6 +293,7 @@ export async function runHexDocDump(outputDir: string, options: DumpOptions = {}
     )
     if (pending.length === 0) {
         console.log('All packages already exported, nothing to do.')
+        writeDumpStatus(outputPath, 0)
         return { outputPath, status: 'completed', exported: 0, total: 0 }
     }
 
@@ -305,5 +325,6 @@ export async function runHexDocDump(outputDir: string, options: DumpOptions = {}
     fs.mkdirSync(outputDir, { recursive: true })
     fs.writeFileSync(outputPath, JSON.stringify(allResults, null, 2), 'utf-8')
     console.log(`\nWrote results to ${outputPath} (${aborted ? 'interrupted, settled' : 'complete'})`)
+    writeDumpStatus(outputPath, aborted ? total - done : 0)
     return { outputPath, status: aborted ? 'aborted' : 'completed', exported: done, total }
 }

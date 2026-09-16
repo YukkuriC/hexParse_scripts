@@ -35,6 +35,7 @@ export function activate(context: vscode.ExtensionContext): void {
         },
         initializationOptions: {
             locale,
+            dumpFile: path.join(context.globalStoragePath, HEXBUG_PATTERNS_FILE),
         },
     }
 
@@ -152,6 +153,8 @@ export function activate(context: vscode.ExtensionContext): void {
                 return
             }
             fs.unlinkSync(filePath)
+            const statusPath = filePath.replace(/\.json$/, '.status.json')
+            if (fs.existsSync(statusPath)) fs.unlinkSync(statusPath)
             vscode.window.showInformationMessage(`Cleared exported HexDoc data: ${filePath}`)
         }),
     )
