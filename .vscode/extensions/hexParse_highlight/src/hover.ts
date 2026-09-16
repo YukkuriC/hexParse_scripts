@@ -3,8 +3,8 @@ import { TextDocumentPositionParams, Hover } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { allPluginHovers, allValueExtractors, allEmptyDefaults } from './plugins'
 import { getTokenAt } from './tokenizer'
-import { t, getLocale } from './i18n'
-import { getPatternIndex, getDumpRemaining, PatternEntry } from './patternIndex'
+import { t } from './i18n'
+import { getPatternIndex, getDumpRemaining, pickPatternName, PatternEntry } from './patternIndex'
 
 /** All hover entries: core + plugins (values are i18n keys) */
 const HOVER_MAP: Map<string, string> = new Map(Object.entries(allPluginHovers))
@@ -15,16 +15,6 @@ function tr(key: string, params?: Record<string, string | number>): string {
 }
 
 // ─── Pattern Name Resolution (via hexdoc dump index) ────────
-
-/** 从多语言名称表中挑选当前语言下的名称，兜底 en_us / 首个值 / id */
-function pickPatternName(entry: PatternEntry): string {
-    const lang = getLocale() === 'zh-cn' ? 'zh_cn' : 'en_us'
-    const name = entry.name ?? {}
-    if (name[lang]) return name[lang]
-    if (name.en_us) return name.en_us
-    const first = Object.values(name)[0]
-    return first ?? entry.id
-}
 
 /** 单条名称行：`名称 (modid)` */
 function formatPatternEntry(entry: PatternEntry): string {

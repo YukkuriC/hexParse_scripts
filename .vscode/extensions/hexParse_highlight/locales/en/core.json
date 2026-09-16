@@ -78,6 +78,7 @@
     "completion.macro.doc": "User-defined macro. Replace macro_name with your defined macro.",
     "completion.escape.detail": "Escape Character",
     "completion.escape.doc": "Alternative to \\\\ for non-functional patterns",
+    "completion.pattern.detail": "{name} ({modid})",
     "hover.thoth": "**Thoth** dialect — built-in dialect for single token parsing",
     "hover.iris": "**Iris** dialect — built-in dialect for single token parsing",
     "hover.if": "**If** — Conditional execution meta pattern",

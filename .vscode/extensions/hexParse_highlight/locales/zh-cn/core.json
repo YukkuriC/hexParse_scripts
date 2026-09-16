@@ -78,6 +78,7 @@
     "completion.macro.doc": "用户自定义宏。将 macro_name 替换为你定义的宏名。",
     "completion.escape.detail": "转义字符",
     "completion.escape.doc": "用于非功能性图案的 \\\\ 替代写法",
+    "completion.pattern.detail": "{name} ({modid})",
     "hover.thoth": "**Thoth（托特）** 方言 —— `for_each`（托特之策略）使用的内置方言",
     "hover.iris": "**Iris（伊里斯）** 方言 —— `eval/cc`（伊里斯之策略）使用的内置方言",
     "hover.if": "**If** —— 条件执行元图案",

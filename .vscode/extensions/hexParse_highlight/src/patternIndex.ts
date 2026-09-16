@@ -1,6 +1,7 @@
 // 图案名称索引：读取 runHexDocDump 导出的 JSON（dump_hexbug_patterns.json），
-// 按 长ID（完整 id）/ 短ID（id 冒号后半部分）构建两级索引，供 hover 解析图案名称
+// 按 长ID（完整 id）/ 短ID（id 冒号后半部分）构建两级索引，供 hover / 补全解析图案名称
 import * as fs from 'fs'
+import { getLocale } from './i18n'
 
 /** dump JSON 中的单个 pattern 对象 */
 export interface DumpPattern {
@@ -20,6 +21,16 @@ export interface PatternIndex {
     byId: Map<string, PatternEntry>
     /** 短名称（id 中 ':' 后半部分）→ pattern 对象列表 */
     byShort: Map<string, PatternEntry[]>
+}
+
+/** 从多语言名称表中挑选当前语言下的名称，兜底 en_us / 首个值 / id */
+export function pickPatternName(entry: PatternEntry): string {
+    const lang = getLocale() === 'zh-cn' ? 'zh_cn' : 'en_us'
+    const name = entry.name ?? {}
+    if (name[lang]) return name[lang]
+    if (name.en_us) return name.en_us
+    const first = Object.values(name)[0]
+    return first ?? entry.id
 }
 
 let dumpFile: string | null = null
