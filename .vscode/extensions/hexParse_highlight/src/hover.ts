@@ -18,7 +18,7 @@ function tr(key: string, params?: Record<string, string | number>): string {
 
 /** 单条名称行：`名称 (modid)` */
 function formatPatternEntry(entry: PatternEntry): string {
-    return `${pickPatternName(entry)} (${entry.modid})`
+    return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid })
 }
 
 /**
@@ -32,13 +32,13 @@ function prependPatternName(base: string, query: string): string {
     const q = query.toLowerCase()
     const hit = index.byId.get(q)
     if (hit) {
-        return tr('hover.patternName', { name: pickPatternName(hit), modid: hit.modid }) + base
+        return `${formatPatternEntry(hit)}\n\n${base}`
     }
     const shortHits = index.byShort.get(q)
     if (shortHits && shortHits.length > 0) {
         if (shortHits.length === 1) {
             const entry = shortHits[0]
-            return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }) + base
+            return `${formatPatternEntry(entry)}\n\n${base}`
         }
         return tr('hover.patternNameList', { list: shortHits.map(formatPatternEntry).join(', ') }) + base
     }

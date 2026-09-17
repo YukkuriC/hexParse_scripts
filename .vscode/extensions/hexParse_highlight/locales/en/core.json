@@ -110,7 +110,7 @@
     "hover.listClose": "**Nested List Close** — Ends a ListIota.",
     "hover.pattern": "**Pattern** — Normal static pattern matched by registration key: `{text}`\n\n→ PatternIota",
     "hover.numericLiteral": "**Numeric Constant** (`{text}`) — Bare number literal\n\nNot a pattern. Use `num_{text}` for a numerical reflection PatternIota.",
-    "hover.patternName": "Pattern: **{name}** ({modid})\n\n",
+    "hover.patternName": "**{name}** ({modid})",
     "hover.patternNameList": "Possible patterns: {list}\n\n",
     "hover.patternIndexHint": "> Hint: run the \"Dump HexDoc Pattern Data from PyPI\" command to enable pattern name display.\n\n",
     "validation.invalidUuid": "Invalid UUID format after entity_: \"{uuid}\". Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
