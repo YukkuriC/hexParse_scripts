@@ -2,7 +2,7 @@
 import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver/node'
 import { Entry, PrefixEntry } from './types'
 import { allPluginPrefixes } from './plugins'
-import { t } from './i18n'
+import { tr } from './i18n'
 import { getPatternIndex, pickPatternName, patternLangKey, PatternEntry } from './patternIndex'
 import { Token } from './tokenizer'
 
@@ -228,11 +228,6 @@ const corePrefixes: PrefixEntry[] = [
 
 /** All prefix entries: core + plugins */
 export const ALL_PREFIXES: PrefixEntry[] = [...corePrefixes, ...allPluginPrefixes]
-
-/** Resolve an i18n key through t() */
-function tr(key: string, params?: Record<string, string | number>): string {
-    return t(key, params)
-}
 
 // ─── Build Completion Items ──────────────────────────────────
 

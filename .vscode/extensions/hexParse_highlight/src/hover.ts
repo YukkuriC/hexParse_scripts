@@ -3,16 +3,11 @@ import { TextDocumentPositionParams, Hover } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { allPluginHovers, allValueExtractors, allEmptyDefaults } from './plugins'
 import { getTokenAt } from './tokenizer'
-import { t } from './i18n'
+import { tr } from './i18n'
 import { getPatternIndex, getDumpRemaining, pickPatternName, PatternEntry } from './patternIndex'
 
 /** All hover entries: core + plugins (values are i18n keys) */
 const HOVER_MAP: Map<string, string> = new Map(Object.entries(allPluginHovers))
-
-/** Resolve an i18n key through t() */
-function tr(key: string, params?: Record<string, string | number>): string {
-    return t(key, params)
-}
 
 // ─── Pattern Name Resolution (via hexdoc dump index) ────────
 

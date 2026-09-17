@@ -29,9 +29,9 @@ export function setLocale(locale: string): void {
  * Translate a key, with optional placeholder substitution.
  * Placeholders are in {name} format.
  *
- * @example t('hello', { name: 'World' }) => 'Hello World'
+ * @example tr('hello', { name: 'World' }) => 'Hello World'
  */
-export function t(key: string, params?: Record<string, string | number>): string {
+export function tr(key: string, params?: Record<string, string | number>): string {
     let text = bundle[key] ?? bundles['en']?.[key] ?? key
     if (params) {
         for (const [k, v] of Object.entries(params)) {

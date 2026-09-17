@@ -3,7 +3,7 @@ import { Diagnostic, DiagnosticSeverity, Position, Range } from 'vscode-language
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { tokenizeLine } from './tokenizer'
 import { allValidators } from './plugins'
-import { t } from './i18n'
+import { tr } from './i18n'
 
 /** Find all block comment ranges in the document for skipping */
 function findBlockCommentRanges(text: string): { start: number; end: number }[] {
@@ -63,7 +63,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
                     diagnostics.push({
                         severity: v.severity ?? DiagnosticSeverity.Error,
                         range: Range.create(tok.start, tok.end),
-                        message: t(result.key, result.params),
+                        message: tr(result.key, result.params),
                         source: 'hexparse',
                     })
                 }
@@ -117,7 +117,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(pos, { line: pos.line, character: pos.character + 1 }),
-            message: t('validation.unmatchedSqOpen'),
+            message: tr('validation.unmatchedSqOpen'),
             source: 'hexparse',
         })
     }
@@ -126,7 +126,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(lastLine, 0, lastLine, Math.max(lines[lastLine].length, 1)),
-            message: t('validation.unmatchedSqClose'),
+            message: tr('validation.unmatchedSqClose'),
             source: 'hexparse',
         })
     }
@@ -135,7 +135,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(pos, { line: pos.line, character: pos.character + 1 }),
-            message: t('validation.unmatchedGroupOpen'),
+            message: tr('validation.unmatchedGroupOpen'),
             source: 'hexparse',
         })
     }
@@ -144,7 +144,7 @@ export function validateDoc(doc: TextDocument): Diagnostic[] {
         diagnostics.push({
             severity: DiagnosticSeverity.Error,
             range: Range.create(lastLine, 0, lastLine, Math.max(lines[lastLine].length, 1)),
-            message: t('validation.unmatchedGroupClose'),
+            message: tr('validation.unmatchedGroupClose'),
             source: 'hexparse',
         })
     }
