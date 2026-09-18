@@ -1,15 +1,16 @@
 // 移植自 PyPI hexdoc 数据导出脚本（hexbug-dump）
 // 从 PyPI 拉取 HexBug-data 的 hexdoc-* 依赖 wheel，提取图案与多语言名称
-// 输出写入扩展的 globalStoragePath（VS Code 规范中存储大量持久化数据的位置）
-import * as fs from 'fs'
-import * as path from 'path'
+// 输出写入扩展宿主指定的 HexParse 持久化目录（globalStorage 上一级，规避编辑器对扩展 globalStorage 的清理）
 import * as https from 'https'
+import * as vscode from 'vscode'
 import AdmZip from 'adm-zip'
 
 const PYPI_JSON_URL = (pkg: string): string => `https://pypi.org/pypi/${pkg}/json`
 
 /** 导出文件名（中断结算与完整导出写同一文件） */
 export const HEXBUG_PATTERNS_FILE = 'dump_hexbug_patterns.json'
+/** 状态文件名（剩余未导出包数；与 server 端规则一致） */
+export const HEXBUG_PATTERNS_STATUS_FILE = HEXBUG_PATTERNS_FILE.replace(/\.json$/, '.status.json')
 
 interface HexDocPattern {
     id: string
@@ -219,10 +220,15 @@ async function processHexDocPackage(packageName: string, signal?: AbortSignal): 
 /**
  * 断点续传：解析已有导出文件中的完整包；解析失败则自动清除该文件（等价于"清除已导出内容"）。
  */
-function loadExistingDump(outputPath: string): Record<string, HexDocPattern[]> {
-    if (!fs.existsSync(outputPath)) return {}
+async function loadExistingDump(outputPath: vscode.Uri): Promise<Record<string, HexDocPattern[]>> {
+    let raw: string
     try {
-        const existing = JSON.parse(fs.readFileSync(outputPath, 'utf8'))
+        raw = Buffer.from(await vscode.workspace.fs.readFile(outputPath)).toString('utf8')
+    } catch {
+        return {}
+    }
+    try {
+        const existing = JSON.parse(raw)
         if (existing && typeof existing === 'object' && !Array.isArray(existing)) {
             console.log(`Resuming from existing dump: ${Object.keys(existing).length} packages already exported`)
             return existing as Record<string, HexDocPattern[]>
@@ -230,7 +236,11 @@ function loadExistingDump(outputPath: string): Record<string, HexDocPattern[]> {
     } catch {
         // fallthrough
     }
-    fs.unlinkSync(outputPath)
+    try {
+        await vscode.workspace.fs.delete(outputPath)
+    } catch {
+        // 文件不存在，无需处理
+    }
     console.log('Existing dump file unreadable, cleared for full re-export')
     return {}
 }
@@ -239,13 +249,13 @@ function loadExistingDump(outputPath: string): Record<string, HexDocPattern[]> {
  * 记录/清除中断状态：中断结算后写入剩余未导出包数，供 server 端 hover 提示。
  * 状态文件路径 = 导出文件路径去掉 .json 追加 .status.json（与 server 端规则一致）。
  */
-function writeDumpStatus(outputPath: string, remaining: number): void {
-    const statusPath = outputPath.replace(/\.json$/, '.status.json')
+async function writeDumpStatus(outputPath: vscode.Uri, remaining: number): Promise<void> {
+    const statusPath = outputPath.with({ path: outputPath.path.replace(/\.json$/, '.status.json') })
     if (remaining > 0) {
-        fs.writeFileSync(statusPath, JSON.stringify({ remaining }), 'utf-8')
+        await vscode.workspace.fs.writeFile(statusPath, Buffer.from(JSON.stringify({ remaining }), 'utf-8'))
     } else {
         try {
-            fs.unlinkSync(statusPath)
+            await vscode.workspace.fs.delete(statusPath)
         } catch {
             // 状态文件不存在，无需处理
         }
@@ -255,15 +265,15 @@ function writeDumpStatus(outputPath: string, remaining: number): void {
 /**
  * 拉取 HexBug-data 及其 hexdoc-* 依赖的图案数据，写入 outputDir/dump_hexbug_patterns.json。
  * 中断时结算已完成部分到同一文件；断点续传跳过已导出的完整包。
- * @param outputDir 输出目录（扩展 globalStoragePath）
+ * @param outputDir 输出目录（HexParse 持久化目录）
  */
-export async function runHexDocDump(outputDir: string, options: DumpOptions = {}): Promise<DumpResult> {
+export async function runHexDocDump(outputDir: vscode.Uri, options: DumpOptions = {}): Promise<DumpResult> {
     const { onProgress, signal } = options
-    const outputPath = path.join(outputDir, HEXBUG_PATTERNS_FILE)
+    const outputPath = vscode.Uri.joinPath(outputDir, HEXBUG_PATTERNS_FILE)
     const packageName = 'HexBug-data'
 
     // 断点续传：解析已有文件；解析失败自动清除
-    const allResults = loadExistingDump(outputPath)
+    const allResults = await loadExistingDump(outputPath)
 
     console.log(`Fetching metadata for ${packageName} from PyPI...`)
     const data = await getPackageInfo(packageName, signal)
@@ -275,15 +285,15 @@ export async function runHexDocDump(outputDir: string, options: DumpOptions = {}
     const requires: string[] = info.requires_dist || []
     if (requires.length === 0) {
         console.log('No dependencies found.')
-        writeDumpStatus(outputPath, 0)
-        return { outputPath, status: 'completed', exported: 0, total: 0 }
+        await writeDumpStatus(outputPath, 0)
+        return { outputPath: outputPath.fsPath, status: 'completed', exported: 0, total: 0 }
     }
 
     const hexDocDeps = findHexDocDeps(requires)
     if (hexDocDeps.length === 0) {
         console.log("No 'hexdoc-' prefixed dependencies found.")
-        writeDumpStatus(outputPath, 0)
-        return { outputPath, status: 'completed', exported: 0, total: 0 }
+        await writeDumpStatus(outputPath, 0)
+        return { outputPath: outputPath.fsPath, status: 'completed', exported: 0, total: 0 }
     }
 
     const pending = hexDocDeps.filter(([name]) => !(name in allResults))
@@ -293,8 +303,8 @@ export async function runHexDocDump(outputDir: string, options: DumpOptions = {}
     )
     if (pending.length === 0) {
         console.log('All packages already exported, nothing to do.')
-        writeDumpStatus(outputPath, 0)
-        return { outputPath, status: 'completed', exported: 0, total: 0 }
+        await writeDumpStatus(outputPath, 0)
+        return { outputPath: outputPath.fsPath, status: 'completed', exported: 0, total: 0 }
     }
 
     const total = pending.length
@@ -322,9 +332,9 @@ export async function runHexDocDump(outputDir: string, options: DumpOptions = {}
     }
 
     // 中断结算与完整导出写同一文件
-    fs.mkdirSync(outputDir, { recursive: true })
-    fs.writeFileSync(outputPath, JSON.stringify(allResults, null, 2), 'utf-8')
-    console.log(`\nWrote results to ${outputPath} (${aborted ? 'interrupted, settled' : 'complete'})`)
-    writeDumpStatus(outputPath, aborted ? total - done : 0)
-    return { outputPath, status: aborted ? 'aborted' : 'completed', exported: done, total }
+    await vscode.workspace.fs.createDirectory(outputDir)
+    await vscode.workspace.fs.writeFile(outputPath, Buffer.from(JSON.stringify(allResults, null, 2), 'utf-8'))
+    console.log(`\nWrote results to ${outputPath.fsPath} (${aborted ? 'interrupted, settled' : 'complete'})`)
+    await writeDumpStatus(outputPath, aborted ? total - done : 0)
+    return { outputPath: outputPath.fsPath, status: aborted ? 'aborted' : 'completed', exported: done, total }
 }

@@ -1,10 +1,8 @@
 // 生成于 GLM-5V-Turbo
-import * as fs from 'fs'
-import * as path from 'path'
 import * as vscode from 'vscode'
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node'
 import { calcLehmer, parseLehmerInput } from './lehmer'
-import { runHexDocDump, HEXBUG_PATTERNS_FILE } from './hexdocDump'
+import { runHexDocDump, HEXBUG_PATTERNS_FILE, HEXBUG_PATTERNS_STATUS_FILE } from './hexdocDump'
 
 let client: LanguageClient
 
@@ -17,6 +15,14 @@ function currentThemeColor(): string {
     if (kind === vscode.ColorThemeKind.Light) return '#1f1f1f'
     if (kind === vscode.ColorThemeKind.HighContrast) return '#ffffff'
     return '#d4d4d4'
+}
+
+/**
+ * HexParse 持久化目录：globalStorage 上一级的 HexParse 目录。
+ * 不用扩展自带 globalStorage 目录，规避编辑器启动时对扩展 globalStorage 的整目录清理。
+ */
+function hexParseStorageUri(context: vscode.ExtensionContext): vscode.Uri {
+    return vscode.Uri.joinPath(context.globalStorageUri, '..', 'HexParse')
 }
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -43,7 +49,7 @@ export function activate(context: vscode.ExtensionContext): void {
         },
         initializationOptions: {
             locale,
-            dumpFile: path.join(context.globalStoragePath, HEXBUG_PATTERNS_FILE),
+            dumpFile: vscode.Uri.joinPath(hexParseStorageUri(context), HEXBUG_PATTERNS_FILE).fsPath,
             themeColor: currentThemeColor(),
         },
     }
@@ -92,8 +98,8 @@ export function activate(context: vscode.ExtensionContext): void {
         }),
     )
 
-    // Dump hexdoc pattern data from PyPI into globalStoragePath
-    // (VS Code spec: place for storing large amounts of persistent data)
+    // Dump hexdoc pattern data from PyPI into the HexParse storage dir
+    // (outside globalStorage: the editor wipes the extension globalStorage dir at startup)
     // Supports resume from settled dump file; interrupt settles to the same file
     context.subscriptions.push(
         vscode.commands.registerCommand('hexparse.dumpHexDocData', async () => {
@@ -101,8 +107,8 @@ export function activate(context: vscode.ExtensionContext): void {
                 vscode.window.showInformationMessage('HexDoc export is already running.')
                 return
             }
-            const storageDir = context.globalStoragePath
-            fs.mkdirSync(storageDir, { recursive: true })
+            const storageDir = hexParseStorageUri(context)
+            await vscode.workspace.fs.createDirectory(storageDir)
             const controller = new AbortController()
             dumpController = controller
             await vscode.window.withProgress(
@@ -150,28 +156,35 @@ export function activate(context: vscode.ExtensionContext): void {
     // Open the exported hexdoc patterns json
     context.subscriptions.push(
         vscode.commands.registerCommand('hexparse.openHexDocDump', async () => {
-            const filePath = path.join(context.globalStoragePath, HEXBUG_PATTERNS_FILE)
-            if (!fs.existsSync(filePath)) {
-                vscode.window.showWarningMessage(`HexDoc patterns file not found: ${filePath}. Run the export first.`)
+            const fileUri = vscode.Uri.joinPath(hexParseStorageUri(context), HEXBUG_PATTERNS_FILE)
+            try {
+                await vscode.workspace.fs.stat(fileUri)
+            } catch {
+                vscode.window.showWarningMessage(`HexDoc patterns file not found: ${fileUri.fsPath}. Run the export first.`)
                 return
             }
-            const doc = await vscode.workspace.openTextDocument(vscode.Uri.file(filePath))
+            const doc = await vscode.workspace.openTextDocument(fileUri)
             await vscode.window.showTextDocument(doc, { preview: false })
         }),
     )
 
     // Clear the exported hexdoc patterns json
     context.subscriptions.push(
-        vscode.commands.registerCommand('hexparse.clearHexDocDump', () => {
-            const filePath = path.join(context.globalStoragePath, HEXBUG_PATTERNS_FILE)
-            if (!fs.existsSync(filePath)) {
-                vscode.window.showInformationMessage(`No exported HexDoc data to clear: ${filePath}`)
+        vscode.commands.registerCommand('hexparse.clearHexDocDump', async () => {
+            const fileUri = vscode.Uri.joinPath(hexParseStorageUri(context), HEXBUG_PATTERNS_FILE)
+            try {
+                await vscode.workspace.fs.stat(fileUri)
+            } catch {
+                vscode.window.showInformationMessage(`No exported HexDoc data to clear: ${fileUri.fsPath}`)
                 return
             }
-            fs.unlinkSync(filePath)
-            const statusPath = filePath.replace(/\.json$/, '.status.json')
-            if (fs.existsSync(statusPath)) fs.unlinkSync(statusPath)
-            vscode.window.showInformationMessage(`Cleared exported HexDoc data: ${filePath}`)
+            await vscode.workspace.fs.delete(fileUri)
+            try {
+                await vscode.workspace.fs.delete(vscode.Uri.joinPath(hexParseStorageUri(context), HEXBUG_PATTERNS_STATUS_FILE))
+            } catch {
+                // 状态文件不存在，无需处理
+            }
+            vscode.window.showInformationMessage(`Cleared exported HexDoc data: ${fileUri.fsPath}`)
         }),
     )
 }
