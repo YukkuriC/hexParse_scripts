@@ -1,5 +1,5 @@
 // 生成于 GLM-5V-Turbo
-import { CompletionItemKind, DiagnosticSeverity } from 'vscode-languageserver/node'
+import { CompletionItemKind, DiagnosticSeverity, MarkupContent } from 'vscode-languageserver/node'
 
 export interface Entry {
     label: string
@@ -15,15 +15,29 @@ export interface PrefixEntry {
 }
 
 /**
- * Hover 条目值：i18n key，或回调。
- * 回调接收匹配命中后的后缀（key 前缀之后的剩余部分，小写），返回 i18n key
- * （随后按后缀注入 `{value}`）或 null。返回 null 表示该条目不适用，跳出匹配。
+ * Hover 回调返回：i18n key、完整 hover 内容对象（`{kind, value}`，跳过 `{value}` 注入），或 null。
+ * 返回 null 表示该条目不适用，跳出匹配。
  */
-export type HoverValue = string | ((suffix: string) => string | null)
+export type HoverResult = string | MarkupContent | null
 
-export interface HoverEntry {
-    [key: string]: HoverValue
-}
+/**
+ * Hover 条目值：i18n key，或回调。
+ * 回调接收匹配命中后的后缀（匹配之后的剩余部分），返回 `HoverResult`。
+ */
+export type HoverValue = string | ((suffix: string) => HoverResult)
+
+/**
+ * Hover 条目声明：`[触发前缀(区分大小写), HoverValue]` 元组数组，
+ * 或 `{ 前缀: HoverValue }` 对象。
+ * 两种形式均按声明（对象按键插入）顺序匹配，命中即返回；顺序即优先级，允许同名/覆盖。
+ */
+export type HoverEntry = [string, HoverValue][] | Record<string, HoverValue>
+
+/**
+ * 正则 Hover 条目数组：`[正则(默认区分大小写), HoverValue]`。
+ * 后缀由命名捕获组 `(?<suffix>...)` 提供；缺失时退回整组 `m[0]`。
+ */
+export type HoverRegex = [RegExp, HoverValue][]
 
 // ─── Plugin Registration Interface ────────────────────────────
 
@@ -59,8 +73,10 @@ export interface PluginDef {
     prefixes: PrefixEntry[]
 
     // ── Hover ──
-    /** Hover entries: token prefix → i18n key (resolved at display time) */
+    /** Hover entries: ordered `[prefix, value]` pairs (case-sensitive prefix match) */
     hovers: HoverEntry
+    /** Regex hover entries: ordered `[RegExp, value]` pairs (case-sensitive by default) */
+    hoversRegex?: HoverRegex
     /**
      * Value extractors for prefix hovers that need special formatting.
      * Key = hover prefix (must match a key in `hovers`),

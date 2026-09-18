@@ -4,6 +4,12 @@ import { CompletionItemKind, DiagnosticSeverity } from 'vscode-languageserver/no
 
 // ─── MoreIotas: Matrix & Type References ──────────────────────
 
+// matrix_ / mat_ 别名：原 mod 为单一 Regex `^mat(rix)?_`，拆两条以保留不同 i18n
+const RE_MATRIX = /^matrix_(?<suffix>.*)$/
+const RE_MAT_ALIAS = /^mat_(?<suffix>.*)$/
+// type 引用：原 mod Regex `^type(/iota)?_`，扩展 entity/item/block 分支并覆盖裸 `type_`
+const RE_TYPE_REF = /^type(?:\/(?:iota|entity|item|block))?_(?<suffix>.*)$/
+
 const extractMatrix: ValueExtractor = (suffix) => {
     const parts = suffix.split('_').filter(Boolean)
     if (parts.length < 2) return suffix || '(empty)'
@@ -54,18 +60,18 @@ export const moreIotasPlugin: PluginDef = {
     ],
 
     hovers: {
-        matrix_: 'hover.matrix',
-        mat_: 'hover.matrixAlias',
-        'type/iota_': 'hover.typeRef',
-        'type/entity_': 'hover.typeRef',
-        'type/item_': 'hover.typeRef',
-        'type/block_': 'hover.typeRef',
         str_: 'hover.str',
     },
 
+    hoversRegex: [
+        [RE_MATRIX, 'hover.matrix'],
+        [RE_MAT_ALIAS, 'hover.matrixAlias'],
+        [RE_TYPE_REF, 'hover.typeRef'],
+    ],
+
     valueExtractors: {
-        matrix_: extractMatrix,
-        mat_: extractMatrix,
+        [RE_MATRIX.source]: extractMatrix,
+        [RE_MAT_ALIAS.source]: extractMatrix,
     },
 
     validators: [

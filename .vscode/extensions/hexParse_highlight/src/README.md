@@ -35,7 +35,8 @@ interface PluginDef {
     prefixes: PrefixEntry[]                    // Prefix-based completion entries
 
     // -- Hover --
-    hovers: HoverEntry                        // prefix -> i18n key map
+    hovers: HoverEntry                        // ordered [prefix, value][] OR { prefix: value }
+    hoversRegex?: HoverRegex                  // ordered [RegExp, i18nKey-or-callback]
     valueExtractors?: Record<string, ValueExtractor>  // Special formatting fns
     emptyDefaults?: Record<string, string>    // Fallback when suffix is empty
 
@@ -78,18 +79,46 @@ export const myPlugin: PluginDef = {
 | `documentation` | `string` (i18n key) | No | Documentation panel content |
 | `insertText` | `string` | No | Snippet template with `${n:placeholder}` |
 
-### 2. Hover (`hovers` + `valueExtractors` + `emptyDefaults`)
+### 2. Hover (`hovers` + `hoversRegex` + `valueExtractors` + `emptyDefaults`)
 
 #### Basic hover registration
 
+Both object and tuple-array declarations are supported (object matches by key insertion order,
+array by declaration order; both are case-sensitive prefix matches):
+
 ```typescript
+// Object form (recommended, most concise)
 hovers: {
-    thing_: 'hover.thing',   // i18n key; use {value} placeholder for extracted value
+    thing_: 'hover.thing',   // [prefix, i18n key]
 }
+
+// Or tuple-array form (for explicit ordering / same-key overrides)
+hovers: [
+    ['thing_', 'hover.thing'],
+]
 ```
 
 The framework extracts the suffix after the prefix and passes it as `{value}` to the i18n template.
 For example, typing `thing_abc123` shows `{value}` = `"abc123"`.
+Entries are matched in declaration order; the first hit wins (ordered priority).
+
+#### Regex hover registration (`hoversRegex`)
+
+For shapes that aren't a simple prefix, register a `[RegExp, i18nKey-or-callback]` pair.
+Regexes are case-sensitive by default; the suffix shown as `{value}` comes from the named capture
+group `(?<suffix>...)`, falling back to the full match `m[0]`:
+
+```typescript
+const RE_ENTITY = /^entity_(?<suffix>[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})$/
+
+hoversRegex: [
+    [RE_ENTITY, 'hover.entity'],
+],
+```
+
+The callback (or string value) may also return a full hover content object `{ kind: 'markdown', value }`,
+which is returned as-is, skipping `{value}` injection; returning `null` means this entry doesn't
+apply and matching stops.
 
 #### Custom value formatting (`valueExtractors`)
 
@@ -103,12 +132,13 @@ const extractThing: ValueExtractor = (suffix) => {
     return `[${parts[0] ?? '?'}, ${parts[1] ?? '?'}]`
 }
 
-// Key must match a key in `hovers`
 export const myPlugin: PluginDef = {
     hovers: { thing_: 'hover.thing' },
     valueExtractors: { thing_: extractThing },
 }
 ```
+
+For regex entries the extractor key is the regex `source` string (e.g. `[RE_VEC.source]: extractVec`).
 
 #### Empty suffix defaults (`emptyDefaults`)
 
@@ -179,7 +209,7 @@ User types "num_42" in editor
         |
         v
   hover.ts
-    |-- HOVER_MAP lookup: "num_" matches corePlugin.hovers.num_ --> "hover.num"
+    |-- HOVER_ITEMS dispatch: prefix "num_" matches corePlugin.hovers --> "hover.num"
     |-- allEmptyDefaults lookup: not needed (suffix non-empty)
     |-- allValueExtractors lookup: no extractor for "num_" --> raw suffix "42"
     |

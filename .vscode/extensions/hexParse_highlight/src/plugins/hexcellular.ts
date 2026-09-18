@@ -4,6 +4,9 @@ import { CompletionItemKind } from 'vscode-languageserver/node'
 
 // ─── Hexcellular: Property ───────────────────────────────────
 
+// prop_ 别名 property_：原 mod Regex `^prop(erty)?_`；myprop_ 保持独立前缀
+const RE_PROP = /^prop(?:erty)?_(?<suffix>.*)$/
+
 export const hexcellularPlugin: PluginDef = {
     name: 'hexcellular',
 
@@ -18,7 +21,10 @@ export const hexcellularPlugin: PluginDef = {
     ],
 
     hovers: {
-        prop_: 'hover.prop',
         myprop_: 'hover.myProp',
     },
+
+    hoversRegex: [
+        [RE_PROP, 'hover.prop'],
+    ],
 }

@@ -1,61 +1,33 @@
 // 生成于 GLM-5V-Turbo
-import { TextDocumentPositionParams, Hover } from 'vscode-languageserver/node'
+import { TextDocumentPositionParams, Hover, MarkupKind } from 'vscode-languageserver/node'
 import { TextDocument } from 'vscode-languageserver-textdocument'
-import { allPluginHovers, allValueExtractors, allEmptyDefaults } from './plugins'
-import { getTokenAt } from './tokenizer'
+import { allPluginHovers, allHoversRegex, allValueExtractors, allEmptyDefaults } from './plugins'
+import { getTokenAt, Token } from './tokenizer'
 import { tr } from './i18n'
-import { getPatternIndex, getDumpRemaining, pickPatternName, getPatternImage, resolveRawPattern, PatternEntry } from './patternIndex'
+import { getPatternIndex, prependPatternName } from './patternIndex'
 import { HoverValue } from './types'
 
-/** All hover entries: core + plugins (values are i18n keys or predicate callbacks) */
-const HOVER_MAP: Map<string, HoverValue> = new Map(Object.entries(allPluginHovers))
-
-// ─── Pattern Name Resolution (via hexdoc dump index) ────────
-
-/** 单条名称行：`![图案名](图片) 名称 (modid)`；无渲染时退回纯文本 */
-function formatPatternEntry(entry: PatternEntry): string {
-    const name = pickPatternName(entry)
-    const text = tr('hover.patternName', { name, modid: entry.modid })
-    const image = getPatternImage(entry)
-    return image ? `![${name}](${image}) ${text}` : text
+/** 统一派发表：区分大小写的字符串前缀 + 正则条目，按声明顺序匹配（顺序即优先级） */
+interface HoverDispatch {
+    id: string
+    match: string | RegExp
+    value: HoverValue
 }
-
-/** 纯文本名称行（多命中列表等场景，不带图） */
-function formatPatternEntryText(entry: PatternEntry): string {
-    return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid })
-}
-
-/** 前置区段与 base 之间的统一分隔线 */
-const NAME_BASE_SEP = '\n\n---\n\n'
-
-/**
- * 为 pattern 类型 hover 前置图案名称区段，返回完整 markdown。
- * 索引构建失败 → 前置提示；长ID命中或短ID唯一命中 → 前置单条；短ID多命中 → 前置列表；未命中 → 原样返回。
- */
-function prependPatternName(base: string, query: string): string {
-    const index = getPatternIndex()
-    if (!index) return tr('hover.patternIndexHint') + NAME_BASE_SEP + base
-
-    const q = query.toLowerCase()
-    const hit = index.byId.get(q)
-    if (hit) {
-        return `${formatPatternEntry(hit)}${NAME_BASE_SEP}${base}`
-    }
-    const shortHits = index.byShort.get(q)
-    if (shortHits && shortHits.length > 0) {
-        if (shortHits.length === 1) {
-            const entry = shortHits[0]
-            return `${formatPatternEntry(entry)}${NAME_BASE_SEP}${base}`
-        }
-        return tr('hover.patternNameList', { list: shortHits.map(formatPatternEntryText).join(', ') }) + NAME_BASE_SEP + base
-    }
-    // 未命中：若导出中断仍有剩余未导出包，与无索引时提示相同信息
-    if (getDumpRemaining() > 0) return tr('hover.patternIndexHint') + NAME_BASE_SEP + base
-    return base
-}
+const HOVER_ITEMS: HoverDispatch[] = [
+    ...allPluginHovers.map(([key, value]) => ({ id: key, match: key, value })),
+    ...allHoversRegex.map(([re, value]) => ({ id: re.source, match: re, value })),
+]
 
 // ─── Hover Handler ───────────────────────────────────────────
 
+function patternMatch(token: Token) {
+    return {
+        contents: {
+            kind: 'markdown' as MarkupKind,
+            value: prependPatternName(tr('hover.pattern', { text: token.text }), token.text),
+        },
+    }
+}
 export function handleHover(
     textDocumentPosition: TextDocumentPositionParams,
     documents: { get(uri: string): TextDocument | undefined },
@@ -83,62 +55,49 @@ export function handleHover(
         }
     }
 
-    const lowered = text.toLowerCase()
+    // ── Pattern fast-path: 与原 mod 相同，图案全字匹配优先于其余解析 ──
+    // 全字命中长 id / 短 id 即直接转给 core pattern（prependPatternName）短路返回，否则继续
+    const patternIndex = getPatternIndex()
+    if (patternIndex) {
+        const q = text.toLowerCase()
+        if (patternIndex.byId.has(q) || (patternIndex.byShort.get(q)?.length ?? 0) > 0) {
+            return patternMatch(token)
+        }
+    }
 
-    // Table-driven match — exact keys are handled naturally as empty-suffix prefix matches
-    for (const [key, rawVal] of HOVER_MAP) {
-        if (!lowered.startsWith(key)) continue
-        const suffix = lowered.slice(key.length)
-        // 值为回调：传入后缀（key 之后的部分）由其判断，返回 null 表示不适用，跳出
+    // Table-driven match — string 前缀与正则均区分大小写，按声明顺序命中即返回
+    for (const { id, match, value: rawVal } of HOVER_ITEMS) {
+        // 正则：默认区分大小写，后缀取自命名捕获组 `suffix`（缺失时退回整组）
+        let suffix: string
+        if (match instanceof RegExp) {
+            const m = match.exec(text)
+            if (!m) continue
+            const g = m.groups?.suffix
+            suffix = g === undefined ? m[0] : g
+        } else {
+            if (!text.startsWith(match)) continue
+            suffix = text.slice(match.length)
+        }
+        // 值为回调：传入后缀（匹配之后的部分）由其判断，返回 null 表示该条目不适用，跳出；
+        // 返回完整对象（{kind, value}）则直接作为 hover 内容返回，跳过 i18n 注入
         const v = typeof rawVal === 'function' ? rawVal(suffix) : rawVal
         if (v === null) break
+        if (typeof v === 'object') {
+            return { contents: v }
+        }
         // Apply empty default (e.g. num_ with no number → "0")
         let s = suffix
-        if (!s && key in allEmptyDefaults) s = allEmptyDefaults[key]
+        if (!s && id in allEmptyDefaults) s = allEmptyDefaults[id]
         // Dispatch to registered extractor, or use raw suffix as fallback
-        const extracted = key in allValueExtractors ? allValueExtractors[key](s) : s
+        const extracted = id in allValueExtractors ? allValueExtractors[id](s) : s
 
         return {
             contents: { kind: 'markdown', value: tr(v, { value: extracted }) },
         }
     }
 
-    // Raw pattern
-    if (/^_[wedsaq]*$/.test(lowered) && lowered.length > 1) {
-        const sig = lowered.slice(1)
-        const base = tr('hover.rawPattern', { sig })
-        // 合法角度串且长度 < 64：尝试渲染图案（合成 EAST 起始条目，不缓存）
-        if (sig.length < 64 && /^[wedsaq]+$/.test(sig)) {
-            const entry = resolveRawPattern(sig)
-            const synth: PatternEntry = {
-                id: 'raw:' + sig,
-                name: entry?.name ?? {},
-                modid: entry?.modid ?? '',
-                startdir: 'EAST',
-                signature: sig,
-            }
-            const image = getPatternImage(synth, { cache: false })
-            if (image) {
-                const name = entry ? pickPatternName(entry) : sig
-                const nameLine = entry ? formatPatternEntryText(entry) : ''
-                return {
-                    contents: {
-                        kind: 'markdown',
-                        value: `![${name}](${image})\n\n${nameLine ? nameLine + '\n\n' : ''}${base}`,
-                    },
-                }
-            }
-        }
-        return {
-            contents: {
-                kind: 'markdown',
-                value: prependPatternName(base, sig),
-            },
-        }
-    }
-
     // Macro
-    if (lowered.startsWith('#')) {
+    if (text.startsWith('#')) {
         return {
             contents: {
                 kind: 'markdown',
@@ -181,10 +140,5 @@ export function handleHover(
     }
 
     // Generic pattern
-    return {
-        contents: {
-            kind: 'markdown',
-            value: prependPatternName(tr('hover.pattern', { text: token.text }), text),
-        },
-    }
+    return patternMatch(token)
 }

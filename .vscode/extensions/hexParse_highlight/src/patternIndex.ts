@@ -1,7 +1,7 @@
 // 图案名称索引：读取 runHexDocDump 导出的 JSON（dump_hexbug_patterns.json），
 // 按 长ID（完整 id）/ 短ID（id 冒号后半部分）构建两级索引，供 hover / 补全解析图案名称
 import * as fs from 'fs'
-import { getLocale } from './i18n'
+import { getLocale, tr } from './i18n'
 
 /** dump JSON 中的单个 pattern 对象 */
 export interface DumpPattern {
@@ -350,4 +350,48 @@ export function resolveRawPattern(signature: string): PatternEntry | null {
     const list = index.byRaw.get(signature.toLowerCase())
     if (!list || list.length === 0) return null
     return list.find((e) => e.startdir === 'EAST') ?? list[0]
+}
+
+// ─── 图案名称展示（hover 前置区段）────────────────────────────
+
+/** 单条名称行：`![图案名](图片) 名称 (modid)`；无渲染时退回纯文本 */
+export function formatPatternEntry(entry: PatternEntry): string {
+    const name = pickPatternName(entry)
+    const text = tr('hover.patternName', { name, modid: entry.modid })
+    const image = getPatternImage(entry)
+    return image ? `![${name}](${image}) ${text}` : text
+}
+
+/** 纯文本名称行（多命中列表等场景，不带图） */
+export function formatPatternEntryText(entry: PatternEntry): string {
+    return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid })
+}
+
+/** 前置区段与 base 之间的统一分隔线 */
+const NAME_BASE_SEP = '\n\n---\n\n'
+
+/**
+ * 为 pattern 类型 hover 前置图案名称区段，返回完整 markdown。
+ * 索引构建失败 → 前置提示；长ID命中或短ID唯一命中 → 前置单条；短ID多命中 → 前置列表；未命中 → 原样返回。
+ */
+export function prependPatternName(base: string, query: string): string {
+    const index = getPatternIndex()
+    if (!index) return tr('hover.patternIndexHint') + NAME_BASE_SEP + base
+
+    const q = query.toLowerCase()
+    const hit = index.byId.get(q)
+    if (hit) {
+        return `${formatPatternEntry(hit)}${NAME_BASE_SEP}${base}`
+    }
+    const shortHits = index.byShort.get(q)
+    if (shortHits && shortHits.length > 0) {
+        if (shortHits.length === 1) {
+            const entry = shortHits[0]
+            return `${formatPatternEntry(entry)}${NAME_BASE_SEP}${base}`
+        }
+        return tr('hover.patternNameList', { list: shortHits.map(formatPatternEntryText).join(', ') }) + NAME_BASE_SEP + base
+    }
+    // 未命中：若导出中断仍有剩余未导出包，与无索引时提示相同信息
+    if (getDumpRemaining() > 0) return tr('hover.patternIndexHint') + NAME_BASE_SEP + base
+    return base
 }

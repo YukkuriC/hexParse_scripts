@@ -4,6 +4,9 @@ import { CompletionItemKind } from 'vscode-languageserver/node'
 
 // ─── HexFlow: Meta Patterns & Copy Mask ───────────────────────
 
+// copy_mask_：HexFlow 原实现 Regex `^copy_mask_[-n]+$`，后缀仅允许 `-`/`n`
+const RE_COPY_MASK = /^copy_mask_(?<suffix>[-n]+)$/
+
 export const hexFlowPlugin: PluginDef = {
     name: 'hexFlow',
 
@@ -54,8 +57,11 @@ export const hexFlowPlugin: PluginDef = {
         pure_map: 'hover.pureMap',
         pure_reduce: 'hover.pureReduce',
         call_stack: 'hover.callStack',
-        copy_mask_: 'hover.copyMask',
     },
+
+    hoversRegex: [
+        [RE_COPY_MASK, 'hover.copyMask'],
+    ],
 
     validators: [
         {
