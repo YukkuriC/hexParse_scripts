@@ -14,8 +14,15 @@ export interface PrefixEntry {
     entries: Entry[]
 }
 
+/**
+ * Hover 条目值：i18n key，或回调。
+ * 回调接收匹配命中后的后缀（key 前缀之后的剩余部分，小写），返回 i18n key
+ * （随后按后缀注入 `{value}`）或 null。返回 null 表示该条目不适用，跳出匹配。
+ */
+export type HoverValue = string | ((suffix: string) => string | null)
+
 export interface HoverEntry {
-    [key: string]: string
+    [key: string]: HoverValue
 }
 
 // ─── Plugin Registration Interface ────────────────────────────

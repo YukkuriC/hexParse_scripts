@@ -11,6 +11,14 @@ let client: LanguageClient
 /** 当前进行中的导出控制器，供"中断导出"命令使用 */
 let dumpController: AbortController | null = null
 
+/** 当前主题普通文本颜色（#rrggbb），供图案渲染使用 */
+function currentThemeColor(): string {
+    const kind = vscode.window.activeColorTheme.kind
+    if (kind === vscode.ColorThemeKind.Light) return '#1f1f1f'
+    if (kind === vscode.ColorThemeKind.HighContrast) return '#ffffff'
+    return '#d4d4d4'
+}
+
 export function activate(context: vscode.ExtensionContext): void {
     const serverModule = context.asAbsolutePath('out/server.js')
 
@@ -36,12 +44,20 @@ export function activate(context: vscode.ExtensionContext): void {
         initializationOptions: {
             locale,
             dumpFile: path.join(context.globalStoragePath, HEXBUG_PATTERNS_FILE),
+            themeColor: currentThemeColor(),
         },
     }
 
     client = new LanguageClient('hexparseServer', 'HexParse Language Server', serverOptions, clientOptions)
 
     client.start()
+
+    // 主题切换时通知服务端更新图案渲染颜色
+    context.subscriptions.push(
+        vscode.window.onDidChangeActiveColorTheme(() => {
+            client.sendNotification('hexparse/themeColor', currentThemeColor())
+        }),
+    )
 
     // Register Lehmer Code calculation command
     context.subscriptions.push(
