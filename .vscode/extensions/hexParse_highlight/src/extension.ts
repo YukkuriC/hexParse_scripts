@@ -75,7 +75,7 @@ export function activate(context: vscode.ExtensionContext): void {
     }
 
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'HexParse' }],
+        documentSelector: [{ language: 'HexParse' }],
         synchronize: {
             configurationSection: 'hexparse',
         },
