@@ -123,5 +123,7 @@
     "command.hexdocDumpAbort.title": "中断 HexDoc 导出",
     "command.hexdocDumpOpen.title": "打开 HexDoc 图案 JSON",
     "command.hexdocDumpClear.title": "清除已导出的 HexDoc 内容",
-    "config.lehmerTemplate.description": "Lehmer 码输出模板。使用 {result} 作为计算结果的占位符。"
+    "config.lehmerTemplate.description": "Lehmer 码输出模板。使用 {result} 作为计算结果的占位符。",
+    "config.patternGradient.description": "图案笔画渐变色列表，从首笔到末笔依次插值。特殊值 'theme' 表示当前主题色，其余需为 #RRGGBB。",
+    "config.perWorldColor.description": "卓越（per-world）图案覆盖色，需为 #RRGGBB。有有效值时所有卓越图案使用该纯色，不再使用渐变。"
 }

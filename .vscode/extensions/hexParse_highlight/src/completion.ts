@@ -3,7 +3,7 @@ import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-lan
 import { Entry, PrefixEntry } from './types'
 import { allPluginPrefixes } from './plugins'
 import { tr } from './i18n'
-import { getPatternIndex, pickPatternName, patternLangKey, PatternEntry } from './patternIndex'
+import { getPatternIndex, pickPatternName, patternLangKey, PatternEntry, getPatternImage } from './patternIndex'
 import { Token } from './tokenizer'
 
 // ─── Core Completion Data (Hexcasting built-in) ──────────────
@@ -308,13 +308,17 @@ function patternSuggestions(textSoFar: string, token: Token | null | undefined):
         // 附加各语言译名后，中文/英文译名输入也能命中，而补全文本仍是长/短 ID
         const names = Object.values(entry.name ?? {}).filter((n): n is string => typeof n === 'string' && n.length > 0)
         const filterText = names.length > 0 ? `${label} ${names.join(' ')}` : label
+        // 展开 doc 直接展示图案渐变图，不再重复显示名称文本
+        const image = getPatternImage(entry)
         return {
             label,
             kind: CompletionItemKind.Value,
             detail: tr('completion.pattern.detail', { name: pickPatternName(entry), modid: entry.modid }),
             documentation: {
                 kind: 'markdown',
-                value: tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }),
+                value: image
+                    ? `![${pickPatternName(entry)}](${image})`
+                    : tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }),
             },
             sortText: String(prio) + ':' + label,
             insertText: label,

@@ -53,9 +53,7 @@ let cached: { mtimeMs: number; index: PatternIndex } | null = null
 let cachedStatus: { mtimeMs: number; remaining: number } | null = null
 
 // ─── 图案渲染状态 ────────────────────────────────────────────
-/** 当前主题普通文本颜色（由扩展宿主通过 LSP 通知传入），仅支持 #rrggbb */
-let patternColor = '#d4d4d4'
-/** 渲染缓存：entry.id → base64 data URI（惰性求值） */
+/** 渲染缓存：entry.id → base64 data URI（惰性求值，hover 与补全共用） */
 const renderCache = new Map<string, string>()
 
 /** LSP 初始化时设置 dump 文件路径 */
@@ -204,11 +202,6 @@ function patternPoints(startdir: string, signature: string): [number, number][] 
     return pts
 }
 
-/** 第 i 笔（pts[i]→pts[i+1]）的线段向量 */
-function segVec(pts: [number, number][], i: number): [number, number] {
-    return [pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]]
-}
-
 /** SVG 路径命令（仅折线：M 起点 / L 连线） */
 interface PathCmd {
     t: 'M' | 'L'
@@ -216,58 +209,10 @@ interface PathCmd {
 }
 
 /**
- * 构建 SVG path 命令：
- * - per_world：不绘制拐点，所有笔画按位置去重（无序端点对）后整段画出，长度占网格 100%
- * - 普通：每笔只画居中 80% 的直线主体，拐点前后 10% 以折线直连
+ * 计算缩放与平移：bbox 覆盖所有拐点与命令端点，缩放到 content×content 并居中到 canvas×canvas
+ * （四周留白，避免描边被裁切）。
  */
-function buildPathCommands(pts: [number, number][], perWorld: boolean): PathCmd[] | null {
-    const segCount = pts.length - 1
-    if (segCount <= 0) return null
-
-    if (perWorld) {
-        // 按无序端点对去重：key = 排序后的坐标对
-        const seen = new Set<string>()
-        const cmds: PathCmd[] = []
-        for (let i = 0; i < segCount; i++) {
-            const a = pts[i]
-            const b = pts[i + 1]
-            const key = a[0] < b[0] || (a[0] === b[0] && a[1] < b[1])
-                ? `${a[0]},${a[1]}|${b[0]},${b[1]}`
-                : `${b[0]},${b[1]}|${a[0]},${a[1]}`
-            if (seen.has(key)) continue
-            seen.add(key)
-            if (cmds.length === 0) cmds.push({ t: 'M', p: a })
-            cmds.push({ t: 'L', p: b })
-        }
-        return cmds.length > 0 ? cmds : null
-    }
-
-    // 普通：每笔居中 80%，拐点前后 10% 折线直连
-    const cmds: PathCmd[] = []
-    const strokeStart = (i: number): [number, number] => {
-        const v = segVec(pts, i)
-        return [pts[i][0] + 0.1 * v[0], pts[i][1] + 0.1 * v[1]]
-    }
-    const strokeEnd = (i: number): [number, number] => {
-        const v = segVec(pts, i)
-        return [pts[i][0] + 0.9 * v[0], pts[i][1] + 0.9 * v[1]]
-    }
-
-    cmds.push({ t: 'M', p: strokeStart(0) })
-    for (let i = 0; i < segCount; i++) {
-        cmds.push({ t: 'L', p: strokeEnd(i) }) // 第 i 笔直线主体（居中 80%）
-        if (i + 1 >= segCount) break
-        cmds.push({ t: 'L', p: strokeStart(i + 1) }) // 拐点：折线直连
-    }
-
-    return cmds
-}
-
-/**
- * 计算缩放与平移：bbox 覆盖所有拐点与命令端点，缩放到 20×20 并居中到 24×24
- * （四周各留 2px 白边，避免描边被裁切）。
- */
-function fitScale(pts: [number, number][], cmds: PathCmd[]): { scale: number; ox: number; oy: number } {
+function fitScale(pts: [number, number][], cmds: PathCmd[], content = 20, canvas = 24): { scale: number; ox: number; oy: number } {
     let minX = Infinity
     let minY = Infinity
     let maxX = -Infinity
@@ -282,10 +227,10 @@ function fitScale(pts: [number, number][], cmds: PathCmd[]): { scale: number; ox
     for (const c of cmds) span(c.p[0], c.p[1])
     const bw = maxX - minX
     const bh = maxY - minY
-    if (bw === 0 && bh === 0) return { scale: 1, ox: 12, oy: 12 }
-    const scale = Math.min(20 / (bw || 1e-9), 20 / (bh || 1e-9))
-    const ox = (24 - (maxX + minX) * scale) / 2
-    const oy = (24 - (maxY + minY) * scale) / 2
+    if (bw === 0 && bh === 0) return { scale: 1, ox: canvas / 2, oy: canvas / 2 }
+    const scale = Math.min(content / (bw || 1e-9), content / (bh || 1e-9))
+    const ox = (canvas - (maxX + minX) * scale) / 2
+    const oy = (canvas - (maxY + minY) * scale) / 2
     return { scale, ox, oy }
 }
 
@@ -294,50 +239,134 @@ function fmt(n: number): string {
     return (Math.round(n * 100) / 100).toString()
 }
 
-/** 命令序列 → SVG path d 串 */
-function serializePath(cmds: PathCmd[], scale: number, ox: number, oy: number): string {
-    const tx = (x: number) => fmt(x * scale + ox)
-    const ty = (y: number) => fmt(y * scale + oy)
-    return cmds.map((c) => `${c.t}${tx(c.p[0])},${ty(c.p[1])}`).join(' ')
+/** 图案渲染参数：内容区大小、画布大小（含留白）、笔触宽度 */
+interface RenderOptions {
+    /** 图案内容区边长（px） */
+    content: number
+    /** 画布边长（px）= 内容区 + 留白 */
+    canvas: number
+    /** 笔触宽度（px） */
+    strokeWidth: number
 }
 
-/** 设置主题普通文本颜色（#rrggbb）；变化时清空渲染缓存 */
-export function setPatternColor(color: string): void {
-    if (color === patternColor) return
-    patternColor = color
+/** 图案渲染：100px 内容 + 8px 留白，4px 笔触，逐笔画渐变（hover 与补全共用） */
+const PATTERN_RENDER: RenderOptions = { content: 100, canvas: 108, strokeWidth: 4 }
+
+/** 图案笔画渐变色列表（宿主已解析为具体 #rrggbb），从首笔到末笔依次插值 */
+let gradientColors: string[] = ['#ff00ff', '#d4d4d4']
+
+/** 卓越（per_world）图案覆盖颜色；null 表示无覆盖（维持渐变色） */
+let perWorldColor: string | null = '#7f7f7f'
+
+/** 设置卓越图案覆盖颜色；仅接受 #rrggbb，非法值视为无覆盖 */
+export function setPerWorldColor(color: unknown): void {
+    const valid = typeof color === 'string' && /^#[0-9a-fA-F]{6}$/.test(color) ? color : null
+    if (valid === perWorldColor) return
+    perWorldColor = valid
     renderCache.clear()
 }
 
-function renderPatternUri(entry: PatternEntry): string | null {
+/** 设置笔画渐变色列表；仅接受 #rrggbb，过滤非法项，全非法时忽略 */
+export function setPatternGradient(colors: unknown): void {
+    if (!Array.isArray(colors)) return
+    const valid = colors.filter((c): c is string => typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c))
+    if (valid.length === 0) return
+    gradientColors = valid
+    renderCache.clear()
+}
+
+/** 两色线性插值（#rrggbb） */
+function lerpColor(a: string, b: string, t: number): string {
+    const lerp = (x: number, y: number) => Math.round(x + (y - x) * t)
+    const comp = (v: number) => v.toString(16).padStart(2, '0')
+    return `#${comp(lerp(parseInt(a.slice(1, 3), 16), parseInt(b.slice(1, 3), 16)))}` +
+        `${comp(lerp(parseInt(a.slice(3, 5), 16), parseInt(b.slice(3, 5), 16)))}` +
+        `${comp(lerp(parseInt(a.slice(5, 7), 16), parseInt(b.slice(5, 7), 16)))}`
+}
+
+/**
+ * 在渐变色列表上按 t∈[0,1] 线性插值取色：相邻列表项之间为一段线性渐变。
+ * t 由笔画序数经总笔画数归一化得到（首笔 t=0，末笔 t=1）。
+ */
+function gradientAt(colors: string[], t: number): string {
+    if (colors.length === 1) return colors[0]
+    const pos = t * (colors.length - 1)
+    const i0 = Math.min(Math.floor(pos), colors.length - 2)
+    return lerpColor(colors[i0], colors[i0 + 1], pos - i0)
+}
+
+/** 渐变图案：每条笔画拆成独立 path，各笔内沿自身起点→终点渐变。
+ *  第 i 笔跨渐变色列表的 [i/N, (i+1)/N] 段，首笔起点、末笔终点分别对齐列表首末色。
+ *  端点圆头，拐点由相邻笔画圆头重叠形成圆角连接。 */
+function renderPatternUri(entry: PatternEntry, opts: RenderOptions): string | null {
     const pts = patternPoints(entry.startdir, entry.signature)
     if (!pts) return null
-    const cmds = buildPathCommands(pts, entry.is_per_world === true)
-    if (!cmds) return null
-    const { scale, ox, oy } = fitScale(pts, cmds)
-    const d = serializePath(cmds, scale, ox, oy)
+    const segCount = pts.length - 1
+    if (segCount <= 0) return null
+    const cmds: PathCmd[] = []
+    for (let i = 0; i < segCount; i++) {
+        cmds.push({ t: 'M', p: pts[i] })
+        cmds.push({ t: 'L', p: pts[i + 1] })
+    }
+    const { scale, ox, oy } = fitScale(pts, cmds, opts.content, opts.canvas)
+    const tx = (x: number) => fmt(x * scale + ox)
+    const ty = (y: number) => fmt(y * scale + oy)
+    // 卓越图案有有效覆盖色时整图使用该纯色，否则与普通图案一样用渐变
+    const override = entry.is_per_world === true ? perWorldColor : null
+    const defs: string[] = []
+    const paths: string[] = []
+    for (let i = 0; i < segCount; i++) {
+        const ax = tx(pts[i][0])
+        const ay = ty(pts[i][1])
+        const bx = tx(pts[i + 1][0])
+        const by = ty(pts[i + 1][1])
+        if (override) {
+            paths.push(
+                `<path d="M${ax},${ay}L${bx},${by}" fill="none" stroke="${override}" stroke-width="${opts.strokeWidth}" stroke-linecap="round"/>`,
+            )
+            continue
+        }
+        // 第 i 笔占列表跨度 [i/N, (i+1)/N]，渐变沿笔画自身方向（笔起点 → 笔终点）
+        const t0 = i / segCount
+        const t1 = (i + 1) / segCount
+        defs.push(
+            `<linearGradient id="pg${i}" gradientUnits="userSpaceOnUse" x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}">` +
+            `<stop offset="0" stop-color="${gradientAt(gradientColors, t0)}"/>` +
+            `<stop offset="1" stop-color="${gradientAt(gradientColors, t1)}"/>` +
+            `</linearGradient>`,
+        )
+        paths.push(
+            `<path d="M${ax},${ay}L${bx},${by}" fill="none" stroke="url(#pg${i})" stroke-width="${opts.strokeWidth}" stroke-linecap="round"/>`,
+        )
+    }
     const svg =
-        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">` +
-        `<path d="${d}" fill="none" stroke="${patternColor}" stroke-width="2"/>` +
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${opts.canvas}" height="${opts.canvas}" viewBox="0 0 ${opts.canvas} ${opts.canvas}">` +
+        (defs.length > 0 ? `<defs>${defs.join('')}</defs>` : '') +
+        paths.join('') +
         `</svg>`
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`
 }
 
+/** 按 entry.id 缓存渲染图案；命中缓存直接返回，否则渲染后写入缓存 */
+function renderCached(entry: PatternEntry, cache: Map<string, string>, opts: RenderOptions): string | null {
+    if (typeof entry.startdir !== 'string' || entry.startdir.length === 0) return null
+    if (typeof entry.signature !== 'string' || entry.signature.length === 0) return null
+    const hit = cache.get(entry.id)
+    if (hit) return hit
+    const uri = renderPatternUri(entry, opts)
+    if (uri === null) return null
+    cache.set(entry.id, uri)
+    return uri
+}
+
 /**
- * 惰性求值获取图案图片（base64 data URI）。
- * 默认按 entry.id 缓存；cache=false 时不缓存（用于 raw 图案，id 为合成的 'raw:'+sig）。
+ * 惰性求值获取图案渐变图（base64 data URI），hover 与补全共用，按 entry.id 缓存。
+ * cache=false 时不缓存（用于 raw 图案，id 为合成的 'raw:'+sig）。
  * 无 startdir/signature 返回 null。
  */
 export function getPatternImage(entry: PatternEntry, opts?: { cache?: boolean }): string | null {
-    if (typeof entry.startdir !== 'string' || entry.startdir.length === 0) return null
-    if (typeof entry.signature !== 'string' || entry.signature.length === 0) return null
-    if (opts?.cache !== false) {
-        const hit = renderCache.get(entry.id)
-        if (hit) return hit
-    }
-    const uri = renderPatternUri(entry)
-    if (uri === null) return null
-    if (opts?.cache !== false) renderCache.set(entry.id, uri)
-    return uri
+    if (opts?.cache === false) return renderPatternUri(entry, PATTERN_RENDER)
+    return renderCached(entry, renderCache, PATTERN_RENDER)
 }
 
 /**

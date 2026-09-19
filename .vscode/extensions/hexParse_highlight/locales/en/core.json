@@ -124,5 +124,7 @@
     "command.hexdocDumpAbort.title": "Abort HexDoc Export",
     "command.hexdocDumpOpen.title": "Open HexDoc Patterns JSON",
     "command.hexdocDumpClear.title": "Clear Exported HexDoc Data",
-    "config.lehmerTemplate.description": "Template for Lehmer code output. Use {result} as placeholder for the calculated Lehmer code value."
+    "config.lehmerTemplate.description": "Template for Lehmer code output. Use {result} as placeholder for the calculated Lehmer code value.",
+    "config.patternGradient.description": "Gradient colors for pattern strokes, from the first stroke to the last. The special value 'theme' means the current theme color; other entries must be #RRGGBB.",
+    "config.perWorldColor.description": "Override color for per-world patterns; must be #RRGGBB. When valid, all per-world patterns render in this solid color instead of the gradient."
 }

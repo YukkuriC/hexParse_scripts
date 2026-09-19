@@ -77,6 +77,19 @@
                     "type": "string",
                     "default": "({result})splat,swizzle",
                     "description": "%config.lehmerTemplate.description%"
+                },
+                "hexparse.patternGradient": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": ["#ff00ff", "theme"],
+                    "description": "%config.patternGradient.description%"
+                },
+                "hexparse.perWorldColor": {
+                    "type": "string",
+                    "default": "#7F7F7F",
+                    "description": "%config.perWorldColor.description%"
                 }
             }
         },

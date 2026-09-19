@@ -17,6 +17,18 @@ function currentThemeColor(): string {
     return '#d4d4d4'
 }
 
+/** 当前笔画渐变色列表配置；'theme' 在传入前解析为当前主题色，其余需为 #RGB */
+function currentGradient(): string[] {
+    const list = vscode.workspace.getConfiguration('hexparse').get<string[]>('patternGradient', ['#ff00ff', 'theme'])
+    return list.map((c) => (c === 'theme' ? currentThemeColor() : c))
+}
+
+/** 当前卓越图案覆盖色；非法值返回 null（维持渐变色） */
+function currentPerWorldColor(): string | null {
+    const color = vscode.workspace.getConfiguration('hexparse').get<string>('perWorldColor', '#7f7f7f')
+    return typeof color === 'string' && /^#[0-9a-fA-F]{6}$/.test(color) ? color : null
+}
+
 /**
  * HexParse 持久化目录：globalStorage 上一级的 HexParse 目录。
  * 不用扩展自带 globalStorage 目录，规避编辑器启动时对扩展 globalStorage 的整目录清理。
@@ -50,7 +62,8 @@ export function activate(context: vscode.ExtensionContext): void {
         initializationOptions: {
             locale,
             dumpFile: vscode.Uri.joinPath(hexParseStorageUri(context), HEXBUG_PATTERNS_FILE).fsPath,
-            themeColor: currentThemeColor(),
+            patternGradient: currentGradient(),
+            perWorldColor: currentPerWorldColor(),
         },
     }
 
@@ -58,10 +71,22 @@ export function activate(context: vscode.ExtensionContext): void {
 
     client.start()
 
-    // 主题切换时通知服务端更新图案渲染颜色
+    // 主题切换时重新解析并推送笔画渐变色列表（'theme' 随主题变化）
     context.subscriptions.push(
         vscode.window.onDidChangeActiveColorTheme(() => {
-            client.sendNotification('hexparse/themeColor', currentThemeColor())
+            client.sendNotification('hexparse/patternGradient', currentGradient())
+        }),
+    )
+
+    // 渐变色列表 / 卓越覆盖色配置变化时同步到服务端
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeConfiguration((e) => {
+            if (e.affectsConfiguration('hexparse.patternGradient')) {
+                client.sendNotification('hexparse/patternGradient', currentGradient())
+            }
+            if (e.affectsConfiguration('hexparse.perWorldColor')) {
+                client.sendNotification('hexparse/perWorldColor', currentPerWorldColor())
+            }
         }),
     )
 

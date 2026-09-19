@@ -15,7 +15,7 @@ import { handleHover } from './hover'
 import { validateDoc } from './validation'
 import { getTokenAt } from './tokenizer'
 import { registerBundle, setLocale } from './i18n'
-import { initPatternIndex, setPatternColor } from './patternIndex'
+import { initPatternIndex, setPatternGradient, setPerWorldColor } from './patternIndex'
 import * as nlsEn from '../package.nls.json'
 import * as nlsZh from '../package.nls.zh-cn.json'
 
@@ -42,9 +42,9 @@ connection.onInitialize((params: InitializeParams) => {
     // Locate the hexdoc dump file (written by hexparse.dumpHexDocData)
     initPatternIndex(params.initializationOptions?.dumpFile as string | undefined)
 
-    // Theme color from extension host (client passes current theme foreground)
-    const themeColor = params.initializationOptions?.themeColor as string | undefined
-    if (typeof themeColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(themeColor)) setPatternColor(themeColor)
+    // Pattern stroke gradient list from configuration (host resolves 'theme' beforehand)
+    setPatternGradient(params.initializationOptions?.patternGradient)
+    setPerWorldColor(params.initializationOptions?.perWorldColor)
 
     const result: InitializeResult = {
         capabilities: {
@@ -71,14 +71,17 @@ connection.onCompletion((textDocumentPosition): import('vscode-languageserver/no
 
 connection.onCompletionResolve((item) => item)
 
-// ─── Theme Color Notification ────────────────────────────────
-// 扩展宿主在主题切换时推送普通文本颜色，供图案渲染使用
-
-connection.onNotification('hexparse/themeColor', (color) => {
-    if (typeof color === 'string' && /^#[0-9a-fA-F]{6}$/.test(color)) setPatternColor(color)
+// 扩展宿主在配置变化时推送（已解析）笔画渐变色列表
+connection.onNotification('hexparse/patternGradient', (colors) => {
+    setPatternGradient(colors)
 })
 
-// ─── Hover Handler ───────────────────────────────────────────
+// 扩展宿主在配置变化时推送卓越图案覆盖颜色
+connection.onNotification('hexparse/perWorldColor', (color) => {
+    setPerWorldColor(color)
+})
+
+// ─── Completion Handler ───────────────────────────────────────────
 
 connection.onHover((textDocumentPosition) => handleHover(textDocumentPosition, documents))
 
