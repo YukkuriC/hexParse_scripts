@@ -2,6 +2,7 @@
 // 按 长ID（完整 id）/ 短ID（id 冒号后半部分）构建两级索引，供 hover / 补全解析图案名称
 import * as fs from 'fs'
 import { getLocale, tr } from './i18n'
+import { defaultConfigs, defaultThemeColor, isHexColor, resolveThemeOr } from './color'
 
 /** dump JSON 中的单个 pattern 对象 */
 export interface DumpPattern {
@@ -253,14 +254,14 @@ interface RenderOptions {
 const PATTERN_RENDER: RenderOptions = { content: 100, canvas: 108, strokeWidth: 4 }
 
 /** 图案笔画渐变色列表（宿主已解析为具体 #rrggbb），从首笔到末笔依次插值 */
-let gradientColors: string[] = ['#ff00ff', '#d4d4d4']
+let gradientColors: string[] = defaultConfigs.patternGradient.map((c) => resolveThemeOr(c, defaultThemeColor))
 
 /** 卓越（per_world）图案覆盖颜色；null 表示无覆盖（维持渐变色） */
-let perWorldColor: string | null = '#7f7f7f'
+let perWorldColor: string | null = defaultConfigs.perWorldColor
 
 /** 设置卓越图案覆盖颜色；仅接受 #rrggbb，非法值视为无覆盖 */
 export function setPerWorldColor(color: unknown): void {
-    const valid = typeof color === 'string' && /^#[0-9a-fA-F]{6}$/.test(color) ? color : null
+    const valid = isHexColor(color) ? color : null
     if (valid === perWorldColor) return
     perWorldColor = valid
     renderCache.clear()
@@ -269,7 +270,7 @@ export function setPerWorldColor(color: unknown): void {
 /** 设置笔画渐变色列表；仅接受 #rrggbb，过滤非法项，全非法时忽略 */
 export function setPatternGradient(colors: unknown): void {
     if (!Array.isArray(colors)) return
-    const valid = colors.filter((c): c is string => typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c))
+    const valid = colors.filter(isHexColor)
     if (valid.length === 0) return
     gradientColors = valid
     renderCache.clear()
@@ -293,6 +294,65 @@ function gradientAt(colors: string[], t: number): string {
     const pos = t * (colors.length - 1)
     const i0 = Math.min(Math.floor(pos), colors.length - 2)
     return lerpColor(colors[i0], colors[i0 + 1], pos - i0)
+}
+
+// ─── 图案动画小球 ─────────────────────────────────────────────
+/** 动画经过单个笔画的时间（秒）；出现 / 消失也各占一步；轮间停顿固定 0.5s，不受步长影响 */
+let ballStep = 0.5
+
+/** 设置动画步长；仅接受 [0.01, 1000]，非法 / 越界时回退默认 0.5 */
+export function setBallStep(step: unknown): void {
+    const valid = typeof step === 'number' && Number.isFinite(step) ? Math.min(1000, Math.max(0.01, step)) : 0.5
+    if (valid === ballStep) return
+    ballStep = valid
+    renderCache.clear()
+}
+
+/** 动画关键帧数值格式化（保留 4 位小数，避免舍入导致 keyTimes 非严格递增） */
+function fmtKey(n: number): string {
+    return (Math.round(n * 1e4) / 1e4).toString()
+}
+
+/** 动画小球填充色；null 表示不显示小球（配置留空 / 非法色值） */
+let ballColor: string | null = null
+
+/** 设置动画小球颜色；仅接受 #rrggbb，非法值（含空串）视为不显示 */
+export function setBallColor(color: unknown): void {
+    const valid = isHexColor(color) ? color : null
+    if (valid === ballColor) return
+    ballColor = valid
+    renderCache.clear()
+}
+
+/**
+ * 动画小球元素（SVG 最上层）：半径 = 笔画粗细，仅在渐变色笔画时调用。
+ * 周期 = 出现 + N×移动 + 消失 + 停顿（每两步之间间隔固定 0.5s，不受步长影响）：
+ *  - 出现：scale 线性从 0 放大到 1，停在起点；
+ *  - 移动：沿笔画路径匀速行进，一次经过一个笔画；
+ *  - 消失：scale 线性从 1 缩到 0，停在终点；
+ *  - 停顿：停在终点，等待下一轮。
+ * 出现 / 消失 / 每步移动各用 ballStep 秒。
+ */
+const BALL_PAUSE_SEC = 0.5
+
+function renderBall(pathD: string, segCount: number, strokeWidth: number, color: string): string {
+    if (segCount <= 0) return ''
+    const total = (segCount + 3) * ballStep + BALL_PAUSE_SEC
+    const appearEnd = ballStep / total
+    const moveEnd = ((segCount + 1) * ballStep) / total
+    const exitEnd = ((segCount + 2) * ballStep) / total
+    // scale 线性关键帧：0→1（出现）、恒 1（移动）、1→0（消失）、恒 0（轮间停顿）
+    const scale =
+        `<circle cx="0" cy="0" r="${strokeWidth}" fill="${color}">` +
+        `<animateTransform attributeName="transform" attributeType="XML" type="scale" ` +
+        `values="0;1;1;0;0" keyTimes="0;${fmtKey(appearEnd)};${fmtKey(moveEnd)};${fmtKey(exitEnd)};1" calcMode="linear" ` +
+        `dur="${fmtKey(total)}s" repeatCount="indefinite"/>` +
+        `</circle>`
+    // 移动动画：keyPoints 重复值使出现 / 消失 / 停顿相位停在路径首末，移动相位匀速 0→1
+    const motion =
+        `<animateMotion dur="${fmtKey(total)}s" repeatCount="indefinite" calcMode="linear" ` +
+        `keyPoints="0;0;1;1;1" keyTimes="0;${fmtKey(appearEnd)};${fmtKey(moveEnd)};${fmtKey(exitEnd)};1" path="${pathD}"/>`
+    return `<g>${scale}${motion}</g>`
 }
 
 /** 渐变图案：每条笔画拆成独立 path，各笔内沿自身起点→终点渐变。
@@ -339,10 +399,14 @@ function renderPatternUri(entry: PatternEntry, opts: RenderOptions): string | nu
             `<path d="M${ax},${ay}L${bx},${by}" fill="none" stroke="url(#pg${i})" stroke-width="${opts.strokeWidth}" stroke-linecap="round"/>`,
         )
     }
+    // 动画小球：最上层，仅在渐变色笔画时显示（per-world 覆盖时不显示），颜色取配置值
+    const ballPath = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${tx(p[0])},${ty(p[1])}`).join('')
+    const ballSvg = !override && ballColor ? renderBall(ballPath, segCount, opts.strokeWidth, ballColor) : ''
     const svg =
         `<svg xmlns="http://www.w3.org/2000/svg" width="${opts.canvas}" height="${opts.canvas}" viewBox="0 0 ${opts.canvas} ${opts.canvas}">` +
         (defs.length > 0 ? `<defs>${defs.join('')}</defs>` : '') +
         paths.join('') +
+        ballSvg +
         `</svg>`
     return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`
 }

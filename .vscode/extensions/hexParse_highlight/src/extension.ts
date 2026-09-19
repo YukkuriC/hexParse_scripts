@@ -3,6 +3,7 @@ import * as vscode from 'vscode'
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node'
 import { calcLehmer, parseLehmerInput } from './lehmer'
 import { runHexDocDump, HEXBUG_PATTERNS_FILE, HEXBUG_PATTERNS_STATUS_FILE } from './hexdocDump'
+import { defaultConfigs, isHexColor, resolveThemeOr } from './color'
 
 let client: LanguageClient
 
@@ -11,22 +12,41 @@ let dumpController: AbortController | null = null
 
 /** 当前主题普通文本颜色（#rrggbb），供图案渲染使用 */
 function currentThemeColor(): string {
-    const kind = vscode.window.activeColorTheme.kind
-    if (kind === vscode.ColorThemeKind.Light) return '#1f1f1f'
-    if (kind === vscode.ColorThemeKind.HighContrast) return '#ffffff'
-    return '#d4d4d4'
+    switch (vscode.window.activeColorTheme.kind) {
+        case vscode.ColorThemeKind.Light:
+        case vscode.ColorThemeKind.HighContrastLight:
+            return '#1f1f1f'
+        case vscode.ColorThemeKind.Dark:
+        case vscode.ColorThemeKind.HighContrast:
+            return '#ffffff'
+    }
 }
 
-/** 当前笔画渐变色列表配置；'theme' 在传入前解析为当前主题色，其余需为 #RGB */
+/** 当前笔画渐变色列表配置；'theme' 与 #RRGGBB 统一经 color.ts 处理，非法项剔除 */
 function currentGradient(): string[] {
-    const list = vscode.workspace.getConfiguration('hexparse').get<string[]>('patternGradient', ['#ff00ff', 'theme'])
-    return list.map((c) => (c === 'theme' ? currentThemeColor() : c))
+    const list = vscode.workspace.getConfiguration('hexparse').get<string[]>('patternGradient', [...defaultConfigs.patternGradient])
+    const theme = currentThemeColor()
+    return list.map((c) => resolveThemeOr(c, theme)).filter(isHexColor)
 }
 
-/** 当前卓越图案覆盖色；非法值返回 null（维持渐变色） */
+/** 当前卓越图案覆盖色；无效值返回 null（维持渐变色），支持 'theme' */
 function currentPerWorldColor(): string | null {
-    const color = vscode.workspace.getConfiguration('hexparse').get<string>('perWorldColor', '#7f7f7f')
-    return typeof color === 'string' && /^#[0-9a-fA-F]{6}$/.test(color) ? color : null
+    const raw = vscode.workspace.getConfiguration('hexparse').get<string>('perWorldColor', defaultConfigs.perWorldColor)
+    const color = resolveThemeOr(raw, currentThemeColor())
+    return isHexColor(color) ? color : null
+}
+
+/** 当前动画小球颜色；'theme' 由 resolveThemeOr 统一解析，空串表示不显示小球 */
+function currentBallColor(): string {
+    const raw = vscode.workspace.getConfiguration('hexparse').get<string>('ballColor', defaultConfigs.ballColor)
+    return resolveThemeOr(raw, currentThemeColor())
+}
+
+/** 当前动画步长；越界 / 非法值钳制回 [0.01, 1000] */
+function currentBallStep(): number {
+    const step = vscode.workspace.getConfiguration('hexparse').get<number>('ballStep', 0.5)
+    const valid = typeof step === 'number' && Number.isFinite(step) ? step : 0.5
+    return Math.min(1000, Math.max(0.01, valid))
 }
 
 /**
@@ -64,6 +84,8 @@ export function activate(context: vscode.ExtensionContext): void {
             dumpFile: vscode.Uri.joinPath(hexParseStorageUri(context), HEXBUG_PATTERNS_FILE).fsPath,
             patternGradient: currentGradient(),
             perWorldColor: currentPerWorldColor(),
+            ballColor: currentBallColor(),
+            ballStep: currentBallStep(),
         },
     }
 
@@ -71,14 +93,15 @@ export function activate(context: vscode.ExtensionContext): void {
 
     client.start()
 
-    // 主题切换时重新解析并推送笔画渐变色列表（'theme' 随主题变化）
+    // 主题切换时重新解析并推送笔画渐变色 / 动画小球颜色（'theme' 随主题变化）
     context.subscriptions.push(
         vscode.window.onDidChangeActiveColorTheme(() => {
             client.sendNotification('hexparse/patternGradient', currentGradient())
+            client.sendNotification('hexparse/ballColor', currentBallColor())
         }),
     )
 
-    // 渐变色列表 / 卓越覆盖色配置变化时同步到服务端
+    // 渐变色列表 / 卓越覆盖色 / 小球颜色配置变化时同步到服务端
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
             if (e.affectsConfiguration('hexparse.patternGradient')) {
@@ -86,6 +109,12 @@ export function activate(context: vscode.ExtensionContext): void {
             }
             if (e.affectsConfiguration('hexparse.perWorldColor')) {
                 client.sendNotification('hexparse/perWorldColor', currentPerWorldColor())
+            }
+            if (e.affectsConfiguration('hexparse.ballColor')) {
+                client.sendNotification('hexparse/ballColor', currentBallColor())
+            }
+            if (e.affectsConfiguration('hexparse.ballStep')) {
+                client.sendNotification('hexparse/ballStep', currentBallStep())
             }
         }),
     )

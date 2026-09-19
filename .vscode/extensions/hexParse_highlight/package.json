@@ -83,13 +83,25 @@
                     "items": {
                         "type": "string"
                     },
-                    "default": ["#ff00ff", "theme"],
+                    "default": ["#aa00ee", "theme"],
                     "description": "%config.patternGradient.description%"
                 },
                 "hexparse.perWorldColor": {
                     "type": "string",
                     "default": "#7F7F7F",
                     "description": "%config.perWorldColor.description%"
+                },
+                "hexparse.ballColor": {
+                    "type": "string",
+                    "default": "theme",
+                    "description": "%config.ballColor.description%"
+                },
+                "hexparse.ballStep": {
+                    "type": "number",
+                    "default": 0.5,
+                    "minimum": 0.01,
+                    "maximum": 1000,
+                    "description": "%config.ballStep.description%"
                 }
             }
         },

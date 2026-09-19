@@ -15,7 +15,7 @@ import { handleHover } from './hover'
 import { validateDoc } from './validation'
 import { getTokenAt } from './tokenizer'
 import { registerBundle, setLocale } from './i18n'
-import { initPatternIndex, setPatternGradient, setPerWorldColor } from './patternIndex'
+import { initPatternIndex, setPatternGradient, setPerWorldColor, setBallColor, setBallStep } from './patternIndex'
 import * as nlsEn from '../package.nls.json'
 import * as nlsZh from '../package.nls.zh-cn.json'
 
@@ -45,6 +45,8 @@ connection.onInitialize((params: InitializeParams) => {
     // Pattern stroke gradient list from configuration (host resolves 'theme' beforehand)
     setPatternGradient(params.initializationOptions?.patternGradient)
     setPerWorldColor(params.initializationOptions?.perWorldColor)
+    setBallColor(params.initializationOptions?.ballColor)
+    setBallStep(params.initializationOptions?.ballStep)
 
     const result: InitializeResult = {
         capabilities: {
@@ -79,6 +81,16 @@ connection.onNotification('hexparse/patternGradient', (colors) => {
 // 扩展宿主在配置变化时推送卓越图案覆盖颜色
 connection.onNotification('hexparse/perWorldColor', (color) => {
     setPerWorldColor(color)
+})
+
+// 扩展宿主在配置 / 主题变化时推送动画小球颜色
+connection.onNotification('hexparse/ballColor', (color) => {
+    setBallColor(color)
+})
+
+// 扩展宿主在配置变化时推送动画步长
+connection.onNotification('hexparse/ballStep', (step) => {
+    setBallStep(step)
 })
 
 // ─── Completion Handler ───────────────────────────────────────────

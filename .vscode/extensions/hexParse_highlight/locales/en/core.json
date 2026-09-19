@@ -126,5 +126,7 @@
     "command.hexdocDumpClear.title": "Clear Exported HexDoc Data",
     "config.lehmerTemplate.description": "Template for Lehmer code output. Use {result} as placeholder for the calculated Lehmer code value.",
     "config.patternGradient.description": "Gradient colors for pattern strokes, from the first stroke to the last. The special value 'theme' means the current theme color; other entries must be #RRGGBB.",
-    "config.perWorldColor.description": "Override color for per-world patterns; must be #RRGGBB. When valid, all per-world patterns render in this solid color instead of the gradient."
+    "config.perWorldColor.description": "Override color for per_world patterns. Supports the special value 'theme' (current theme color) or #RRGGBB. When valid, all per_world patterns render in this solid color instead of the gradient.",
+    "config.ballColor.description": "Color of the pattern animation ball. The special value 'theme' means the current theme text color; empty means no ball; other values must be #RRGGBB.",
+    "config.ballStep.description": "Duration in seconds of each animation step (ball appear, disappear, and one stroke move). Range 0.01-1000. The pause between two animation cycles is fixed at 0.5s and is not affected."
 }

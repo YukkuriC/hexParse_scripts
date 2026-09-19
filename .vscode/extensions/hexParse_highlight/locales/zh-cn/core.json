@@ -125,5 +125,7 @@
     "command.hexdocDumpClear.title": "清除已导出的 HexDoc 内容",
     "config.lehmerTemplate.description": "Lehmer 码输出模板。使用 {result} 作为计算结果的占位符。",
     "config.patternGradient.description": "图案笔画渐变色列表，从首笔到末笔依次插值。特殊值 'theme' 表示当前主题色，其余需为 #RRGGBB。",
-    "config.perWorldColor.description": "卓越（per-world）图案覆盖色，需为 #RRGGBB。有有效值时所有卓越图案使用该纯色，不再使用渐变。"
+    "config.perWorldColor.description": "卓越（per-world）图案覆盖色，支持特殊值 'theme'（当前主题色）或 #RRGGBB。有有效值时所有卓越图案使用该纯色，不再使用渐变。",
+    "config.ballColor.description": "图案动画小球颜色。特殊值 'theme' 表示当前主题文本色；留空则不显示小球；其余需为 #RRGGBB。",
+    "config.ballStep.description": "图案动画每一步的用时（秒），控制小球出现、消失及每移动一步的时间。取值范围 0.01-1000。两次动画播放之间的间隔固定 0.5s，不受影响。"
 }
