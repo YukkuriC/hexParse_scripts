@@ -13,7 +13,21 @@ export interface DumpPattern {
     is_per_world?: boolean
 }
 
-/** 索引条目：dump pattern 对象 + 来源 modid */
+/** dump JSON 中 patchouli 页面引用：op_id → 页面（entry 为相对 entries/ 的路径，含子目录，如 patterns/meta） */
+interface PatchouliPageRef {
+    op_id: string
+    entry: string
+    anchor: string
+}
+
+/** dump JSON 中单个包的数据（兼容旧格式：值直接为图案数组，无链接数据） */
+interface PackageDump {
+    book_url?: string
+    patterns?: DumpPattern[]
+    pages?: PatchouliPageRef[]
+}
+
+/** 索引条目：dump pattern 对象 + 来源 modid + hexdoc 链接 */
 export interface PatternEntry {
     id: string
     name: Record<string, string>
@@ -21,6 +35,10 @@ export interface PatternEntry {
     startdir: string
     signature: string
     is_per_world?: boolean
+    /** hexdoc 图案页面链接（图案名链接）；无可用数据时不设置 */
+    pageUrl?: string
+    /** hexdoc 书主页链接（mod 名链接）；无可用数据时不设置 */
+    modUrl?: string
 }
 
 export interface PatternIndex {
@@ -86,14 +104,29 @@ export function getDumpRemaining(): number {
 }
 
 function readPatternIndex(filePath: string): PatternIndex {
-    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, DumpPattern[]>
+    const raw = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, unknown>
     const byId = new Map<string, PatternEntry>()
     const byShort = new Map<string, PatternEntry[]>()
     const byName = new Map<string, Map<string, PatternEntry[]>>()
     const byRaw = new Map<string, PatternEntry[]>()
-    for (const [pkg, patterns] of Object.entries(raw)) {
-        if (!Array.isArray(patterns)) continue
+    for (const [pkg, rawVal] of Object.entries(raw)) {
+        // 兼容旧格式：值直接为图案数组（无链接数据）；新格式：{ book_url?, patterns, pages }
+        const dump = rawVal as PackageDump
+        const patterns = Array.isArray(rawVal) ? (rawVal as DumpPattern[]) : Array.isArray(dump.patterns) ? dump.patterns : null
+        if (!patterns) continue
         const modid = pkg.startsWith('hexdoc-') ? pkg.slice('hexdoc-'.length) : pkg
+        const bookUrl = normalizeBookUrl(dump.book_url)
+        // 本包页面索引：op_id（小写）→ 页面引用列表
+        const pagesByOp = new Map<string, PatchouliPageRef[]>()
+        if (Array.isArray(dump.pages)) {
+            for (const page of dump.pages) {
+                if (!page || typeof page.op_id !== 'string' || page.op_id.length === 0) continue
+                const key = page.op_id.toLowerCase()
+                const list = pagesByOp.get(key)
+                if (list) list.push(page)
+                else pagesByOp.set(key, [page])
+            }
+        }
         for (const p of patterns) {
             if (!p || typeof p.id !== 'string' || p.id.length === 0) continue
             const entry: PatternEntry = {
@@ -105,6 +138,15 @@ function readPatternIndex(filePath: string): PatternIndex {
                 is_per_world: p.is_per_world === true,
             }
             const id = p.id.toLowerCase()
+            // 图案页面链接：取本包索引中首个页面引用；book_url 缺失或未命中时留空
+            if (bookUrl) {
+                const refs = pagesByOp.get(id)
+                if (refs && refs.length > 0) {
+                    const r = refs[0]
+                    entry.pageUrl = `${bookUrl}#${r.entry}@${r.anchor}`
+                }
+                entry.modUrl = bookUrl
+            }
             byId.set(id, entry)
             const short = id.includes(':') ? id.slice(id.indexOf(':') + 1) : id
             const list = byShort.get(short)
@@ -442,22 +484,36 @@ export function resolveRawPattern(signature: string): PatternEntry | null {
     if (!index) return null
     const list = index.byRaw.get(signature.toLowerCase())
     if (!list || list.length === 0) return null
-    return list.find((e) => e.startdir === 'EAST') ?? list[0]
+    return list.find(e => e.startdir === 'EAST') ?? list[0]
 }
 
 // ─── 图案名称展示（hover 前置区段）────────────────────────────
 
+/** book_url 归一化：hexdoc 站实际走 https，统一 http→https 便于点击跳转 */
+function normalizeBookUrl(url: unknown): string | undefined {
+    if (typeof url !== 'string' || url.length === 0) return undefined
+    return url.replace(/^http:\/\//, 'https://')
+}
+
+/** 目标可用时生成 [text](target)；链接不可用时直接返回纯文本 */
+function linkTo(target: string | undefined, text: string): string {
+    return target ? `[${text}](${target})` : text
+}
+
+/** 名称行文本：图案名链接到 hexdoc 图案页面，modid 链接到 hexdoc 书主页；链接不可用时输出纯文本 */
+export function formatPatternEntryText(entry: PatternEntry): string {
+    return tr('hover.patternName', {
+        name: linkTo(entry.pageUrl, pickPatternName(entry)),
+        modid: linkTo(entry.modUrl, entry.modid),
+    })
+}
+
 /** 单条名称行：`![图案名](图片) 名称 (modid)`；无渲染时退回纯文本 */
 export function formatPatternEntry(entry: PatternEntry): string {
     const name = pickPatternName(entry)
-    const text = tr('hover.patternName', { name, modid: entry.modid })
+    const text = formatPatternEntryText(entry)
     const image = getPatternImage(entry)
     return image ? `![${name}](${image}) ${text}` : text
-}
-
-/** 纯文本名称行（多命中列表等场景，不带图） */
-export function formatPatternEntryText(entry: PatternEntry): string {
-    return tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid })
 }
 
 /** 前置区段与 base 之间的统一分隔线 */

@@ -3,7 +3,7 @@ import { CompletionItem, CompletionItemKind, InsertTextFormat } from 'vscode-lan
 import { Entry, PrefixEntry } from './types'
 import { allPluginPrefixes } from './plugins'
 import { tr } from './i18n'
-import { getPatternIndex, pickPatternName, patternLangKey, PatternEntry, getPatternImage } from './patternIndex'
+import { getPatternIndex, pickPatternName, patternLangKey, PatternEntry, getPatternImage, formatPatternEntryText } from './patternIndex'
 import { Token } from './tokenizer'
 
 // ─── Core Completion Data (Hexcasting built-in) ──────────────
@@ -316,9 +316,7 @@ function patternSuggestions(textSoFar: string, token: Token | null | undefined):
             detail: tr('completion.pattern.detail', { name: pickPatternName(entry), modid: entry.modid }),
             documentation: {
                 kind: 'markdown',
-                value: image
-                    ? `![${pickPatternName(entry)}](${image})`
-                    : tr('hover.patternName', { name: pickPatternName(entry), modid: entry.modid }),
+                value: image ? `![${pickPatternName(entry)}](${image})` : formatPatternEntryText(entry),
             },
             sortText: String(prio) + ':' + label,
             insertText: label,

@@ -17,6 +17,20 @@ interface HexDocPattern {
     name: Record<string, string>
 }
 
+/** patchouli 条目中的图案页面引用：op_id → 页面（entry 为相对 entries/ 的路径，含子目录，如 patterns/meta） */
+interface PatchouliPageRef {
+    op_id: string
+    entry: string
+    anchor: string
+}
+
+/** 单个包导出的完整数据：图案 + patchouli 页面索引 + 书主页基址 */
+interface HexDocPackageDump {
+    book_url?: string
+    patterns: HexDocPattern[]
+    pages: PatchouliPageRef[]
+}
+
 interface WheelInfo {
     url: string
     version: string
@@ -179,7 +193,66 @@ function loadLangFiles(zip: AdmZip, modpostfix: string): Record<string, Record<s
     return result
 }
 
-async function processHexDocPackage(packageName: string, signal?: AbortSignal): Promise<HexDocPattern[]> {
+/** 读取包内 <modid>.hexdoc.json 的 book_url（线上书基址，含版本路径） */
+function loadBookUrl(zip: AdmZip, modpostfix: string): string | null {
+    const marker = `hexdoc_${modpostfix}/_export/generated/`
+    for (const entry of zip.getEntries()) {
+        if (entry.isDirectory) continue
+        const name = entry.entryName
+        if (!name.startsWith(marker)) continue
+        const rest = name.slice(marker.length)
+        if (rest.includes('/') || !rest.endsWith('.hexdoc.json')) continue
+        try {
+            const data = JSON.parse(entry.getData().toString('utf-8'))
+            if (typeof data?.book_url === 'string' && data.book_url.length > 0) return data.book_url
+        } catch {
+            // 解析失败视为无 book_url
+        }
+        return null
+    }
+    return null
+}
+
+/**
+ * 提取 patchouli 页面反向索引：路径固定为
+ * hexdoc_<mod>/_export/generated/assets/hexcasting/patchouli_books/thehexbook/<lang>/entries/<...>.json
+ * 条目可为任意子目录深度（如 patterns/meta.json）；各语言目录下条目结构一致，按条目路径去重。
+ * entry 为相对 entries/ 的路径（去 .json 后缀、保留子目录），对应 hexdoc 线上链接的 #<entry>@<anchor>。
+ */
+function loadPatchouliPages(zip: AdmZip, modpostfix: string): PatchouliPageRef[] {
+    const marker = `hexdoc_${modpostfix}/_export/generated/assets/hexcasting/patchouli_books/thehexbook/`
+    const result: PatchouliPageRef[] = []
+    const seen = new Set<string>()
+    for (const entry of zip.getEntries()) {
+        if (entry.isDirectory) continue
+        const name = entry.entryName
+        if (!name.startsWith(marker)) continue
+        const parts = name.slice(marker.length).split('/')
+        if (parts.length < 3 || parts[1] !== 'entries') continue
+        const tail = parts.slice(2).join('/')
+        if (!tail.endsWith('.json')) continue
+        const entryPath = tail.slice(0, -5)
+        if (seen.has(entryPath)) continue
+        seen.add(entryPath)
+        let data: any
+        try {
+            data = JSON.parse(entry.getData().toString('utf-8'))
+        } catch {
+            continue
+        }
+        if (!data || typeof data !== 'object' || !Array.isArray(data.pages)) continue
+        for (const page of data.pages) {
+            if (!page || typeof page !== 'object') continue
+            const opId = page.op_id
+            if (typeof opId !== 'string' || opId.length === 0) continue
+            const anchor = typeof page.anchor === 'string' && page.anchor.length > 0 ? page.anchor : opId
+            result.push({ op_id: opId, entry: entryPath, anchor })
+        }
+    }
+    return result
+}
+
+async function processHexDocPackage(packageName: string, signal?: AbortSignal): Promise<HexDocPackageDump> {
     const postfix = packageName.slice('hexdoc-'.length)
     const modpostfix = postfix.replace(/-/g, '_')
     console.log(`\n=== ${packageName} (postfix: ${postfix}, module: ${modpostfix}) ===`)
@@ -194,7 +267,7 @@ async function processHexDocPackage(packageName: string, signal?: AbortSignal): 
     const patternsData = loadPatterns(zip, modpostfix)
     if (!patternsData) {
         console.log('  patterns file not found, skipping')
-        return []
+        return { patterns: [], pages: [] }
     }
 
     const patterns: HexDocPattern[] = patternsData.patterns || []
@@ -214,13 +287,29 @@ async function processHexDocPackage(packageName: string, signal?: AbortSignal): 
         }
     }
 
-    return patterns
+    const pages = loadPatchouliPages(zip, modpostfix)
+    console.log(`  Loaded ${pages.length} patchouli page refs`)
+
+    const bookUrl = loadBookUrl(zip, modpostfix)
+    console.log(`  book_url: ${bookUrl ?? '(none)'}`)
+
+    return { book_url: bookUrl ?? undefined, patterns, pages }
+}
+
+/**
+ * 断点续传完整性校验：patterns 与 pages 两部分数据缺一不可，缺任意一部分视为需要重新获取。
+ */
+function isCompletePackageDump(v: unknown): v is HexDocPackageDump {
+    if (!v || typeof v !== 'object' || Array.isArray(v)) return false
+    const o = v as Record<string, unknown>
+    return Array.isArray(o.patterns) && Array.isArray(o.pages)
 }
 
 /**
  * 断点续传：解析已有导出文件中的完整包；解析失败则自动清除该文件（等价于"清除已导出内容"）。
+ * 单个包数据不完整（缺 patterns 或 pages）时不视为已导出，由 runHexDocDump 重新获取。
  */
-async function loadExistingDump(outputPath: vscode.Uri): Promise<Record<string, HexDocPattern[]>> {
+async function loadExistingDump(outputPath: vscode.Uri): Promise<Record<string, HexDocPackageDump>> {
     let raw: string
     try {
         raw = Buffer.from(await vscode.workspace.fs.readFile(outputPath)).toString('utf8')
@@ -230,8 +319,9 @@ async function loadExistingDump(outputPath: vscode.Uri): Promise<Record<string, 
     try {
         const existing = JSON.parse(raw)
         if (existing && typeof existing === 'object' && !Array.isArray(existing)) {
-            console.log(`Resuming from existing dump: ${Object.keys(existing).length} packages already exported`)
-            return existing as Record<string, HexDocPattern[]>
+            const complete = Object.values(existing).filter((v) => isCompletePackageDump(v)).length
+            console.log(`Resuming from existing dump: ${complete} complete packages (of ${Object.keys(existing).length} entries)`)
+            return existing as Record<string, HexDocPackageDump>
         }
     } catch {
         // fallthrough
@@ -296,7 +386,11 @@ export async function runHexDocDump(outputDir: vscode.Uri, options: DumpOptions 
         return { outputPath: outputPath.fsPath, status: 'completed', exported: 0, total: 0 }
     }
 
-    const pending = hexDocDeps.filter(([name]) => !(name in allResults))
+    // 断点续传：仅重新获取「未导出」或「数据不完整（缺 patterns/pages 任意一部分）」的包
+    const pending = hexDocDeps.filter(([name]) => {
+        const existing = allResults[name]
+        return existing === undefined || !isCompletePackageDump(existing)
+    })
     console.log(
         `\nFound ${hexDocDeps.length} 'hexdoc-' prefixed dependencies; ` +
             `${hexDocDeps.length - pending.length} already exported, ${pending.length} pending`,
@@ -327,6 +421,8 @@ export async function runHexDocDump(outputDir: vscode.Uri, options: DumpOptions 
             }
             const message = e instanceof Error ? e.message : String(e)
             console.log(`  Skipped/Error processing ${name}: ${message}`)
+            // 导出失败不保留该包数据，避免旧格式/半截数据被续传误判为完整
+            delete allResults[name]
         }
         onProgress?.(done, total)
     }
