@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## [1.3.0]
+
+### Features
+
+- **Dump HexDoc pattern data from PyPI**: new `hexparse.dumpHexDocData` command downloads pattern IDs and localized names for HexCasting addons from PyPI; exports can be interrupted (settling completed packages), resumed later, opened, or cleared via new commands
+- **Pattern names on hover**: when the HexDoc data is exported, hovering a pattern shows its localized name and modid, with an SVG preview of the pattern drawn from its angle signature
+- **Pattern preview rendering**: preview images follow the current editor theme text color and update on theme switch
+- **Raw pattern previews**: raw patterns (`_wedsaq`) now render a preview and resolve to a known pattern name when available
+- **Pattern ID completion**: completions now suggest pattern IDs (short and full forms) with localized names; substring matching covers IDs and translated names (with en_us fallback), including raw `_` prefix suggestions
+- **Stricter hover matching aligned with the original mod**: case-sensitive matching with suffix validation for `thoth_N`, `for_each_N`, `mask_-v`, `entity_<uuid>`, `copy_mask_-n`, `matrix_`/`mat_`, `type(/iota|entity|item|block)_`, and `prop_`/`property_`
+
+---
+
 ## [1.2.1]
 
 ### Features
