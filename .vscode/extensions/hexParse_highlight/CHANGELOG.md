@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## [1.3.1]
+
+### Features
+
+- **Pattern stroke gradient**: pattern previews now draw strokes in a configurable gradient (`hexparse.patternGradient`) instead of a single theme color, interpolating from the first stroke to the last
+- **Per-world pattern color override**: new `hexparse.perWorldColor` config renders per-world patterns in a solid color (or `theme`) instead of the gradient
+- **Pattern animation ball**: pattern previews animate a ball tracing the strokes, with configurable color (`hexparse.ballColor`) and per-step timing (`hexparse.ballStep`)
+- **Pattern previews in completions**: completion documentation now shows the pattern's own preview image directly instead of repeating its name text
+- **HexDoc dump links patterns to the online book**: exported data now also fetches Patchouli page references and the book URL, linking each pattern to its online hexdoc page; interrupted exports with incomplete package data are re-fetched on resume
+
+### Fixes
+
+- Language support now also activates on temporary editor windows (previously only on saved `file:` documents)
+
+---
+
 ## [1.3.0]
 
 ### Features
