@@ -13,7 +13,7 @@ export const defaultThemeColor = '#d4d4d4'
 
 /** 颜色相关配置的默认值（与 package.json 的 defaults 保持一致；渐变列表的 'theme' 由宿主解析为主题色） */
 export const defaultConfigs = {
-    patternGradient: ['#aa00ee', 'theme'],
+    patternGradient: ['#aa00ee', '#3300aa', 'theme'],
     perWorldColor: '#7f7f7f',
     ballColor: 'theme',
 } as const
