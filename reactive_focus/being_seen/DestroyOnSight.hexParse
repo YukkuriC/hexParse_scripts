@@ -5,6 +5,10 @@
 duplicate,entity_pos/foot,create_text
 over,create_text,add,print,mask_v
 
+// what about without it: print 2 lines
+duplicate,entity_pos/foot,print,pop
+print
+
 comment_attack
 duplicate,#attacker
 comment_collect

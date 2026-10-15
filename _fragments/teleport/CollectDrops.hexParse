@@ -9,3 +9,9 @@ for_each,mask_v,gate/close
 
 // typical usage:
 // print,duplicate,#attacker,entity_pos/foot,#collect_drops
+
+// ===========================================
+// what if there's no Hexal & MoreIotas
+// TODO handle exp orbs
+num_1,zone_entity/item
+(duplicate,entity_pos/foot,get_caster,entity_pos/foot,const/vec/py,add,swap,sub,teleport)swap,for_each

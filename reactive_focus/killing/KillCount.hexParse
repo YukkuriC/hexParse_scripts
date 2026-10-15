@@ -14,3 +14,22 @@ event/read,num_1,read/local,replace,event/write
 splat,num_1,add,write/local,eval
 \"Kills: ",read/local,string/iota,add,print
 event/read,num_2,read/local,replace,event/write
+
+// ===========================================
+// what if there's no MoreIotas
+// basic
+(13566 /* replace this later */)splat,num_1,add,write/local
+read/local,print
+event/read,num_1,read/local,replace,event/write
+
+// MK2
+// Requires: hexautomata, hexoverpowered
+([get_caster,get_entity_height,num_1.75,less
+  ([entity_pos/foot,duplicate
+  duplicate,sentinel/create/great,\16,zone_entity/monster
+  (duplicate,num_1,factor_cut,pop)swap,for_each]pop)
+  splat,if,eval
+]13566)
+splat,num_1,add,write/local,eval
+read/local,print
+event/read,num_2,read/local,replace,event/write
