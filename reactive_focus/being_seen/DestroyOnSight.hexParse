@@ -1,0 +1,11 @@
+// Requires: hexparse, moreiotas, hexpose, hexoverpowered, hexal
+
+// display who's coming (and dying)
+// requires: hexpose
+duplicate,entity_pos/foot,create_text
+over,create_text,add,print,mask_v
+
+comment_attack
+duplicate,#attacker
+comment_collect
+entity_pos/foot,#collect_drops
